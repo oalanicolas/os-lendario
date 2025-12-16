@@ -1,0 +1,268 @@
+import React, { useState, useRef, useCallback } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '../../ui/dialog';
+import { Button } from '../../ui/button';
+import { Icon } from '../../ui/icon';
+import { useMindAvatarUpload } from '../../../hooks/useMindAvatarUpload';
+import { cn } from '../../../lib/utils';
+
+interface MindAvatarUploadProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  mindId: string;
+  mindSlug: string;
+  mindName: string;
+  currentAvatar: string;
+  onSuccess?: () => void;
+}
+
+const getDiceBearUrl = (slug: string): string => {
+  return `https://api.dicebear.com/7.x/initials/svg?seed=${slug}&backgroundColor=0d9488`;
+};
+
+export function MindAvatarUpload({
+  open,
+  onOpenChange,
+  mindId,
+  mindSlug,
+  mindName,
+  currentAvatar,
+  onSuccess,
+}: MindAvatarUploadProps) {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [dragActive, setDragActive] = useState(false);
+  const [currentImgError, setCurrentImgError] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const { upload, isUploading, error, clearError } = useMindAvatarUpload({
+    mindId,
+    mindSlug,
+    onSuccess: (newUrl) => {
+      handleClose();
+      onSuccess?.();
+    },
+  });
+
+  const handleClose = useCallback(() => {
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    clearError();
+    onOpenChange(false);
+  }, [clearError, onOpenChange]);
+
+  const handleDrag = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === 'dragenter' || e.type === 'dragover') {
+      setDragActive(true);
+    } else if (e.type === 'dragleave') {
+      setDragActive(false);
+    }
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFileSelect(e.dataTransfer.files[0]);
+    }
+  }, []);
+
+  const handleFileSelect = useCallback((file: File) => {
+    clearError();
+    setSelectedFile(file);
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+  }, [clearError]);
+
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files && e.target.files[0]) {
+        handleFileSelect(e.target.files[0]);
+      }
+    },
+    [handleFileSelect]
+  );
+
+  const handleRemoveFile = useCallback(() => {
+    setSelectedFile(null);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setPreviewUrl(null);
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
+  }, [previewUrl]);
+
+  const handleSave = useCallback(async () => {
+    if (selectedFile) {
+      await upload(selectedFile);
+    }
+  }, [selectedFile, upload]);
+
+  const currentAvatarSrc = currentImgError ? getDiceBearUrl(mindSlug) : currentAvatar;
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent onClose={handleClose}>
+        <DialogHeader>
+          <DialogTitle>Editar Foto de Perfil</DialogTitle>
+          <DialogDescription>
+            Atualize a foto de perfil de {mindName}
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-6">
+          {/* Avatar Preview Section */}
+          <div className="flex items-center justify-center gap-6">
+            {/* Current Avatar */}
+            <div className="flex flex-col items-center gap-2">
+              <span className="text-xs text-muted-foreground font-sans">Atual</span>
+              <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-border bg-muted">
+                <img
+                  src={currentAvatarSrc}
+                  alt={mindName}
+                  className="w-full h-full object-cover"
+                  onError={() => setCurrentImgError(true)}
+                />
+              </div>
+            </div>
+
+            {/* Arrow */}
+            {previewUrl && (
+              <>
+                <Icon
+                  name="arrow-right"
+                  size="size-5"
+                  className="text-muted-foreground"
+                />
+
+                {/* New Avatar Preview */}
+                <div className="flex flex-col items-center gap-2">
+                  <span className="text-xs text-muted-foreground font-sans">Nova</span>
+                  <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-primary bg-muted">
+                    <img
+                      src={previewUrl}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Upload Area */}
+          <div
+            className={cn(
+              'relative flex flex-col items-center justify-center w-full min-h-[140px] rounded-lg border-2 border-dashed transition-colors cursor-pointer',
+              dragActive
+                ? 'border-primary bg-primary/5'
+                : 'border-muted-foreground/25 hover:bg-muted/30',
+              selectedFile ? 'border-solid border-border bg-card' : ''
+            )}
+            onDragEnter={handleDrag}
+            onDragLeave={handleDrag}
+            onDragOver={handleDrag}
+            onDrop={handleDrop}
+            onClick={() => !selectedFile && inputRef.current?.click()}
+          >
+            <input
+              ref={inputRef}
+              type="file"
+              className="hidden"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={handleInputChange}
+            />
+
+            {selectedFile ? (
+              <div className="flex items-center gap-4 p-4 w-full">
+                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 text-primary">
+                  <Icon name="image" size="size-6" />
+                </div>
+                <div className="flex-1 min-w-0 text-left">
+                  <p className="text-sm font-semibold truncate font-sans">
+                    {selectedFile.name}
+                  </p>
+                  <p className="text-xs text-muted-foreground font-mono">
+                    {(selectedFile.size / 1024).toFixed(1)} KB
+                  </p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRemoveFile();
+                  }}
+                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                >
+                  <Icon name="trash" size="size-4" />
+                </Button>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center text-center p-6">
+                <div className="mb-4 rounded-full bg-muted p-3">
+                  <Icon
+                    name="cloud-upload"
+                    className="text-muted-foreground"
+                    size="size-6"
+                  />
+                </div>
+                <p className="text-sm font-semibold font-sans mb-1">
+                  <span className="text-primary hover:underline">
+                    Clique para upload
+                  </span>{' '}
+                  ou arraste e solte
+                </p>
+                <p className="text-xs text-muted-foreground font-sans">
+                  JPG, PNG ou WebP (max. 2MB)
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+              <Icon name="warning" size="size-4" />
+              <span>{error}</span>
+            </div>
+          )}
+        </div>
+
+        <DialogFooter>
+          <Button
+            variant="ghost"
+            onClick={handleClose}
+            disabled={isUploading}
+          >
+            Cancelar
+          </Button>
+          <Button
+            onClick={handleSave}
+            disabled={!selectedFile || isUploading}
+          >
+            {isUploading ? (
+              <>
+                <Icon name="spinner" size="size-4" className="mr-2 animate-spin" />
+                Salvando...
+              </>
+            ) : (
+              'Salvar Foto'
+            )}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}

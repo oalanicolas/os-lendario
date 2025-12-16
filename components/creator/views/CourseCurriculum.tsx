@@ -1,0 +1,420 @@
+import React, { useState } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { Section } from '../../../types';
+import { Card, CardContent } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Icon } from '../../ui/icon';
+import { Badge } from '../../ui/badge';
+import { Input } from '../../ui/input';
+import { cn } from '../../../lib/utils';
+import { useCourse } from '../../../hooks/useCourse';
+import { useCourseContents, CourseModule, CourseLesson } from '../../../hooks/useCourseContents';
+import { STUDIO_PRIMARY, STUDIO_GOLD } from '../studio-tokens';
+import CreatorTopbar from '../CreatorTopbar';
+
+interface CourseCurriculumProps {
+  setSection: (s: Section) => void;
+}
+
+const CourseCurriculum: React.FC<CourseCurriculumProps> = ({ setSection }) => {
+  const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
+  const { course, loading: courseLoading } = useCourse(slug);
+  const { content, loading: contentLoading } = useCourseContents(slug);
+
+  // Edit states
+  const [editingModuleId, setEditingModuleId] = useState<string | null>(null);
+  const [editingLessonId, setEditingLessonId] = useState<string | null>(null);
+  const [editingTitle, setEditingTitle] = useState('');
+  const [hasChanges, setHasChanges] = useState(false);
+
+  const loading = courseLoading || contentLoading;
+
+  // Handlers
+  const handleEditModule = (mod: CourseModule) => {
+    setEditingModuleId(mod.id);
+    setEditingTitle(mod.title);
+  };
+
+  const handleEditLesson = (les: CourseLesson) => {
+    setEditingLessonId(les.id);
+    setEditingTitle(les.title);
+  };
+
+  const handleSaveEdit = () => {
+    // TODO: Implement save to database
+    console.log('Saving:', editingModuleId || editingLessonId, editingTitle);
+    setEditingModuleId(null);
+    setEditingLessonId(null);
+    setEditingTitle('');
+    setHasChanges(true);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingModuleId(null);
+    setEditingLessonId(null);
+    setEditingTitle('');
+  };
+
+  const handleAddModule = () => {
+    // TODO: Implement add module
+    console.log('Add module');
+    setHasChanges(true);
+  };
+
+  const handleAddLesson = (moduleId: string) => {
+    // TODO: Implement add lesson
+    console.log('Add lesson to module:', moduleId);
+    setHasChanges(true);
+  };
+
+  const handleDeleteModule = (moduleId: string) => {
+    // TODO: Implement delete with confirmation
+    console.log('Delete module:', moduleId);
+    setHasChanges(true);
+  };
+
+  const handleDeleteLesson = (lessonId: string) => {
+    // TODO: Implement delete with confirmation
+    console.log('Delete lesson:', lessonId);
+    setHasChanges(true);
+  };
+
+  const handleSaveAll = () => {
+    // TODO: Implement save all changes
+    console.log('Save all changes');
+    setHasChanges(false);
+  };
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="flex flex-col min-h-screen bg-[#0A0A0F] font-sans">
+        <CreatorTopbar currentSection={Section.APP_CREATOR_COURSES} setSection={setSection} />
+        <main className="flex-1 max-w-[1400px] w-full mx-auto px-6 md:px-12 py-8">
+          <div className="max-w-[1000px] mx-auto">
+            <div className="h-4 w-48 bg-muted/20 rounded animate-pulse mb-3" />
+            <div className="h-8 w-64 bg-muted/30 rounded animate-pulse mb-8" />
+            <div className="space-y-3">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-24 bg-muted/10 rounded-xl border border-border/30 animate-pulse" />
+              ))}
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // Not found state
+  if (!course) {
+    return (
+      <div className="flex flex-col min-h-screen bg-[#0A0A0F] font-sans">
+        <CreatorTopbar currentSection={Section.APP_CREATOR_COURSES} setSection={setSection} />
+        <main className="flex-1 flex flex-col items-center justify-center">
+          <Icon name="exclamation-circle" className="text-destructive mb-4" size="size-12" />
+          <h2 className="text-2xl font-bold mb-2">Curso não encontrado</h2>
+          <Button onClick={() => navigate('/creator/cursos')}>Voltar para Cursos</Button>
+        </main>
+      </div>
+    );
+  }
+
+  const modules = content?.modules || [];
+  const totalLessons = content?.totalLessons || 0;
+  const totalModules = content?.totalModules || 0;
+
+  return (
+    <div className="flex flex-col min-h-screen bg-[#0A0A0F] font-sans">
+      <CreatorTopbar currentSection={Section.APP_CREATOR_COURSES} setSection={setSection} />
+
+      {/* SUB-HEADER */}
+      <div className="border-b border-border/50 bg-[#0A0A0F]/95">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-4">
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
+            <Link to="/creator/cursos" className="hover:text-foreground transition-colors">Cursos</Link>
+            <Icon name="angle-right" size="size-3" />
+            <Link to={`/creator/cursos/${slug}`} className="hover:text-foreground transition-colors">{course.name}</Link>
+            <Icon name="angle-right" size="size-3" />
+            <span className="text-foreground">Editar Currículo</span>
+          </nav>
+
+          {/* Title row */}
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
+                <Icon name="pencil" size="size-5" style={{ color: STUDIO_PRIMARY }} />
+                Editor de Currículo
+              </h1>
+              <p className="text-sm text-muted-foreground mt-0.5">
+                {totalModules} módulos · {totalLessons} lições
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate(`/creator/cursos/${slug}`)}
+                className="border-border/50 hover:bg-muted/20"
+              >
+                <Icon name="angle-left" className="mr-2" size="size-4" /> Voltar
+              </Button>
+              {hasChanges && (
+                <Button
+                  size="sm"
+                  onClick={handleSaveAll}
+                  className="text-[#0A0A0F] font-semibold"
+                  style={{ backgroundColor: STUDIO_GOLD }}
+                >
+                  <Icon name="check" className="mr-2" size="size-4" /> Salvar Alterações
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* TOOLBAR */}
+      <div className="border-b border-border/30 bg-card/20">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <Icon name="info-circle" size="size-3" />
+            <span>Arraste para reordenar · Clique no título para editar · Use os botões + para adicionar</span>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleAddModule}
+            className="border-dashed border-[#538096]/50 text-[#538096] hover:bg-[#538096]/10"
+          >
+            <Icon name="plus" className="mr-2" size="size-4" /> Novo Módulo
+          </Button>
+        </div>
+      </div>
+
+      {/* MAIN CONTENT */}
+      <main className="flex-1 max-w-[1400px] w-full mx-auto px-6 md:px-12 py-6">
+        {modules.length === 0 ? (
+          <Card className="bg-card/30 border-border/30 border-dashed">
+            <CardContent className="p-12 text-center">
+              <div className="w-16 h-16 rounded-full bg-muted/20 flex items-center justify-center mx-auto mb-4">
+                <Icon name="folder-open" size="size-8" className="text-muted-foreground" />
+              </div>
+              <h3 className="text-lg font-bold mb-2">Currículo vazio</h3>
+              <p className="text-muted-foreground text-sm mb-6">Comece adicionando o primeiro módulo do seu curso.</p>
+              <Button onClick={handleAddModule} style={{ backgroundColor: STUDIO_PRIMARY }} className="text-white">
+                <Icon name="plus" className="mr-2" size="size-4" /> Criar Primeiro Módulo
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-4">
+            {modules.map((mod, modIndex) => (
+              <Card key={mod.id} className="bg-card/30 border-border/30 overflow-hidden group/module">
+                {/* Module Header */}
+                <div className="px-4 py-3 flex items-center gap-3 bg-card/50 border-b border-border/30">
+                  {/* Drag Handle */}
+                  <div className="cursor-grab text-muted-foreground/40 hover:text-muted-foreground transition-colors">
+                    <Icon name="grip-dots-vertical" size="size-4" />
+                  </div>
+
+                  {/* Module Badge */}
+                  <div
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold shrink-0"
+                    style={{ backgroundColor: `${STUDIO_PRIMARY}20`, color: STUDIO_PRIMARY }}
+                  >
+                    M{modIndex + 1}
+                  </div>
+
+                  {/* Module Title (Editable) */}
+                  {editingModuleId === mod.id ? (
+                    <div className="flex-1 flex items-center gap-2">
+                      <Input
+                        value={editingTitle}
+                        onChange={(e) => setEditingTitle(e.target.value)}
+                        className="h-8 text-sm font-semibold bg-background"
+                        autoFocus
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') handleSaveEdit();
+                          if (e.key === 'Escape') handleCancelEdit();
+                        }}
+                      />
+                      <Button size="icon" variant="ghost" className="h-7 w-7" onClick={handleSaveEdit}>
+                        <Icon name="check" size="size-3" className="text-emerald-500" />
+                      </Button>
+                      <Button size="icon" variant="ghost" className="h-7 w-7" onClick={handleCancelEdit}>
+                        <Icon name="cross" size="size-3" className="text-muted-foreground" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => handleEditModule(mod)}
+                      className="flex-1 text-left font-semibold text-foreground hover:text-[#538096] transition-colors"
+                    >
+                      {mod.title}
+                    </button>
+                  )}
+
+                  {/* Module Meta */}
+                  <Badge variant="secondary" className="text-[10px] bg-muted/30">
+                    {mod.lessons.length} aulas
+                  </Badge>
+
+                  {/* Module Actions */}
+                  <div className="flex items-center gap-1 opacity-0 group-hover/module:opacity-100 transition-opacity">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                      onClick={() => handleAddLesson(mod.id)}
+                      title="Adicionar aula"
+                    >
+                      <Icon name="plus" size="size-3" />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                      onClick={() => handleDeleteModule(mod.id)}
+                      title="Excluir módulo"
+                    >
+                      <Icon name="trash" size="size-3" />
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Lessons */}
+                <div className="divide-y divide-border/20">
+                  {mod.lessons.map((les, lesIndex) => (
+                    <div
+                      key={les.id}
+                      className="px-4 py-2.5 flex items-center gap-3 hover:bg-muted/5 transition-colors group/lesson"
+                    >
+                      {/* Drag Handle */}
+                      <div className="cursor-grab text-muted-foreground/30 hover:text-muted-foreground transition-colors pl-4">
+                        <Icon name="grip-dots-vertical" size="size-3" />
+                      </div>
+
+                      {/* Lesson Number */}
+                      <span className="font-mono text-xs text-muted-foreground w-8 shrink-0">
+                        {modIndex + 1}.{lesIndex + 1}
+                      </span>
+
+                      {/* Lesson Title (Editable) */}
+                      {editingLessonId === les.id ? (
+                        <div className="flex-1 flex items-center gap-2">
+                          <Input
+                            value={editingTitle}
+                            onChange={(e) => setEditingTitle(e.target.value)}
+                            className="h-7 text-sm bg-background"
+                            autoFocus
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') handleSaveEdit();
+                              if (e.key === 'Escape') handleCancelEdit();
+                            }}
+                          />
+                          <Button size="icon" variant="ghost" className="h-6 w-6" onClick={handleSaveEdit}>
+                            <Icon name="check" size="size-3" className="text-emerald-500" />
+                          </Button>
+                          <Button size="icon" variant="ghost" className="h-6 w-6" onClick={handleCancelEdit}>
+                            <Icon name="cross" size="size-3" className="text-muted-foreground" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => handleEditLesson(les)}
+                          className="flex-1 text-left text-sm text-foreground/80 hover:text-[#538096] transition-colors truncate"
+                        >
+                          {les.title}
+                        </button>
+                      )}
+
+                      {/* Lesson Status */}
+                      <Badge
+                        variant="secondary"
+                        className={cn(
+                          "text-[10px] shrink-0",
+                          les.status === 'published'
+                            ? "bg-emerald-500/20 text-emerald-400"
+                            : "bg-muted/30 text-muted-foreground"
+                        )}
+                      >
+                        {les.status === 'published' ? 'Publicado' : 'Rascunho'}
+                      </Badge>
+
+                      {/* Lesson Actions */}
+                      <div className="flex items-center gap-1 opacity-0 group-hover/lesson:opacity-100 transition-opacity">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-6 w-6 text-muted-foreground hover:text-foreground"
+                          onClick={() => navigate(`/creator/cursos/${slug}/licoes/${les.id}`)}
+                          title="Editar conteúdo"
+                        >
+                          <Icon name="arrow-right" size="size-3" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                          onClick={() => handleDeleteLesson(les.id)}
+                          title="Excluir aula"
+                        >
+                          <Icon name="trash" size="size-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Add Lesson Button (inside module) */}
+                  <button
+                    onClick={() => handleAddLesson(mod.id)}
+                    className="w-full px-4 py-2.5 flex items-center gap-3 text-muted-foreground hover:text-[#538096] hover:bg-muted/5 transition-colors text-sm"
+                  >
+                    <div className="pl-4">
+                      <Icon name="plus" size="size-3" />
+                    </div>
+                    <span className="font-mono text-xs w-8">{modIndex + 1}.{mod.lessons.length + 1}</span>
+                    <span>Adicionar aula...</span>
+                  </button>
+                </div>
+              </Card>
+            ))}
+
+            {/* Add Module Button */}
+            <button
+              onClick={handleAddModule}
+              className="w-full p-4 rounded-xl border-2 border-dashed border-border/30 hover:border-[#538096]/50 text-muted-foreground hover:text-[#538096] transition-colors flex items-center justify-center gap-2"
+            >
+              <Icon name="plus" size="size-4" />
+              <span className="font-medium">Adicionar Módulo</span>
+            </button>
+          </div>
+        )}
+      </main>
+
+      {/* FOOTER with save indicator */}
+      {hasChanges && (
+        <div className="sticky bottom-0 border-t border-border/50 bg-[#0A0A0F]/95 backdrop-blur-sm">
+          <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-2 text-sm text-amber-500">
+              <Icon name="exclamation-circle" size="size-4" />
+              <span>Você tem alterações não salvas</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" size="sm" onClick={() => setHasChanges(false)}>
+                Descartar
+              </Button>
+              <Button size="sm" onClick={handleSaveAll} className="text-[#0A0A0F] font-semibold" style={{ backgroundColor: STUDIO_GOLD }}>
+                <Icon name="check" className="mr-2" size="size-4" /> Salvar Alterações
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default CourseCurriculum;
