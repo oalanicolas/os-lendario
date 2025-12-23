@@ -1,13 +1,7 @@
 // Database types for Supabase
 // Based on mmos-schema.md
 
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[];
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export interface Database {
   public: {
@@ -203,39 +197,57 @@ export interface Database {
           updated_at?: string;
         };
       };
-      content_frameworks: {
+      frameworks: {
         Row: {
           id: string;
           slug: string;
           name: string;
-          description: string | null;
-          framework_type: string | null;
-          framework_schema: Json | null;
-          is_active: boolean;
-          created_at: string;
-          updated_at: string;
+          description: string;
+          framework_type: string;
+          structure_type: string;
+          output_format: string | null;
+          framework_schema: Json;
+          is_active: boolean | null;
+          parent_framework_id: string | null;
+          origin_mind_id: string | null;
+          when_to_use: string | null;
+          created_at: string | null;
+          updated_at: string | null;
+          deleted_at: string | null;
         };
         Insert: {
           id?: string;
           slug: string;
           name: string;
-          description?: string | null;
-          framework_type?: string | null;
-          framework_schema?: Json | null;
-          is_active?: boolean;
-          created_at?: string;
-          updated_at?: string;
+          description: string;
+          framework_type: string;
+          structure_type: string;
+          output_format?: string | null;
+          framework_schema?: Json;
+          is_active?: boolean | null;
+          parent_framework_id?: string | null;
+          origin_mind_id?: string | null;
+          when_to_use?: string | null;
+          created_at?: string | null;
+          updated_at?: string | null;
+          deleted_at?: string | null;
         };
         Update: {
           id?: string;
           slug?: string;
           name?: string;
-          description?: string | null;
-          framework_type?: string | null;
-          framework_schema?: Json | null;
-          is_active?: boolean;
-          created_at?: string;
-          updated_at?: string;
+          description?: string;
+          framework_type?: string;
+          structure_type?: string;
+          output_format?: string | null;
+          framework_schema?: Json;
+          is_active?: boolean | null;
+          parent_framework_id?: string | null;
+          origin_mind_id?: string | null;
+          when_to_use?: string | null;
+          created_at?: string | null;
+          updated_at?: string | null;
+          deleted_at?: string | null;
         };
       };
     };
@@ -256,7 +268,7 @@ export type ContentProject = Database['public']['Tables']['content_projects']['R
 export type Content = Database['public']['Tables']['contents']['Row'];
 export type Mind = Database['public']['Tables']['minds']['Row'];
 export type AudienceProfile = Database['public']['Tables']['audience_profiles']['Row'];
-export type ContentFramework = Database['public']['Tables']['content_frameworks']['Row'];
+export type Framework = Database['public']['Tables']['frameworks']['Row'];
 
 // Extended types with relations
 export interface ContentProjectWithRelations extends ContentProject {

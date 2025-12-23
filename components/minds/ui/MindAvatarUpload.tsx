@@ -76,12 +76,15 @@ export function MindAvatarUpload({
     }
   }, []);
 
-  const handleFileSelect = useCallback((file: File) => {
-    clearError();
-    setSelectedFile(file);
-    const url = URL.createObjectURL(file);
-    setPreviewUrl(url);
-  }, [clearError]);
+  const handleFileSelect = useCallback(
+    (file: File) => {
+      clearError();
+      setSelectedFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    },
+    [clearError]
+  );
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,9 +119,7 @@ export function MindAvatarUpload({
       <DialogContent onClose={handleClose}>
         <DialogHeader>
           <DialogTitle>Editar Foto de Perfil</DialogTitle>
-          <DialogDescription>
-            Atualize a foto de perfil de {mindName}
-          </DialogDescription>
+          <DialogDescription>Atualize a foto de perfil de {mindName}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
@@ -126,12 +127,12 @@ export function MindAvatarUpload({
           <div className="flex items-center justify-center gap-6">
             {/* Current Avatar */}
             <div className="flex flex-col items-center gap-2">
-              <span className="text-xs text-muted-foreground font-sans">Atual</span>
-              <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-border bg-muted">
+              <span className="font-sans text-xs text-muted-foreground">Atual</span>
+              <div className="h-24 w-24 overflow-hidden rounded-full border-2 border-border bg-muted">
                 <img
                   src={currentAvatarSrc}
                   alt={mindName}
-                  className="w-full h-full object-cover"
+                  className="h-full w-full object-cover"
                   onError={() => setCurrentImgError(true)}
                 />
               </div>
@@ -140,21 +141,13 @@ export function MindAvatarUpload({
             {/* Arrow */}
             {previewUrl && (
               <>
-                <Icon
-                  name="arrow-right"
-                  size="size-5"
-                  className="text-muted-foreground"
-                />
+                <Icon name="arrow-right" size="size-5" className="text-muted-foreground" />
 
                 {/* New Avatar Preview */}
                 <div className="flex flex-col items-center gap-2">
-                  <span className="text-xs text-muted-foreground font-sans">Nova</span>
-                  <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-primary bg-muted">
-                    <img
-                      src={previewUrl}
-                      alt="Preview"
-                      className="w-full h-full object-cover"
-                    />
+                  <span className="font-sans text-xs text-muted-foreground">Nova</span>
+                  <div className="h-24 w-24 overflow-hidden rounded-full border-2 border-primary bg-muted">
+                    <img src={previewUrl} alt="Preview" className="h-full w-full object-cover" />
                   </div>
                 </div>
               </>
@@ -164,7 +157,7 @@ export function MindAvatarUpload({
           {/* Upload Area */}
           <div
             className={cn(
-              'relative flex flex-col items-center justify-center w-full min-h-[140px] rounded-lg border-2 border-dashed transition-colors cursor-pointer',
+              'relative flex min-h-[140px] w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed transition-colors',
               dragActive
                 ? 'border-primary bg-primary/5'
                 : 'border-muted-foreground/25 hover:bg-muted/30',
@@ -185,15 +178,13 @@ export function MindAvatarUpload({
             />
 
             {selectedFile ? (
-              <div className="flex items-center gap-4 p-4 w-full">
-                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 text-primary">
+              <div className="flex w-full items-center gap-4 p-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                   <Icon name="image" size="size-6" />
                 </div>
-                <div className="flex-1 min-w-0 text-left">
-                  <p className="text-sm font-semibold truncate font-sans">
-                    {selectedFile.name}
-                  </p>
-                  <p className="text-xs text-muted-foreground font-mono">
+                <div className="min-w-0 flex-1 text-left">
+                  <p className="truncate font-sans text-sm font-semibold">{selectedFile.name}</p>
+                  <p className="font-mono text-xs text-muted-foreground">
                     {(selectedFile.size / 1024).toFixed(1)} KB
                   </p>
                 </div>
@@ -204,27 +195,21 @@ export function MindAvatarUpload({
                     e.stopPropagation();
                     handleRemoveFile();
                   }}
-                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                  className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                 >
                   <Icon name="trash" size="size-4" />
                 </Button>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center text-center p-6">
+              <div className="flex flex-col items-center justify-center p-6 text-center">
                 <div className="mb-4 rounded-full bg-muted p-3">
-                  <Icon
-                    name="cloud-upload"
-                    className="text-muted-foreground"
-                    size="size-6"
-                  />
+                  <Icon name="cloud-upload" className="text-muted-foreground" size="size-6" />
                 </div>
-                <p className="text-sm font-semibold font-sans mb-1">
-                  <span className="text-primary hover:underline">
-                    Clique para upload
-                  </span>{' '}
-                  ou arraste e solte
+                <p className="mb-1 font-sans text-sm font-semibold">
+                  <span className="text-primary hover:underline">Clique para upload</span> ou
+                  arraste e solte
                 </p>
-                <p className="text-xs text-muted-foreground font-sans">
+                <p className="font-sans text-xs text-muted-foreground">
                   JPG, PNG ou WebP (max. 2MB)
                 </p>
               </div>
@@ -233,7 +218,7 @@ export function MindAvatarUpload({
 
           {/* Error Message */}
           {error && (
-            <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+            <div className="flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
               <Icon name="warning" size="size-4" />
               <span>{error}</span>
             </div>
@@ -241,17 +226,10 @@ export function MindAvatarUpload({
         </div>
 
         <DialogFooter>
-          <Button
-            variant="ghost"
-            onClick={handleClose}
-            disabled={isUploading}
-          >
+          <Button variant="ghost" onClick={handleClose} disabled={isUploading}>
             Cancelar
           </Button>
-          <Button
-            onClick={handleSave}
-            disabled={!selectedFile || isUploading}
-          >
+          <Button onClick={handleSave} disabled={!selectedFile || isUploading}>
             {isUploading ? (
               <>
                 <Icon name="spinner" size="size-4" className="mr-2 animate-spin" />

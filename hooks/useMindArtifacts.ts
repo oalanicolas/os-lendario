@@ -18,36 +18,70 @@ export const categorizeArtifact = (artifact: MindArtifact): string => {
   const slug = (artifact.slug || '').toLowerCase();
   const combined = `${title} ${slug}`;
 
-  if (combined.includes('identity') || combined.includes('core') || combined.includes('bio') ||
-      combined.includes('formacao') || combined.includes('infancia') || combined.includes('biografia')) {
+  if (
+    combined.includes('identity') ||
+    combined.includes('core') ||
+    combined.includes('bio') ||
+    combined.includes('formacao') ||
+    combined.includes('infancia') ||
+    combined.includes('biografia')
+  ) {
     return 'identity';
   }
-  if (combined.includes('framework') || combined.includes('metodologia') ||
-      combined.includes('principios') || combined.includes('principles') || combined.includes('mental')) {
+  if (
+    combined.includes('framework') ||
+    combined.includes('metodologia') ||
+    combined.includes('principios') ||
+    combined.includes('principles') ||
+    combined.includes('mental')
+  ) {
     return 'frameworks';
   }
-  if (combined.includes('analise') || combined.includes('analysis') ||
-      combined.includes('psicolog') || combined.includes('cognitiv') ||
-      combined.includes('forensic') || combined.includes('arqueologia')) {
+  if (
+    combined.includes('analise') ||
+    combined.includes('analysis') ||
+    combined.includes('psicolog') ||
+    combined.includes('cognitiv') ||
+    combined.includes('forensic') ||
+    combined.includes('arqueologia')
+  ) {
     return 'analysis';
   }
-  if (combined.includes('estilo') || combined.includes('comunicacao') ||
-      combined.includes('aparencia') || combined.includes('maneirismo') ||
-      combined.includes('language')) {
+  if (
+    combined.includes('estilo') ||
+    combined.includes('comunicacao') ||
+    combined.includes('aparencia') ||
+    combined.includes('maneirismo') ||
+    combined.includes('language')
+  ) {
     return 'style';
   }
-  if (combined.includes('case') || combined.includes('exemplo') ||
-      combined.includes('decisoes') || combined.includes('temas') ||
-      combined.includes('relatorio') || combined.includes('abrangente')) {
+  if (
+    combined.includes('case') ||
+    combined.includes('exemplo') ||
+    combined.includes('decisoes') ||
+    combined.includes('temas') ||
+    combined.includes('relatorio') ||
+    combined.includes('abrangente')
+  ) {
     return 'cases';
   }
-  if (combined.includes('architecture') || combined.includes('arquitetura') ||
-      combined.includes('spec') || combined.includes('technical') ||
-      combined.includes('implementation') || combined.includes('implementa')) {
+  if (
+    combined.includes('architecture') ||
+    combined.includes('arquitetura') ||
+    combined.includes('spec') ||
+    combined.includes('technical') ||
+    combined.includes('implementation') ||
+    combined.includes('implementa')
+  ) {
     return 'architecture';
   }
-  if (combined.includes('influencia') || combined.includes('espiritual') ||
-      combined.includes('valores') || combined.includes('values')) {
+  if (
+    combined.includes('influencia') ||
+    combined.includes('espiritual') ||
+    combined.includes('valores') ||
+    combined.includes('values')
+  ) {
     return 'influences';
   }
   return 'other';
@@ -61,7 +95,7 @@ export const CATEGORY_LABELS: Record<string, string> = {
   cases: 'Cases & Relatórios',
   architecture: 'Arquitetura Cognitiva',
   influences: 'Influências & Valores',
-  other: 'Outros Documentos'
+  other: 'Outros Documentos',
 };
 
 export const CATEGORY_ICONS: Record<string, string> = {
@@ -72,7 +106,7 @@ export const CATEGORY_ICONS: Record<string, string> = {
   cases: 'document',
   architecture: 'settings',
   influences: 'star',
-  other: 'folder'
+  other: 'folder',
 };
 
 export interface MindArtifactsResult {
@@ -115,7 +149,8 @@ export function useMindArtifacts(mindId: string | null): UseMindArtifactsResult 
       // Fetch content_project with its contents
       const { data: projectData, error: projectError } = await supabase
         .from('content_projects')
-        .select(`
+        .select(
+          `
           id,
           slug,
           contents (
@@ -126,7 +161,8 @@ export function useMindArtifacts(mindId: string | null): UseMindArtifactsResult 
             content_type,
             metadata
           )
-        `)
+        `
+        )
         .eq('persona_mind_id', mindId)
         .eq('project_type', 'mind_artifacts')
         .single();
@@ -139,7 +175,7 @@ export function useMindArtifacts(mindId: string | null): UseMindArtifactsResult 
             projectSlug: null,
             artifacts: [],
             prompts: [],
-            total: 0
+            total: 0,
           });
           return;
         }
@@ -156,16 +192,16 @@ export function useMindArtifacts(mindId: string | null): UseMindArtifactsResult 
         content: c.content,
         contentType: c.content_type,
         sourceFile: c.metadata?.source_file || null,
-        importedAt: c.metadata?.imported_at || null
+        importedAt: c.metadata?.imported_at || null,
       }));
 
       // Separate by type
       const artifacts = allItems
-        .filter(a => a.contentType === 'mind_artifacts')
+        .filter((a) => a.contentType === 'mind_artifacts')
         .sort((a, b) => a.title.localeCompare(b.title));
 
       const prompts = allItems
-        .filter(a => a.contentType === 'mind_prompts')
+        .filter((a) => a.contentType === 'mind_prompts')
         .sort((a, b) => a.title.localeCompare(b.title));
 
       setData({
@@ -173,7 +209,7 @@ export function useMindArtifacts(mindId: string | null): UseMindArtifactsResult 
         projectSlug: (projectData as any)?.slug || null,
         artifacts,
         prompts,
-        total: allItems.length
+        total: allItems.length,
       });
     } catch (err) {
       console.error('Error fetching mind artifacts:', err);
@@ -192,7 +228,7 @@ export function useMindArtifacts(mindId: string | null): UseMindArtifactsResult 
     data,
     loading,
     error,
-    refetch: fetchArtifacts
+    refetch: fetchArtifacts,
   };
 }
 

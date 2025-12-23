@@ -46,7 +46,7 @@ export const TiptapEditor: React.FC<TiptapEditorProps> = ({
   onChange,
   placeholder = 'Comece a escrever...',
   minHeight = '300px',
-  className
+  className,
 }) => {
   const [mode, setMode] = useState<'visual' | 'markdown'>('visual');
   const [markdownContent, setMarkdownContent] = useState(content || '');
@@ -101,16 +101,21 @@ export const TiptapEditor: React.FC<TiptapEditorProps> = ({
   if (!editor) return null;
 
   return (
-    <div className={cn("tiptap-wrapper rounded-lg border border-border overflow-hidden bg-card", className)}>
+    <div
+      className={cn(
+        'tiptap-wrapper overflow-hidden rounded-lg border border-border bg-card',
+        className
+      )}
+    >
       {/* Toolbar */}
-      <div className="flex items-center gap-1 p-2 border-b border-border bg-muted/50 flex-wrap">
+      <div className="flex flex-wrap items-center gap-1 border-b border-border bg-muted/50 p-2">
         {mode === 'visual' && (
           <>
             <button
               onClick={() => editor.chain().focus().toggleBold().run()}
               className={cn(
-                "p-2 rounded hover:bg-accent transition-colors",
-                editor.isActive('bold') && "bg-accent text-primary"
+                'rounded p-2 transition-colors hover:bg-accent',
+                editor.isActive('bold') && 'bg-accent text-primary'
               )}
               title="Negrito (Ctrl+B)"
               type="button"
@@ -120,8 +125,8 @@ export const TiptapEditor: React.FC<TiptapEditorProps> = ({
             <button
               onClick={() => editor.chain().focus().toggleItalic().run()}
               className={cn(
-                "p-2 rounded hover:bg-accent transition-colors",
-                editor.isActive('italic') && "bg-accent text-primary"
+                'rounded p-2 transition-colors hover:bg-accent',
+                editor.isActive('italic') && 'bg-accent text-primary'
               )}
               title="Itálico (Ctrl+I)"
               type="button"
@@ -131,8 +136,8 @@ export const TiptapEditor: React.FC<TiptapEditorProps> = ({
             <button
               onClick={() => editor.chain().focus().toggleStrike().run()}
               className={cn(
-                "p-2 rounded hover:bg-accent transition-colors",
-                editor.isActive('strike') && "bg-accent text-primary"
+                'rounded p-2 transition-colors hover:bg-accent',
+                editor.isActive('strike') && 'bg-accent text-primary'
               )}
               title="Tachado"
               type="button"
@@ -140,13 +145,13 @@ export const TiptapEditor: React.FC<TiptapEditorProps> = ({
               <Icon name="strikethrough" size="size-4" />
             </button>
 
-            <div className="w-px h-6 bg-border mx-1" />
+            <div className="mx-1 h-6 w-px bg-border" />
 
             <button
               onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
               className={cn(
-                "p-2 rounded hover:bg-accent transition-colors text-sm font-bold",
-                editor.isActive('heading', { level: 2 }) && "bg-accent text-primary"
+                'rounded p-2 text-sm font-bold transition-colors hover:bg-accent',
+                editor.isActive('heading', { level: 2 }) && 'bg-accent text-primary'
               )}
               title="Título H2"
               type="button"
@@ -156,8 +161,8 @@ export const TiptapEditor: React.FC<TiptapEditorProps> = ({
             <button
               onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
               className={cn(
-                "p-2 rounded hover:bg-accent transition-colors text-sm font-bold",
-                editor.isActive('heading', { level: 3 }) && "bg-accent text-primary"
+                'rounded p-2 text-sm font-bold transition-colors hover:bg-accent',
+                editor.isActive('heading', { level: 3 }) && 'bg-accent text-primary'
               )}
               title="Título H3"
               type="button"
@@ -165,13 +170,13 @@ export const TiptapEditor: React.FC<TiptapEditorProps> = ({
               H3
             </button>
 
-            <div className="w-px h-6 bg-border mx-1" />
+            <div className="mx-1 h-6 w-px bg-border" />
 
             <button
               onClick={() => editor.chain().focus().toggleBulletList().run()}
               className={cn(
-                "p-2 rounded hover:bg-accent transition-colors",
-                editor.isActive('bulletList') && "bg-accent text-primary"
+                'rounded p-2 transition-colors hover:bg-accent',
+                editor.isActive('bulletList') && 'bg-accent text-primary'
               )}
               title="Lista com marcadores"
               type="button"
@@ -181,8 +186,8 @@ export const TiptapEditor: React.FC<TiptapEditorProps> = ({
             <button
               onClick={() => editor.chain().focus().toggleOrderedList().run()}
               className={cn(
-                "p-2 rounded hover:bg-accent transition-colors",
-                editor.isActive('orderedList') && "bg-accent text-primary"
+                'rounded p-2 transition-colors hover:bg-accent',
+                editor.isActive('orderedList') && 'bg-accent text-primary'
               )}
               title="Lista numerada"
               type="button"
@@ -190,13 +195,13 @@ export const TiptapEditor: React.FC<TiptapEditorProps> = ({
               <Icon name="list-ol" size="size-4" />
             </button>
 
-            <div className="w-px h-6 bg-border mx-1" />
+            <div className="mx-1 h-6 w-px bg-border" />
 
             <button
               onClick={() => editor.chain().focus().toggleBlockquote().run()}
               className={cn(
-                "p-2 rounded hover:bg-accent transition-colors",
-                editor.isActive('blockquote') && "bg-accent text-primary"
+                'rounded p-2 transition-colors hover:bg-accent',
+                editor.isActive('blockquote') && 'bg-accent text-primary'
               )}
               title="Citação"
               type="button"
@@ -206,8 +211,8 @@ export const TiptapEditor: React.FC<TiptapEditorProps> = ({
             <button
               onClick={() => editor.chain().focus().toggleCodeBlock().run()}
               className={cn(
-                "p-2 rounded hover:bg-accent transition-colors",
-                editor.isActive('codeBlock') && "bg-accent text-primary"
+                'rounded p-2 transition-colors hover:bg-accent',
+                editor.isActive('codeBlock') && 'bg-accent text-primary'
               )}
               title="Bloco de código"
               type="button"
@@ -216,19 +221,19 @@ export const TiptapEditor: React.FC<TiptapEditorProps> = ({
             </button>
             <button
               onClick={() => editor.chain().focus().setHorizontalRule().run()}
-              className="p-2 rounded hover:bg-accent transition-colors"
+              className="rounded p-2 transition-colors hover:bg-accent"
               title="Linha horizontal"
               type="button"
             >
               <Icon name="minus" size="size-4" />
             </button>
 
-            <div className="w-px h-6 bg-border mx-1" />
+            <div className="mx-1 h-6 w-px bg-border" />
 
             <button
               onClick={() => editor.chain().focus().undo().run()}
               disabled={!editor.can().undo()}
-              className="p-2 rounded hover:bg-accent transition-colors disabled:opacity-30"
+              className="rounded p-2 transition-colors hover:bg-accent disabled:opacity-30"
               title="Desfazer (Ctrl+Z)"
               type="button"
             >
@@ -237,7 +242,7 @@ export const TiptapEditor: React.FC<TiptapEditorProps> = ({
             <button
               onClick={() => editor.chain().focus().redo().run()}
               disabled={!editor.can().redo()}
-              className="p-2 rounded hover:bg-accent transition-colors disabled:opacity-30"
+              className="rounded p-2 transition-colors hover:bg-accent disabled:opacity-30"
               title="Refazer (Ctrl+Y)"
               type="button"
             >
@@ -248,14 +253,14 @@ export const TiptapEditor: React.FC<TiptapEditorProps> = ({
 
         {/* Mode Toggle */}
         <div className="flex-1" />
-        <div className="flex items-center gap-1 bg-muted rounded-md p-1">
+        <div className="flex items-center gap-1 rounded-md bg-muted p-1">
           <button
             onClick={() => handleModeSwitch('visual')}
             className={cn(
-              "px-3 py-1 rounded text-sm transition-colors",
+              'rounded px-3 py-1 text-sm transition-colors',
               mode === 'visual'
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
+                ? 'bg-background text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
             )}
             type="button"
           >
@@ -265,10 +270,10 @@ export const TiptapEditor: React.FC<TiptapEditorProps> = ({
           <button
             onClick={() => handleModeSwitch('markdown')}
             className={cn(
-              "px-3 py-1 rounded text-sm transition-colors",
+              'rounded px-3 py-1 text-sm transition-colors',
               mode === 'markdown'
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
+                ? 'bg-background text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
             )}
             type="button"
           >
@@ -284,7 +289,7 @@ export const TiptapEditor: React.FC<TiptapEditorProps> = ({
         <textarea
           value={markdownContent}
           onChange={handleMarkdownChange}
-          className="w-full bg-transparent text-foreground font-mono text-sm leading-relaxed resize-none focus:outline-none p-6"
+          className="w-full resize-none bg-transparent p-6 font-mono text-sm leading-relaxed text-foreground focus:outline-none"
           style={{ minHeight }}
           placeholder="Escreva em markdown..."
           spellCheck={false}

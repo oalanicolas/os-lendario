@@ -1,26 +1,25 @@
-
 import React from 'react';
 import { Avatar, AvatarFallback } from '../../ui/avatar';
 
-interface ChatMessageProps { 
-    user: string;
-    text: string;
-    time: string; 
+interface ChatMessageProps {
+  user: string;
+  text: string;
+  time: string;
 }
 
 export const ChatMessage: React.FC<ChatMessageProps> = ({ user, text, time }) => (
-  <div className="flex gap-3 text-sm animate-fade-in">
-    <Avatar className="w-6 h-6 border border-border">
+  <div className="flex animate-fade-in gap-3 text-sm">
+    <Avatar className="h-6 w-6 border border-border">
       <AvatarFallback className="bg-muted text-[9px] text-muted-foreground">
         {user.substring(0, 2).toUpperCase()}
       </AvatarFallback>
     </Avatar>
     <div>
-      <div className="flex items-center gap-2 mb-0.5">
-        <span className="font-bold text-foreground text-xs">{user}</span>
+      <div className="mb-0.5 flex items-center gap-2">
+        <span className="text-xs font-bold text-foreground">{user}</span>
         <span className="text-[10px] text-muted-foreground">{time}</span>
       </div>
-      <p className="text-muted-foreground leading-snug">{text}</p>
+      <p className="leading-snug text-muted-foreground">{text}</p>
     </div>
   </div>
 );

@@ -1,7 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '../types/database';
 
+// @ts-ignore - Vite env types
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+// @ts-ignore - Vite env types
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {

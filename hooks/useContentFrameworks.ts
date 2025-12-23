@@ -32,7 +32,11 @@ const FRAMEWORK_ENRICHMENT: Record<string, Partial<Framework>> = {
       { name: 'Steps', description: 'Estrutura o caminho passo a passo', duration: '70%' },
     ],
     bestFor: ['Cursos técnicos', 'Treinamentos corporativos', 'Tutoriais'],
-    useCases: ['Estruturar módulos de curso', 'Criar roadmaps de aprendizado', 'Definir objetivos mensuráveis'],
+    useCases: [
+      'Estruturar módulos de curso',
+      'Criar roadmaps de aprendizado',
+      'Definir objetivos mensuráveis',
+    ],
   },
   aida: {
     color: '#F59E0B',
@@ -44,7 +48,11 @@ const FRAMEWORK_ENRICHMENT: Record<string, Partial<Framework>> = {
       { name: 'Action', description: 'Conduz à ação desejada', duration: '25%' },
     ],
     bestFor: ['Landing pages', 'Copy de vendas', 'Campanhas de marketing'],
-    useCases: ['Estruturar páginas de captura', 'Criar sequências de email', 'Desenvolver pitches de vendas'],
+    useCases: [
+      'Estruturar páginas de captura',
+      'Criar sequências de email',
+      'Desenvolver pitches de vendas',
+    ],
   },
   pas: {
     color: '#EF4444',
@@ -55,7 +63,11 @@ const FRAMEWORK_ENRICHMENT: Record<string, Partial<Framework>> = {
       { name: 'Solve', description: 'Apresenta a solução', duration: '35%' },
     ],
     bestFor: ['Storytelling', 'Conteúdo emocional', 'Vídeos de vendas'],
-    useCases: ['Criar narrativas persuasivas', 'Desenvolver estudos de caso', 'Estruturar webinars'],
+    useCases: [
+      'Criar narrativas persuasivas',
+      'Desenvolver estudos de caso',
+      'Estruturar webinars',
+    ],
   },
   bloom_taxonomy: {
     color: '#10B981',
@@ -69,7 +81,11 @@ const FRAMEWORK_ENRICHMENT: Record<string, Partial<Framework>> = {
       { name: 'Create', description: 'Produzir trabalho novo e original', duration: '20%' },
     ],
     bestFor: ['Educação formal', 'Desenvolvimento de competências', 'Avaliações'],
-    useCases: ['Criar objetivos de aprendizagem', 'Desenvolver avaliações', 'Estruturar progressão de curso'],
+    useCases: [
+      'Criar objetivos de aprendizagem',
+      'Desenvolver avaliações',
+      'Estruturar progressão de curso',
+    ],
   },
 };
 
@@ -109,10 +125,8 @@ export function useContentFrameworks(): UseContentFrameworksResult {
     }
 
     try {
-      const { data, error: fetchError } = await supabase
-        .from('content_frameworks')
-        .select('*')
-        .order('name');
+      // @ts-ignore - Supabase query type inference issue
+      const { data, error: fetchError } = await supabase.from('toolbox').select('*').order('name');
 
       if (fetchError) {
         throw fetchError;

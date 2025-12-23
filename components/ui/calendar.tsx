@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { cn } from "../../lib/utils";
-import { Icon } from "./icon";
-import { buttonVariants } from "./button";
+import React, { useState } from 'react';
+import { cn } from '../../lib/utils';
+import { Icon } from './icon';
+import { buttonVariants } from './button';
 
 export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'> {
   selected?: Date;
@@ -11,7 +11,7 @@ export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>
 
 function Calendar({ className, selected, onSelect, ...props }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date()); // View date (Month/Year)
-  
+
   // Helpers (Vanilla JS Date Logic)
   const getDaysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
   const getFirstDayOfMonth = (year: number, month: number) => new Date(year, month, 1).getDay();
@@ -33,7 +33,11 @@ function Calendar({ className, selected, onSelect, ...props }: CalendarProps) {
 
   const isSameDay = (d1?: Date, d2?: Date) => {
     if (!d1 || !d2) return false;
-    return d1.getDate() === d2.getDate() && d1.getMonth() === d2.getMonth() && d1.getFullYear() === d2.getFullYear();
+    return (
+      d1.getDate() === d2.getDate() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getFullYear() === d2.getFullYear()
+    );
   };
 
   const isToday = (day: number) => {
@@ -42,7 +46,20 @@ function Calendar({ className, selected, onSelect, ...props }: CalendarProps) {
   };
 
   const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-  const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+  const monthNames = [
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro',
+  ];
 
   // Generate days array
   const days = [];
@@ -60,12 +77,12 @@ function Calendar({ className, selected, onSelect, ...props }: CalendarProps) {
         key={i}
         onClick={() => handleDateClick(i)}
         className={cn(
-          "h-9 w-9 p-0 font-normal text-sm flex items-center justify-center rounded-md cursor-pointer transition-all duration-200",
-          isSelected 
-            ? "bg-primary text-primary-foreground shadow-md font-bold hover:bg-primary/90" 
+          'flex h-9 w-9 cursor-pointer items-center justify-center rounded-md p-0 text-sm font-normal transition-all duration-200',
+          isSelected
+            ? 'bg-primary font-bold text-primary-foreground shadow-md hover:bg-primary/90'
             : isCurrentDay
-                ? "bg-accent text-accent-foreground font-bold border border-primary/30"
-                : "hover:bg-muted text-foreground"
+              ? 'border border-primary/30 bg-accent font-bold text-accent-foreground'
+              : 'text-foreground hover:bg-muted'
         )}
       >
         {i}
@@ -74,31 +91,43 @@ function Calendar({ className, selected, onSelect, ...props }: CalendarProps) {
   }
 
   return (
-    <div className={cn("p-4 bg-card border border-border rounded-xl shadow-sm w-[280px]", className)} {...props}>
-      <div className="flex justify-between items-center mb-4">
-        <div className="text-sm font-bold font-sans flex gap-1">
-            <span className="capitalize">{monthNames[month]}</span>
-            <span className="text-muted-foreground">{year}</span>
+    <div
+      className={cn('w-[280px] rounded-xl border border-border bg-card p-4 shadow-sm', className)}
+      {...props}
+    >
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex gap-1 font-sans text-sm font-bold">
+          <span className="capitalize">{monthNames[month]}</span>
+          <span className="text-muted-foreground">{year}</span>
         </div>
         <div className="flex items-center gap-1">
-            <button onClick={prevMonth} className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "h-7 w-7")}>
-                <Icon name="angle-left" className="h-4 w-4" />
-            </button>
-            <button onClick={nextMonth} className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "h-7 w-7")}>
-                <Icon name="angle-right" className="h-4 w-4" />
-            </button>
+          <button
+            onClick={prevMonth}
+            className={cn(buttonVariants({ variant: 'ghost', size: 'icon' }), 'h-7 w-7')}
+          >
+            <Icon name="angle-left" className="h-4 w-4" />
+          </button>
+          <button
+            onClick={nextMonth}
+            className={cn(buttonVariants({ variant: 'ghost', size: 'icon' }), 'h-7 w-7')}
+          >
+            <Icon name="angle-right" className="h-4 w-4" />
+          </button>
         </div>
       </div>
-      
-      <div className="grid grid-cols-7 gap-1 text-center mb-2">
-          {weekDays.map(day => (
-              <span key={day} className="text-[0.7rem] uppercase tracking-wider font-bold text-muted-foreground">{day}</span>
-          ))}
+
+      <div className="mb-2 grid grid-cols-7 gap-1 text-center">
+        {weekDays.map((day) => (
+          <span
+            key={day}
+            className="text-[0.7rem] font-bold uppercase tracking-wider text-muted-foreground"
+          >
+            {day}
+          </span>
+        ))}
       </div>
-      
-      <div className="grid grid-cols-7 gap-1">
-          {days}
-      </div>
+
+      <div className="grid grid-cols-7 gap-1">{days}</div>
     </div>
   );
 }

@@ -39,9 +39,22 @@ interface ObjectivesSectionProps {
 // CONSTANTS
 // =============================================================================
 
-const APPROVAL_CONFIG: Record<ApprovalStatus, { label: string; icon: string; color: string; bgColor: string }> = {
-  pending: { label: 'Pendente', icon: 'clock', color: 'text-muted-foreground', bgColor: 'bg-muted' },
-  approved: { label: 'Aprovado', icon: 'check', color: 'text-emerald-500', bgColor: 'bg-emerald-500/10' },
+const APPROVAL_CONFIG: Record<
+  ApprovalStatus,
+  { label: string; icon: string; color: string; bgColor: string }
+> = {
+  pending: {
+    label: 'Pendente',
+    icon: 'clock',
+    color: 'text-muted-foreground',
+    bgColor: 'bg-muted',
+  },
+  approved: {
+    label: 'Aprovado',
+    icon: 'check',
+    color: 'text-emerald-500',
+    bgColor: 'bg-emerald-500/10',
+  },
   adjust: { label: 'Ajustar', icon: 'edit', color: 'text-amber-500', bgColor: 'bg-amber-500/10' },
   rejected: { label: 'Rejeitado', icon: 'cross', color: 'text-red-500', bgColor: 'bg-red-500/10' },
 };
@@ -108,24 +121,27 @@ const ObjectiveItemCard: React.FC<{
   const config = typeConfig[type];
 
   return (
-    <Card className={cn(
-      "p-4 transition-all",
-      statusConfig.bgColor,
-      "border-l-4"
-    )} style={{ borderLeftColor: config.color }}>
+    <Card
+      className={cn('p-4 transition-all', statusConfig.bgColor, 'border-l-4')}
+      style={{ borderLeftColor: config.color }}
+    >
       <div className="flex items-start gap-3">
         {/* Type Icon */}
         <div
-          className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
           style={{ backgroundColor: `${config.color}20` }}
         >
           <Icon name={config.icon} size="size-4" style={{ color: config.color }} />
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           {type === 'main' && (
-            <Badge variant="outline" className="mb-2 text-[10px]" style={{ borderColor: config.color, color: config.color }}>
+            <Badge
+              variant="outline"
+              className="mb-2 text-[10px]"
+              style={{ borderColor: config.color, color: config.color }}
+            >
               {config.label}
             </Badge>
           )}
@@ -139,25 +155,35 @@ const ObjectiveItemCard: React.FC<{
                 autoFocus
               />
               <div className="flex gap-2">
-                <Button size="sm" onClick={handleSave}>Salvar</Button>
-                <Button size="sm" variant="ghost" onClick={() => {
-                  setEditText(item.text);
-                  setIsEditing(false);
-                }}>Cancelar</Button>
+                <Button size="sm" onClick={handleSave}>
+                  Salvar
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    setEditText(item.text);
+                    setIsEditing(false);
+                  }}
+                >
+                  Cancelar
+                </Button>
               </div>
             </div>
           ) : (
             <p
-              className="text-sm cursor-pointer hover:text-primary transition-colors"
+              className="cursor-pointer text-sm transition-colors hover:text-primary"
               onClick={() => setIsEditing(true)}
             >
-              {item.text || <span className="text-muted-foreground italic">Clique para editar...</span>}
+              {item.text || (
+                <span className="italic text-muted-foreground">Clique para editar...</span>
+              )}
             </p>
           )}
 
           {/* Status & Actions */}
           {!isEditing && (
-            <div className="flex items-center gap-2 mt-3 flex-wrap">
+            <div className="mt-3 flex flex-wrap items-center gap-2">
               {/* Approval Buttons */}
               <div className="flex gap-1">
                 {(['approved', 'adjust', 'rejected'] as ApprovalStatus[]).map((status) => {
@@ -166,13 +192,9 @@ const ObjectiveItemCard: React.FC<{
                   return (
                     <Button
                       key={status}
-                      variant={isActive ? "default" : "ghost"}
+                      variant={isActive ? 'default' : 'ghost'}
                       size="sm"
-                      className={cn(
-                        "h-7 px-2",
-                        isActive && cfg.bgColor,
-                        isActive && cfg.color
-                      )}
+                      className={cn('h-7 px-2', isActive && cfg.bgColor, isActive && cfg.color)}
                       onClick={() => onStatusChange(status)}
                     >
                       <Icon name={cfg.icon} size="size-3" className="mr-1" />
@@ -183,7 +205,7 @@ const ObjectiveItemCard: React.FC<{
               </div>
 
               {/* Actions */}
-              <div className="flex gap-1 ml-auto">
+              <div className="ml-auto flex gap-1">
                 {onRegenerate && (
                   <Button
                     variant="ghost"
@@ -192,7 +214,11 @@ const ObjectiveItemCard: React.FC<{
                     onClick={onRegenerate}
                     disabled={isRegenerating}
                   >
-                    <Icon name={isRegenerating ? "spinner" : "refresh"} size="size-3" className={cn(isRegenerating && "animate-spin")} />
+                    <Icon
+                      name={isRegenerating ? 'spinner' : 'refresh'}
+                      size="size-3"
+                      className={cn(isRegenerating && 'animate-spin')}
+                    />
                   </Button>
                 )}
                 {onDelete && (
@@ -222,7 +248,7 @@ export const ObjectivesSection: React.FC<ObjectivesSectionProps> = ({
   content,
   briefProblem,
   briefSolution,
-  onUpdate
+  onUpdate,
 }) => {
   const { generate, isGenerating, progress } = usePRDAI();
   const [objectives, setObjectives] = useState<ObjectivesContent>(content || EMPTY_CONTENT);
@@ -236,9 +262,10 @@ export const ObjectivesSection: React.FC<ObjectivesSectionProps> = ({
   // Generate objectives
   const handleGenerate = useCallback(async () => {
     try {
-      const prompt = OBJECTIVES_PROMPT
-        .replace('{problem}', briefProblem)
-        .replace('{solution}', briefSolution);
+      const prompt = OBJECTIVES_PROMPT.replace('{problem}', briefProblem).replace(
+        '{solution}',
+        briefSolution
+      );
 
       const result = await generate(prompt, {
         systemPrompt: OBJECTIVES_SYSTEM,
@@ -266,71 +293,89 @@ export const ObjectivesSection: React.FC<ObjectivesSectionProps> = ({
   }, [briefProblem, briefSolution, generate, onUpdate]);
 
   // Update handlers
-  const handleUpdateMain = useCallback(async (text: string) => {
-    const updated = { ...objectives, mainObjective: text };
-    setObjectives(updated);
-    await onUpdate(updated);
-  }, [objectives, onUpdate]);
+  const handleUpdateMain = useCallback(
+    async (text: string) => {
+      const updated = { ...objectives, mainObjective: text };
+      setObjectives(updated);
+      await onUpdate(updated);
+    },
+    [objectives, onUpdate]
+  );
 
-  const handleUpdateSecondary = useCallback(async (index: number, text: string) => {
-    const updated = {
-      ...objectives,
-      secondaryObjectives: objectives.secondaryObjectives.map((o, i) => i === index ? text : o)
-    };
-    setObjectives(updated);
-    await onUpdate(updated);
-  }, [objectives, onUpdate]);
+  const handleUpdateSecondary = useCallback(
+    async (index: number, text: string) => {
+      const updated = {
+        ...objectives,
+        secondaryObjectives: objectives.secondaryObjectives.map((o, i) => (i === index ? text : o)),
+      };
+      setObjectives(updated);
+      await onUpdate(updated);
+    },
+    [objectives, onUpdate]
+  );
 
-  const handleDeleteSecondary = useCallback(async (index: number) => {
-    const updated = {
-      ...objectives,
-      secondaryObjectives: objectives.secondaryObjectives.filter((_, i) => i !== index)
-    };
-    setObjectives(updated);
-    await onUpdate(updated);
-  }, [objectives, onUpdate]);
+  const handleDeleteSecondary = useCallback(
+    async (index: number) => {
+      const updated = {
+        ...objectives,
+        secondaryObjectives: objectives.secondaryObjectives.filter((_, i) => i !== index),
+      };
+      setObjectives(updated);
+      await onUpdate(updated);
+    },
+    [objectives, onUpdate]
+  );
 
   const handleAddSecondary = useCallback(async () => {
     const updated = {
       ...objectives,
-      secondaryObjectives: [...objectives.secondaryObjectives, '']
+      secondaryObjectives: [...objectives.secondaryObjectives, ''],
     };
     setObjectives(updated);
     await onUpdate(updated);
   }, [objectives, onUpdate]);
 
-  const handleUpdateNon = useCallback(async (index: number, text: string) => {
-    const updated = {
-      ...objectives,
-      nonObjectives: objectives.nonObjectives.map((o, i) => i === index ? text : o)
-    };
-    setObjectives(updated);
-    await onUpdate(updated);
-  }, [objectives, onUpdate]);
+  const handleUpdateNon = useCallback(
+    async (index: number, text: string) => {
+      const updated = {
+        ...objectives,
+        nonObjectives: objectives.nonObjectives.map((o, i) => (i === index ? text : o)),
+      };
+      setObjectives(updated);
+      await onUpdate(updated);
+    },
+    [objectives, onUpdate]
+  );
 
-  const handleDeleteNon = useCallback(async (index: number) => {
-    const updated = {
-      ...objectives,
-      nonObjectives: objectives.nonObjectives.filter((_, i) => i !== index)
-    };
-    setObjectives(updated);
-    await onUpdate(updated);
-  }, [objectives, onUpdate]);
+  const handleDeleteNon = useCallback(
+    async (index: number) => {
+      const updated = {
+        ...objectives,
+        nonObjectives: objectives.nonObjectives.filter((_, i) => i !== index),
+      };
+      setObjectives(updated);
+      await onUpdate(updated);
+    },
+    [objectives, onUpdate]
+  );
 
   const handleAddNon = useCallback(async () => {
     const updated = {
       ...objectives,
-      nonObjectives: [...objectives.nonObjectives, '']
+      nonObjectives: [...objectives.nonObjectives, ''],
     };
     setObjectives(updated);
     await onUpdate(updated);
   }, [objectives, onUpdate]);
 
-  const handleUpdateNotes = useCallback(async (notes: string) => {
-    const updated = { ...objectives, notes };
-    setObjectives(updated);
-    await onUpdate(updated);
-  }, [objectives, onUpdate]);
+  const handleUpdateNotes = useCallback(
+    async (notes: string) => {
+      const updated = { ...objectives, notes };
+      setObjectives(updated);
+      await onUpdate(updated);
+    },
+    [objectives, onUpdate]
+  );
 
   const hasContent = objectives.mainObjective || objectives.secondaryObjectives.length > 0;
 
@@ -339,11 +384,11 @@ export const ObjectivesSection: React.FC<ObjectivesSectionProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="font-bold text-lg flex items-center gap-2">
+          <h3 className="flex items-center gap-2 text-lg font-bold">
             <Icon name="bullseye" style={{ color: PRD_PRIMARY }} />
             Objetivos do Projeto
           </h3>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="mt-1 text-sm text-muted-foreground">
             Defina o que o projeto deve alcançar e o que não faz parte do escopo
           </p>
         </div>
@@ -359,13 +404,13 @@ export const ObjectivesSection: React.FC<ObjectivesSectionProps> = ({
       {!hasContent && !isGenerating && (
         <Card className="p-8 text-center">
           <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3"
+            className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl"
             style={{ backgroundColor: `${PRD_PRIMARY}20` }}
           >
             <Icon name="bullseye" size="size-6" style={{ color: PRD_PRIMARY }} />
           </div>
-          <h4 className="font-bold mb-2">Gerar Objetivos</h4>
-          <p className="text-sm text-muted-foreground mb-4">
+          <h4 className="mb-2 font-bold">Gerar Objetivos</h4>
+          <p className="mb-4 text-sm text-muted-foreground">
             A IA vai definir objetivos baseados no brief
           </p>
           <Button onClick={handleGenerate} style={{ backgroundColor: PRD_PRIMARY }}>
@@ -378,7 +423,11 @@ export const ObjectivesSection: React.FC<ObjectivesSectionProps> = ({
       {/* Loading */}
       {isGenerating && !hasContent && (
         <Card className="p-8 text-center">
-          <Icon name="spinner" className="animate-spin mx-auto size-8 mb-3" style={{ color: PRD_PRIMARY }} />
+          <Icon
+            name="spinner"
+            className="mx-auto mb-3 size-8 animate-spin"
+            style={{ color: PRD_PRIMARY }}
+          />
           <p className="text-sm text-muted-foreground">Gerando objetivos...</p>
         </Card>
       )}
@@ -388,7 +437,7 @@ export const ObjectivesSection: React.FC<ObjectivesSectionProps> = ({
         <div className="space-y-6">
           {/* Main Objective */}
           <div>
-            <h4 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">
+            <h4 className="mb-3 text-sm font-medium uppercase tracking-wider text-muted-foreground">
               Objetivo Principal
             </h4>
             <ObjectiveItemCard
@@ -401,8 +450,8 @@ export const ObjectivesSection: React.FC<ObjectivesSectionProps> = ({
 
           {/* Secondary Objectives */}
           <div>
-            <div className="flex items-center justify-between mb-3">
-              <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+            <div className="mb-3 flex items-center justify-between">
+              <h4 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
                 Objetivos Secundários
               </h4>
               <Button variant="ghost" size="sm" onClick={handleAddSecondary}>
@@ -417,11 +466,13 @@ export const ObjectivesSection: React.FC<ObjectivesSectionProps> = ({
                   item={{
                     id: `secondary-${index}`,
                     text: obj,
-                    status: secondaryStatuses[index] || 'pending'
+                    status: secondaryStatuses[index] || 'pending',
                   }}
                   type="secondary"
                   onUpdate={(text) => handleUpdateSecondary(index, text)}
-                  onStatusChange={(status) => setSecondaryStatuses(prev => ({ ...prev, [index]: status }))}
+                  onStatusChange={(status) =>
+                    setSecondaryStatuses((prev) => ({ ...prev, [index]: status }))
+                  }
                   onDelete={() => handleDeleteSecondary(index)}
                 />
               ))}
@@ -430,8 +481,8 @@ export const ObjectivesSection: React.FC<ObjectivesSectionProps> = ({
 
           {/* Non-Objectives */}
           <div>
-            <div className="flex items-center justify-between mb-3">
-              <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+            <div className="mb-3 flex items-center justify-between">
+              <h4 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
                 Não-Objetivos (Fora do Escopo)
               </h4>
               <Button variant="ghost" size="sm" onClick={handleAddNon}>
@@ -446,11 +497,13 @@ export const ObjectivesSection: React.FC<ObjectivesSectionProps> = ({
                   item={{
                     id: `non-${index}`,
                     text: obj,
-                    status: nonStatuses[index] || 'pending'
+                    status: nonStatuses[index] || 'pending',
                   }}
                   type="non"
                   onUpdate={(text) => handleUpdateNon(index, text)}
-                  onStatusChange={(status) => setNonStatuses(prev => ({ ...prev, [index]: status }))}
+                  onStatusChange={(status) =>
+                    setNonStatuses((prev) => ({ ...prev, [index]: status }))
+                  }
                   onDelete={() => handleDeleteNon(index)}
                 />
               ))}
@@ -459,7 +512,7 @@ export const ObjectivesSection: React.FC<ObjectivesSectionProps> = ({
 
           {/* Notes */}
           <div>
-            <h4 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">
+            <h4 className="mb-3 text-sm font-medium uppercase tracking-wider text-muted-foreground">
               Notas e Feedback
             </h4>
             <Textarea

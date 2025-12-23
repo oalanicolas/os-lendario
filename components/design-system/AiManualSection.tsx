@@ -95,192 +95,250 @@ Assume the existence of these components in 'components/ui':
 - Always include "use client" if using hooks.`;
 
   return (
-    <div className="space-y-12 animate-fade-in">
-      
+    <div className="animate-fade-in space-y-12">
       {/* Visual Header */}
-      <div className="relative rounded-2xl overflow-hidden bg-card border border-border">
-          <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
-              <Symbol name="infinity" className="text-[12rem] rotate-12" />
+      <div className="relative overflow-hidden rounded-2xl border border-border bg-card">
+        <div className="pointer-events-none absolute right-0 top-0 p-12 opacity-5">
+          <Symbol name="infinity" className="rotate-12 text-[12rem]" />
+        </div>
+        <div className="relative z-10 space-y-6 p-8 md:p-12">
+          <div className="flex items-center gap-3">
+            <Badge
+              variant="outline"
+              className="border-primary/50 bg-background/50 text-primary backdrop-blur-sm"
+            >
+              AI First Development
+            </Badge>
+            <span className="font-mono text-xs text-muted-foreground">v4.1</span>
           </div>
-          <div className="relative z-10 p-8 md:p-12 space-y-6">
-              <div className="flex items-center gap-3">
-                  <Badge variant="outline" className="bg-background/50 backdrop-blur-sm border-primary/50 text-primary">AI First Development</Badge>
-                  <span className="text-xs font-mono text-muted-foreground">v4.1</span>
-              </div>
-              <h2 className="text-4xl md:text-6xl font-sans font-bold tracking-tight max-w-4xl">
-                Manual de Integração <span className="text-primary">IA</span>.
-              </h2>
-              <p className="font-serif text-xl text-muted-foreground max-w-3xl leading-relaxed">
-                  Configurações otimizadas para <strong>Cursor, Claude Code, Lovable e Google AI Studio</strong>.
-                  <br/>
-                  Copie os contextos abaixo para garantir que sua IA gere interfaces fiéis ao padrão da Academia Lendária.
-              </p>
-          </div>
-          {/* Gradient Line */}
-          <div className="h-1 w-full bg-gradient-to-r from-primary via-background to-primary/20"></div>
+          <h2 className="max-w-4xl font-sans text-4xl font-bold tracking-tight md:text-6xl">
+            Manual de Integração <span className="text-primary">IA</span>.
+          </h2>
+          <p className="max-w-3xl font-serif text-xl leading-relaxed text-muted-foreground">
+            Configurações otimizadas para{' '}
+            <strong>Cursor, Claude Code, Lovable e Google AI Studio</strong>.
+            <br />
+            Copie os contextos abaixo para garantir que sua IA gere interfaces fiéis ao padrão da
+            Academia Lendária.
+          </p>
+        </div>
+        {/* Gradient Line */}
+        <div className="h-1 w-full bg-gradient-to-r from-primary via-background to-primary/20"></div>
       </div>
 
       {/* Main Content */}
       <Tabs defaultValue="cursor" className="w-full">
-        <TabsList className="mb-8 flex-wrap h-auto gap-2 bg-transparent p-0 border-b border-border w-full justify-start rounded-none">
-            <TabsTrigger value="cursor" className="rounded-t-lg rounded-b-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-muted/50 px-6 py-3">
-                <Icon name="terminal" className="mr-2 size-4" /> Cursor Rules (.cursorrules)
-            </TabsTrigger>
-            <TabsTrigger value="aistudio" className="rounded-t-lg rounded-b-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-muted/50 px-6 py-3">
-                <Icon name="brain-circuit" className="mr-2 size-4" /> AI Studio & Claude
-            </TabsTrigger>
-            <TabsTrigger value="lovable" className="rounded-t-lg rounded-b-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-muted/50 px-6 py-3">
-                <Icon name="magic-wand" className="mr-2 size-4" /> Lovable & Visual
-            </TabsTrigger>
-             <TabsTrigger value="prompts" className="rounded-t-lg rounded-b-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-muted/50 px-6 py-3">
-                <Icon name="comment-alt-middle" className="mr-2 size-4" /> Engenharia de Prompt
-            </TabsTrigger>
+        <TabsList className="mb-8 h-auto w-full flex-wrap justify-start gap-2 rounded-none border-b border-border bg-transparent p-0">
+          <TabsTrigger
+            value="cursor"
+            className="rounded-b-none rounded-t-lg border-b-2 border-transparent px-6 py-3 data-[state=active]:border-primary data-[state=active]:bg-muted/50"
+          >
+            <Icon name="terminal" className="mr-2 size-4" /> Cursor Rules (.cursorrules)
+          </TabsTrigger>
+          <TabsTrigger
+            value="aistudio"
+            className="rounded-b-none rounded-t-lg border-b-2 border-transparent px-6 py-3 data-[state=active]:border-primary data-[state=active]:bg-muted/50"
+          >
+            <Icon name="brain-circuit" className="mr-2 size-4" /> AI Studio & Claude
+          </TabsTrigger>
+          <TabsTrigger
+            value="lovable"
+            className="rounded-b-none rounded-t-lg border-b-2 border-transparent px-6 py-3 data-[state=active]:border-primary data-[state=active]:bg-muted/50"
+          >
+            <Icon name="magic-wand" className="mr-2 size-4" /> Lovable & Visual
+          </TabsTrigger>
+          <TabsTrigger
+            value="prompts"
+            className="rounded-b-none rounded-t-lg border-b-2 border-transparent px-6 py-3 data-[state=active]:border-primary data-[state=active]:bg-muted/50"
+          >
+            <Icon name="comment-alt-middle" className="mr-2 size-4" /> Engenharia de Prompt
+          </TabsTrigger>
         </TabsList>
 
         {/* --- ABA CURSOR RULES --- */}
-        <TabsContent value="cursor" className="space-y-8 animate-fade-in">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 space-y-6">
-                    <div className="space-y-4">
-                        <h3 className="text-2xl font-bold font-sans flex items-center gap-2">
-                             Arquivo .cursorrules
-                        </h3>
-                        <p className="text-muted-foreground font-serif">
-                            Crie um arquivo chamado <code className="bg-muted px-1 py-0.5 rounded font-mono text-xs">.cursorrules</code> na raiz do seu projeto e cole o conteúdo abaixo. O Cursor lerá isso automaticamente em todos os prompts.
-                        </p>
-                    </div>
+        <TabsContent value="cursor" className="animate-fade-in space-y-8">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <div className="space-y-6 lg:col-span-2">
+              <div className="space-y-4">
+                <h3 className="flex items-center gap-2 font-sans text-2xl font-bold">
+                  Arquivo .cursorrules
+                </h3>
+                <p className="font-serif text-muted-foreground">
+                  Crie um arquivo chamado{' '}
+                  <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">
+                    .cursorrules
+                  </code>{' '}
+                  na raiz do seu projeto e cole o conteúdo abaixo. O Cursor lerá isso
+                  automaticamente em todos os prompts.
+                </p>
+              </div>
 
-                    <CodeBlock title=".cursorrules" language="bash">
-                        {cursorRulesContent}
-                    </CodeBlock>
-                </div>
-
-                <div className="space-y-6">
-                     <Card className="bg-primary/5 border-primary/20">
-                        <CardHeader>
-                            <CardTitle className="text-lg flex items-center gap-2">
-                                <Icon name="bolt" /> Por que usar .cursorrules?
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="text-sm font-serif space-y-4 text-muted-foreground">
-                            <p>
-                                O Cursor usa esse arquivo para "calibrar" o modelo. Isso evita que ele sugira bibliotecas que não usamos (como Heroicons) ou cores fora da paleta (como botões azuis padrão).
-                            </p>
-                            <p>
-                                Com isso, cada `Command+K` ou `Chat` já sabe que existe um componente <code>&lt;Icon /&gt;</code> e uma fonte Serif específica.
-                            </p>
-                        </CardContent>
-                     </Card>
-                </div>
+              <CodeBlock title=".cursorrules" language="bash">
+                {cursorRulesContent}
+              </CodeBlock>
             </div>
+
+            <div className="space-y-6">
+              <Card className="border-primary/20 bg-primary/5">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <Icon name="bolt" /> Por que usar .cursorrules?
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 font-serif text-sm text-muted-foreground">
+                  <p>
+                    O Cursor usa esse arquivo para "calibrar" o modelo. Isso evita que ele sugira
+                    bibliotecas que não usamos (como Heroicons) ou cores fora da paleta (como botões
+                    azuis padrão).
+                  </p>
+                  <p>
+                    Com isso, cada `Command+K` ou `Chat` já sabe que existe um componente{' '}
+                    <code>&lt;Icon /&gt;</code> e uma fonte Serif específica.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* --- ABA AI STUDIO / CLAUDE --- */}
-        <TabsContent value="aistudio" className="space-y-8 animate-fade-in">
-             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 space-y-6">
-                    <div className="space-y-4">
-                        <h3 className="text-2xl font-bold font-sans flex items-center gap-2">
-                             System Instruction
-                        </h3>
-                        <p className="text-muted-foreground font-serif">
-                            Ao usar o <strong>Google AI Studio</strong> ou iniciar um projeto no <strong>Claude Code</strong>, cole este texto no campo "System Instructions" ou no primeiro prompt.
-                        </p>
-                    </div>
+        <TabsContent value="aistudio" className="animate-fade-in space-y-8">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <div className="space-y-6 lg:col-span-2">
+              <div className="space-y-4">
+                <h3 className="flex items-center gap-2 font-sans text-2xl font-bold">
+                  System Instruction
+                </h3>
+                <p className="font-serif text-muted-foreground">
+                  Ao usar o <strong>Google AI Studio</strong> ou iniciar um projeto no{' '}
+                  <strong>Claude Code</strong>, cole este texto no campo "System Instructions" ou no
+                  primeiro prompt.
+                </p>
+              </div>
 
-                    <CodeBlock title="System Prompt" language="bash">
-                        {systemPromptContent}
-                    </CodeBlock>
-                </div>
-             </div>
+              <CodeBlock title="System Prompt" language="bash">
+                {systemPromptContent}
+              </CodeBlock>
+            </div>
+          </div>
         </TabsContent>
 
         {/* --- ABA LOVABLE / VISUAL --- */}
-        <TabsContent value="lovable" className="space-y-8 animate-fade-in">
-            <div className="flex flex-col md:flex-row gap-8">
-                 <div className="flex-1 space-y-6">
-                     <div>
-                        <h3 className="text-2xl font-bold font-sans">Ferramentas Visuais (Lovable, V0)</h3>
-                        <p className="text-muted-foreground font-serif mt-2">
-                            Ferramentas como Lovable leem o repositório. O segredo é instruí-las a <strong>reutilizar</strong> em vez de recriar.
-                        </p>
-                     </div>
+        <TabsContent value="lovable" className="animate-fade-in space-y-8">
+          <div className="flex flex-col gap-8 md:flex-row">
+            <div className="flex-1 space-y-6">
+              <div>
+                <h3 className="font-sans text-2xl font-bold">Ferramentas Visuais (Lovable, V0)</h3>
+                <p className="mt-2 font-serif text-muted-foreground">
+                  Ferramentas como Lovable leem o repositório. O segredo é instruí-las a{' '}
+                  <strong>reutilizar</strong> em vez de recriar.
+                </p>
+              </div>
 
-                     <Card className="border-l-4 border-l-brand-blue">
-                         <CardHeader>
-                             <CardTitle>Prompt para Lovable</CardTitle>
-                         </CardHeader>
-                         <CardContent>
-                             <p className="font-mono text-sm bg-muted p-4 rounded-lg">
-                                 "I want to create a new Dashboard page. Please check the `components/ui` folder and use the existing Card, Button, and Badge components. Do not create new CSS styles, use the Tailwind variables defined in global.css (like var(--primary)). Use the {'<Icon>'} component for icons."
-                             </p>
-                         </CardContent>
-                     </Card>
+              <Card className="border-l-4 border-l-brand-blue">
+                <CardHeader>
+                  <CardTitle>Prompt para Lovable</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="rounded-lg bg-muted p-4 font-mono text-sm">
+                    "I want to create a new Dashboard page. Please check the `components/ui` folder
+                    and use the existing Card, Button, and Badge components. Do not create new CSS
+                    styles, use the Tailwind variables defined in global.css (like var(--primary)).
+                    Use the {'<Icon>'} component for icons."
+                  </p>
+                </CardContent>
+              </Card>
 
-                     <div className="space-y-4">
-                         <h4 className="font-bold">O que verificar no Output Visual:</h4>
-                         <ul className="space-y-2 text-sm text-muted-foreground">
-                             <li className="flex items-center gap-2"><Icon name="check" size="size-3" className="text-green-500" /> Se os botões estão usando a classe <code>bg-primary</code> (Gold) e não um amarelo genérico.</li>
-                             <li className="flex items-center gap-2"><Icon name="check" size="size-3" className="text-green-500" /> Se a fonte serifada está sendo usada nos parágrafos (<code>font-serif</code>).</li>
-                             <li className="flex items-center gap-2"><Icon name="check" size="size-3" className="text-green-500" /> Se o arredondamento dos cards é <code>rounded-xl</code>.</li>
-                         </ul>
-                     </div>
-                 </div>
-             </div>
+              <div className="space-y-4">
+                <h4 className="font-bold">O que verificar no Output Visual:</h4>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-center gap-2">
+                    <Icon name="check" size="size-3" className="text-green-500" /> Se os botões
+                    estão usando a classe <code>bg-primary</code> (Gold) e não um amarelo genérico.
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Icon name="check" size="size-3" className="text-green-500" /> Se a fonte
+                    serifada está sendo usada nos parágrafos (<code>font-serif</code>).
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Icon name="check" size="size-3" className="text-green-500" /> Se o
+                    arredondamento dos cards é <code>rounded-xl</code>.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </TabsContent>
 
         {/* --- ABA ENGENHARIA DE PROMPT --- */}
-        <TabsContent value="prompts" className="space-y-8 animate-fade-in">
-             <div className="space-y-6">
-                <div className="flex flex-col md:flex-row gap-4 justify-between items-start">
-                    <div>
-                        <h3 className="text-2xl font-bold font-sans">Como pedir Componentes</h3>
-                        <p className="text-muted-foreground font-serif">Exemplos de inputs para obter resultados "Lendários".</p>
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* BAD EXAMPLE */}
-                    <Card className="border-destructive/30 bg-destructive/5">
-                        <CardHeader>
-                            <Badge variant="destructive" className="w-fit mb-2">Jeito Medíocre</Badge>
-                            <CardTitle className="text-lg">O Pedido Vago</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="p-3 bg-background rounded border border-border/50 text-sm font-mono text-muted-foreground">
-                                "Crie um card de perfil para mim."
-                            </div>
-                            <div className="space-y-2 text-sm text-destructive font-medium">
-                                <p className="flex items-center gap-2"><Icon name="cross" size="size-3" /> A IA vai escolher cores aleatórias.</p>
-                                <p className="flex items-center gap-2"><Icon name="cross" size="size-3" /> Vai usar fontes padrão (Arial/Roboto).</p>
-                                <p className="flex items-center gap-2"><Icon name="cross" size="size-3" /> Provavelmente ficará feio.</p>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    {/* GOOD EXAMPLE */}
-                    <Card className="border-primary/30 bg-primary/5">
-                        <CardHeader>
-                            <Badge className="w-fit mb-2 bg-primary text-primary-foreground">Jeito Lendário</Badge>
-                            <CardTitle className="text-lg">O Pedido Contextual</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="p-3 bg-background rounded border border-border/50 text-sm font-mono text-muted-foreground">
-                                "Crie um Card de Perfil seguindo o Design System. Use uma imagem redonda, nome em Inter Bold, bio em Source Serif e um botão outline 'Ver Detalhes'."
-                            </div>
-                            <div className="space-y-2 text-sm text-primary font-medium">
-                                <p className="flex items-center gap-2"><Icon name="check" size="size-3" /> Segue a tipografia mista.</p>
-                                <p className="flex items-center gap-2"><Icon name="check" size="size-3" /> Usa as variantes corretas de botão.</p>
-                                <p className="flex items-center gap-2"><Icon name="check" size="size-3" /> Mantém a consistência visual.</p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
+        <TabsContent value="prompts" className="animate-fade-in space-y-8">
+          <div className="space-y-6">
+            <div className="flex flex-col items-start justify-between gap-4 md:flex-row">
+              <div>
+                <h3 className="font-sans text-2xl font-bold">Como pedir Componentes</h3>
+                <p className="font-serif text-muted-foreground">
+                  Exemplos de inputs para obter resultados "Lendários".
+                </p>
+              </div>
             </div>
+
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+              {/* BAD EXAMPLE */}
+              <Card className="border-destructive/30 bg-destructive/5">
+                <CardHeader>
+                  <Badge variant="destructive" className="mb-2 w-fit">
+                    Jeito Medíocre
+                  </Badge>
+                  <CardTitle className="text-lg">O Pedido Vago</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="rounded border border-border/50 bg-background p-3 font-mono text-sm text-muted-foreground">
+                    "Crie um card de perfil para mim."
+                  </div>
+                  <div className="space-y-2 text-sm font-medium text-destructive">
+                    <p className="flex items-center gap-2">
+                      <Icon name="cross" size="size-3" /> A IA vai escolher cores aleatórias.
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <Icon name="cross" size="size-3" /> Vai usar fontes padrão (Arial/Roboto).
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <Icon name="cross" size="size-3" /> Provavelmente ficará feio.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* GOOD EXAMPLE */}
+              <Card className="border-primary/30 bg-primary/5">
+                <CardHeader>
+                  <Badge className="mb-2 w-fit bg-primary text-primary-foreground">
+                    Jeito Lendário
+                  </Badge>
+                  <CardTitle className="text-lg">O Pedido Contextual</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="rounded border border-border/50 bg-background p-3 font-mono text-sm text-muted-foreground">
+                    "Crie um Card de Perfil seguindo o Design System. Use uma imagem redonda, nome
+                    em Inter Bold, bio em Source Serif e um botão outline 'Ver Detalhes'."
+                  </div>
+                  <div className="space-y-2 text-sm font-medium text-primary">
+                    <p className="flex items-center gap-2">
+                      <Icon name="check" size="size-3" /> Segue a tipografia mista.
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <Icon name="check" size="size-3" /> Usa as variantes corretas de botão.
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <Icon name="check" size="size-3" /> Mantém a consistência visual.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </TabsContent>
-
       </Tabs>
-
     </div>
   );
 };

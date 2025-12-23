@@ -1,5 +1,5 @@
-import React from "react"
-import { cn } from "../../lib/utils"
+import React from 'react';
+import { cn } from '../../lib/utils';
 
 interface SliderProps extends React.InputHTMLAttributes<HTMLInputElement> {
   min?: number;
@@ -17,14 +17,14 @@ const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
         step={step}
         ref={ref}
         className={cn(
-          "w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary",
+          'h-2 w-full cursor-pointer appearance-none rounded-lg bg-secondary accent-primary',
           className
         )}
         {...props}
       />
-    )
+    );
   }
-)
-Slider.displayName = "Slider"
+);
+Slider.displayName = 'Slider';
 
-export { Slider }
+export { Slider };

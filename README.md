@@ -47,6 +47,7 @@ src/
 ## 🚀 Instalação & Setup
 
 ### Pré-requisitos
+
 - Node.js 18+
 - npm ou yarn
 
@@ -62,6 +63,26 @@ npm run dev
 
 A aplicação estará disponível em `http://localhost:5173`.
 
+### Code Quality Scripts
+
+Mantemos altos padrões de qualidade de código com ESLint, Prettier e Husky:
+
+```bash
+# Executar linting (requer 0 erros)
+npm run lint
+
+# Auto-corrigir erros de linting
+npm run lint:fix
+
+# Formatar código com Prettier
+npm run format
+
+# Validação de tipos TypeScript
+npm run typecheck
+```
+
+**Importante:** O pre-commit hook (Git Husky) executa automaticamente linting e formatting antes de permitir commits. Isso garante que todo código mesclado ao repositório esteja em conformidade com os padrões do projeto.
+
 ---
 
 ## 🎨 Fundamentos de Design
@@ -69,20 +90,23 @@ A aplicação estará disponível em `http://localhost:5173`.
 O sistema utiliza **CSS Variables** nativas para permitir troca de temas em tempo de real (Runtime Theming) sem recompilação do Tailwind.
 
 ### 1. Cores Semânticas
+
 Não use cores hexadecimais hardcoded. Use as variáveis semânticas para garantir compatibilidade com **Dark Mode**.
 
-| Token | Uso | Exemplo |
-|-------|-----|---------|
-| `bg-background` | Fundo da página | Branco / Preto Absoluto |
-| `bg-card` | Contêineres e Painéis | Branco / Cinza Escuro |
-| `bg-primary` | Ações Principais | **Gold (#C9B298)** |
-| `text-muted-foreground` | Texto Secundário | Cinza Médio |
-| `border-border` | Bordas sutis | Cinza Claro / Cinza Escuro |
+| Token                   | Uso                   | Exemplo                    |
+| ----------------------- | --------------------- | -------------------------- |
+| `bg-background`         | Fundo da página       | Branco / Preto Absoluto    |
+| `bg-card`               | Contêineres e Painéis | Branco / Cinza Escuro      |
+| `bg-primary`            | Ações Principais      | **Gold (#C9B298)**         |
+| `text-muted-foreground` | Texto Secundário      | Cinza Médio                |
+| `border-border`         | Bordas sutis          | Cinza Claro / Cinza Escuro |
 
 ### 2. A Regra dos 8%
+
 A cor primária (Gold/Marca) deve ocupar no máximo **8%** da interface. O restante deve ser monocromático, focado em tipografia e espaçamento.
 
 ### 3. Tipografia
+
 - **Inter (Sans-serif):** Títulos, Botões, UI Controls.
 - **Source Serif 4 (Serif):** Corpo de texto, parágrafos longos, citações.
 
@@ -93,6 +117,7 @@ A cor primária (Gold/Marca) deve ocupar no máximo **8%** da interface. O resta
 Abaixo estão os exemplos de uso dos componentes core.
 
 ### Botões (`Button`)
+
 ```tsx
 import { Button } from '@/components/ui/button';
 
@@ -107,19 +132,21 @@ import { Button } from '@/components/ui/button';
 ```
 
 ### Ícones (`Icon`)
-NÃO use bibliotecas externas diretamente. Use o wrapper proprietário que mapeia para *Flaticon UIcons*.
+
+NÃO use bibliotecas externas diretamente. Use o wrapper proprietário que mapeia para _Flaticon UIcons_.
 
 ```tsx
 import { Icon } from '@/components/ui/icon';
 
 // Correto
-<Icon name="home" size="size-5" />
+<Icon name="home" size="size-5" />;
 
 // Errado
 import { Home } from 'lucide-react'; // X
 ```
 
 ### Cards (`Card`)
+
 ```tsx
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
@@ -130,7 +157,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
   <CardContent>
     <p>Conteúdo aqui...</p>
   </CardContent>
-</Card>
+</Card>;
 ```
 
 ---
@@ -140,12 +167,15 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 Este Design System foi construído para ser "falado" por LLMs (Cursor, Claude, GPT).
 
 ### Prompt System (Contexto)
+
 Ao pedir para uma IA criar uma nova tela, forneça o seguinte contexto:
 
 > "Use o Academia Lendária Design System. Utilize componentes de 'components/ui'. Use a função 'cn()' para classes. Siga a regra de 8% de cor. Fontes: Inter para UI, Source Serif 4 para texto. Use o componente <Icon name='...' /> para ícones."
 
 ### Arquivo `.cursorrules`
+
 Existe um arquivo de regras na raiz que instrui o editor Cursor a:
+
 1. Preferir `components/ui` ao invés de criar novos.
 2. Usar TailwindCSS para estilização.
 3. Manter a estética "Lendária" (Minimalismo de Luxo).
@@ -155,9 +185,10 @@ Existe um arquivo de regras na raiz que instrui o editor Cursor a:
 ## 📏 Convenções de Código
 
 1. **Utilitário `cn()`**: Sempre use `cn()` para classes condicionais.
+
    ```tsx
    // Correto
-   <div className={cn("p-4", isActive && "bg-primary")} />
+   <div className={cn('p-4', isActive && 'bg-primary')} />
    ```
 
 2. **Exports**: Use Named Exports para componentes (`export function Button...`).
@@ -166,6 +197,95 @@ Existe um arquivo de regras na raiz que instrui o editor Cursor a:
    ```tsx
    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
    ```
+
+---
+
+## 🔒 TypeScript Strict Mode
+
+Todos os arquivos TypeScript do projeto devem passar em `npm run typecheck` com **zero erros**. O projeto utiliza `"strict": true` no `tsconfig.json`, que ativa todas as 10 regras de verificação rigorosa.
+
+### Regras Principais
+
+1. **Always type function parameters and returns**
+
+   ```typescript
+   // ❌ Errado
+   const add = (a, b) => a + b;
+
+   // ✅ Correto
+   const add = (a: number, b: number): number => a + b;
+   ```
+
+2. **Use interfaces for React component props**
+
+   ```typescript
+   interface ButtonProps {
+     variant?: 'primary' | 'secondary';
+     size?: 'sm' | 'md' | 'lg';
+     disabled?: boolean;
+     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+     children: React.ReactNode;
+   }
+
+   export const Button = ({ variant = 'primary', ...props }: ButtonProps) => (
+     <button className={`btn btn-${variant}`} {...props} />
+   );
+   ```
+
+3. **Check for null/undefined before accessing properties**
+
+   ```typescript
+   // ❌ Errado - fails strictNullChecks
+   const name = user.name;
+
+   // ✅ Correto - optional chaining
+   const name = user?.name;
+
+   // ✅ Correto - nullish coalescing
+   const name = user?.name ?? 'Unknown';
+   ```
+
+4. **Never use `any` - use `unknown` instead**
+
+   ```typescript
+   // ❌ Errado
+   const data: any = fetchData();
+
+   // ✅ Correto - use type guards
+   const data: unknown = fetchData();
+   if (typeof data === 'string') {
+     // data is now typed as string
+   }
+   ```
+
+5. **Remove unused variables and parameters**
+
+   ```typescript
+   // ❌ Errado - noUnusedLocals catches this
+   const getUser = (id: string) => {
+     const unused = 'value';
+     return getUserById(id);
+   };
+
+   // ✅ Correto - remove or prefix with underscore
+   const getUser = (id: string) => getUserById(id);
+
+   // ✅ Correto - if intentionally unused
+   const handler = (_event: React.MouseEvent) => {
+     console.log('handled');
+   };
+   ```
+
+### Quando usar `@ts-nocheck`
+
+Para arquivos com problemas estruturais de tipo (deferred fixes), adicione `// @ts-nocheck` no topo do arquivo com um comentário explicando:
+
+```typescript
+// @ts-nocheck
+// TODO: Story 0.2.1 - Refactor Supabase type definitions
+// Database schema and application expectations are misaligned
+// This will be fixed in Story 0.2.1
+```
 
 ---
 

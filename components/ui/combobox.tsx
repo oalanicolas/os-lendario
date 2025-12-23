@@ -1,6 +1,6 @@
-import React, { useState } from "react"
-import { cn } from "../../lib/utils"
-import { Button } from "./button"
+import React, { useState } from 'react';
+import { cn } from '../../lib/utils';
+import { Button } from './button';
 import {
   Command,
   CommandEmpty,
@@ -8,11 +8,9 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "./command"
-import {
-  Popover,
-} from "./popover"
-import { Icon } from "./icon"
+} from './command';
+import { Popover } from './popover';
+import { Icon } from './icon';
 
 interface ComboboxProps {
   options: { value: string; label: string }[];
@@ -26,25 +24,25 @@ interface ComboboxProps {
 
 const Combobox: React.FC<ComboboxProps> = ({
   options,
-  placeholder = "Selecione...",
-  searchPlaceholder = "Buscar...",
-  emptyText = "Nenhum resultado.",
+  placeholder = 'Selecione...',
+  searchPlaceholder = 'Buscar...',
+  emptyText = 'Nenhum resultado.',
   value,
   onValueChange,
   className,
 }) => {
-  const [internalValue, setInternalValue] = useState("")
-  const currentValue = value !== undefined ? value : internalValue
-  const [open, setOpen] = useState(false)
+  const [internalValue, setInternalValue] = useState('');
+  const currentValue = value !== undefined ? value : internalValue;
+  const [open, setOpen] = useState(false);
 
   const handleSelect = (currentValue: string) => {
-    const newValue = currentValue === value ? "" : currentValue
-    if(onValueChange) onValueChange(newValue)
-    else setInternalValue(newValue)
-    setOpen(false)
-  }
+    const newValue = currentValue === value ? '' : currentValue;
+    if (onValueChange) onValueChange(newValue);
+    else setInternalValue(newValue);
+    setOpen(false);
+  };
 
-  const selectedLabel = options.find((option) => option.value === currentValue)?.label
+  const selectedLabel = options.find((option) => option.value === currentValue)?.label;
 
   return (
     <Popover
@@ -53,7 +51,11 @@ const Combobox: React.FC<ComboboxProps> = ({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn("w-full justify-between font-normal", !currentValue && "text-muted-foreground", className)}
+          className={cn(
+            'w-full justify-between font-normal',
+            !currentValue && 'text-muted-foreground',
+            className
+          )}
         >
           {selectedLabel || placeholder}
           <Icon name="angle-small-down" className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -66,15 +68,12 @@ const Combobox: React.FC<ComboboxProps> = ({
             <CommandEmpty>{emptyText}</CommandEmpty>
             <CommandGroup>
               {options.map((option) => (
-                <CommandItem
-                  key={option.value}
-                  onSelect={() => handleSelect(option.value)}
-                >
+                <CommandItem key={option.value} onSelect={() => handleSelect(option.value)}>
                   <Icon
                     name="check"
                     className={cn(
-                      "mr-2 h-4 w-4",
-                      currentValue === option.value ? "opacity-100" : "opacity-0"
+                      'mr-2 h-4 w-4',
+                      currentValue === option.value ? 'opacity-100' : 'opacity-0'
                     )}
                   />
                   {option.label}
@@ -87,7 +86,7 @@ const Combobox: React.FC<ComboboxProps> = ({
       className="w-[200px] p-0"
       align="start"
     />
-  )
-}
+  );
+};
 
-export { Combobox }
+export { Combobox };

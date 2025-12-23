@@ -54,17 +54,19 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 6, onComplete, className }
   };
 
   return (
-    <div className={cn("flex gap-2 justify-center", className)}>
+    <div className={cn('flex justify-center gap-2', className)}>
       {otp.map((value, index) => (
         <input
           key={index}
-          ref={(input) => {inputRefs.current[index] = input}}
+          ref={(input) => {
+            inputRefs.current[index] = input;
+          }}
           type="text"
           value={value}
           onChange={(e) => handleChange(index, e.target.value)}
           onClick={() => handleClick(index)}
           onKeyDown={(e) => handleKeyDown(index, e)}
-          className="w-10 h-12 text-center text-lg font-bold rounded-lg border border-input bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all font-mono"
+          className="h-12 w-10 rounded-lg border border-input bg-background text-center font-mono text-lg font-bold ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         />
       ))}
     </div>

@@ -4,14 +4,11 @@
  * - Removes entries from symlinks
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 import { lstat } from 'fs/promises';
 import { join } from 'path';
 
-const supabase = createClient(
-  process.env.VITE_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+const supabase = createClient(process.env.VITE_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 const OUTPUTS_DIR = '../outputs/minds';
 
@@ -60,7 +57,7 @@ async function main() {
     }
 
     // Check if symlink
-    if (mindSlug && await isSymlink(mindSlug, sourceFile)) {
+    if (mindSlug && (await isSymlink(mindSlug, sourceFile))) {
       console.log(`[SYMLINK] ${prompt.title} → DELETE`);
       toDelete.push(prompt.id);
       continue;
@@ -84,10 +81,7 @@ async function main() {
     console.log();
     console.log('Deleting duplicates...');
 
-    const { error: deleteError } = await supabase
-      .from('contents')
-      .delete()
-      .in('id', toDelete);
+    const { error: deleteError } = await supabase.from('contents').delete().in('id', toDelete);
 
     if (deleteError) {
       console.error('Error deleting:', deleteError);

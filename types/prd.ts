@@ -207,6 +207,10 @@ export interface PRDStory extends Omit<Content, 'metadata'> {
   metadata: StoryMetadata;
 }
 
+// Type aliases for backward compatibility
+export type EpicData = PRDEpic;
+export type StoryData = PRDStory;
+
 // Export from contents table
 export interface PRDExport extends Omit<Content, 'metadata'> {
   metadata: ExportMetadata;
@@ -273,8 +277,8 @@ export function transformToProject(raw: ContentProject): PRDProject {
   return {
     ...raw,
     project_metadata: (raw.project_metadata as unknown as PRDProjectMetadata) || {
-      prdType: 'project'
-    }
+      prdType: 'project',
+    },
   };
 }
 
@@ -285,8 +289,8 @@ export function transformToEpic(raw: Content): PRDEpic {
       objective: '',
       dependencies: [],
       acceptanceCriteria: [],
-      storiesCount: 0
-    }
+      storiesCount: 0,
+    },
   };
 }
 
@@ -297,7 +301,7 @@ export function transformToStory(raw: Content): PRDStory {
       acceptanceCriteria: [],
       complexity: 'M',
       dependencies: [],
-      isValidated: false
-    }
+      isValidated: false,
+    },
   };
 }

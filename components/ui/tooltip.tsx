@@ -1,6 +1,5 @@
-
-import React, { useState, createContext, useContext } from "react";
-import { cn } from "../../lib/utils";
+import React, { useState, createContext, useContext } from 'react';
+import { cn } from '../../lib/utils';
 
 interface TooltipProviderProps {
   children: React.ReactNode;
@@ -27,8 +26,8 @@ const Tooltip: React.FC<TooltipProps> = ({ children, className, ...props }) => {
 
   return (
     <TooltipContext.Provider value={{ isOpen, setIsOpen }}>
-      <div 
-        className={cn("relative inline-block", className)} 
+      <div
+        className={cn('relative inline-block', className)}
         onMouseEnter={() => setIsOpen(true)}
         onMouseLeave={() => setIsOpen(false)}
         {...props}
@@ -43,44 +42,54 @@ interface TooltipTriggerProps extends React.HTMLAttributes<HTMLDivElement> {
   asChild?: boolean;
 }
 
-const TooltipTrigger: React.FC<TooltipTriggerProps> = ({ children, className, asChild, ...props }) => {
+const TooltipTrigger: React.FC<TooltipTriggerProps> = ({
+  children,
+  className,
+  asChild,
+  ...props
+}) => {
   return (
-    <div className={cn("inline-block cursor-help", className)} {...props}>
+    <div className={cn('inline-block cursor-help', className)} {...props}>
       {children}
     </div>
   );
 };
 
 interface TooltipContentProps extends React.HTMLAttributes<HTMLDivElement> {
-  side?: "top" | "bottom" | "left" | "right";
+  side?: 'top' | 'bottom' | 'left' | 'right';
 }
 
-const TooltipContent: React.FC<TooltipContentProps> = ({ children, className, side = "top", ...props }) => {
+const TooltipContent: React.FC<TooltipContentProps> = ({
+  children,
+  className,
+  side = 'top',
+  ...props
+}) => {
   const context = useContext(TooltipContext);
-  
+
   if (!context?.isOpen) return null;
 
   return (
     <div
       className={cn(
-        "absolute z-50 px-3 py-1.5 text-xs rounded-md shadow-md pointer-events-none bg-foreground text-background font-sans font-semibold whitespace-nowrap",
-        "animate-in fade-in zoom-in-95 duration-200",
+        'pointer-events-none absolute z-50 whitespace-nowrap rounded-md bg-foreground px-3 py-1.5 font-sans text-xs font-semibold text-background shadow-md',
+        'animate-in fade-in zoom-in-95 duration-200',
         // Positioning logic
-        side === "top" && "bottom-full left-1/2 -translate-x-1/2 mb-2",
-        side === "bottom" && "top-full left-1/2 -translate-x-1/2 mt-2",
-        side === "left" && "right-full top-1/2 -translate-y-1/2 mr-2",
-        side === "right" && "left-full top-1/2 -translate-y-1/2 ml-2",
+        side === 'top' && 'bottom-full left-1/2 mb-2 -translate-x-1/2',
+        side === 'bottom' && 'left-1/2 top-full mt-2 -translate-x-1/2',
+        side === 'left' && 'right-full top-1/2 mr-2 -translate-y-1/2',
+        side === 'right' && 'left-full top-1/2 ml-2 -translate-y-1/2',
         className
       )}
       {...props}
     >
       {children}
       {/* Arrow */}
-      {side === "top" && (
-        <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-foreground"></div>
+      {side === 'top' && (
+        <div className="absolute left-1/2 top-full -mt-px h-0 w-0 -translate-x-1/2 border-l-[4px] border-r-[4px] border-t-[4px] border-l-transparent border-r-transparent border-t-foreground"></div>
       )}
-      {side === "bottom" && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-px w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-b-[4px] border-b-foreground"></div>
+      {side === 'bottom' && (
+        <div className="absolute bottom-full left-1/2 -mb-px h-0 w-0 -translate-x-1/2 border-b-[4px] border-l-[4px] border-r-[4px] border-b-foreground border-l-transparent border-r-transparent"></div>
       )}
     </div>
   );

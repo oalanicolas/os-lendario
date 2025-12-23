@@ -25,19 +25,37 @@ interface WOWsInputViewProps {
 const MAX_WOWS = 10;
 const MIN_WOWS = 1;
 
-const CATEGORY_CONFIG: Record<WOWCategory, { icon: string; label: string; color: string; bgColor: string }> = {
-  insight: { icon: 'lightbulb', label: 'Insight', color: 'text-amber-500', bgColor: 'bg-amber-500/10' },
-  question: { icon: 'question', label: 'Dúvida', color: 'text-blue-500', bgColor: 'bg-blue-500/10' },
+const CATEGORY_CONFIG: Record<
+  WOWCategory,
+  { icon: string; label: string; color: string; bgColor: string }
+> = {
+  insight: {
+    icon: 'lightbulb',
+    label: 'Insight',
+    color: 'text-amber-500',
+    bgColor: 'bg-amber-500/10',
+  },
+  question: {
+    icon: 'question',
+    label: 'Dúvida',
+    color: 'text-blue-500',
+    bgColor: 'bg-blue-500/10',
+  },
   idea: { icon: 'chat-alt', label: 'Ideia', color: 'text-purple-500', bgColor: 'bg-purple-500/10' },
-  risk: { icon: 'exclamation-triangle', label: 'Risco', color: 'text-red-500', bgColor: 'bg-red-500/10' },
+  risk: {
+    icon: 'exclamation-triangle',
+    label: 'Risco',
+    color: 'text-red-500',
+    bgColor: 'bg-red-500/10',
+  },
 };
 
 const PROMPT_SUGGESTIONS = [
-  "O que te surpreendeu na pesquisa?",
-  "Que problema você não tinha considerado?",
-  "Que oportunidade você descobriu?",
-  "O que os concorrentes estão fazendo de errado?",
-  "Que pergunta surgiu que você não sabe responder?",
+  'O que te surpreendeu na pesquisa?',
+  'Que problema você não tinha considerado?',
+  'Que oportunidade você descobriu?',
+  'O que os concorrentes estão fazendo de errado?',
+  'Que pergunta surgiu que você não sabe responder?',
 ];
 
 // =============================================================================
@@ -59,14 +77,14 @@ const CategorySelector: React.FC<{
           <Button
             key={cat}
             type="button"
-            variant={isSelected ? "default" : "outline"}
+            variant={isSelected ? 'default' : 'outline'}
             size="sm"
             onClick={() => onSelect(cat)}
             className={cn(
-              "flex items-center gap-1.5 transition-all",
+              'flex items-center gap-1.5 transition-all',
               isSelected && config.bgColor,
               isSelected && config.color,
-              isSelected && "border-transparent"
+              isSelected && 'border-transparent'
             )}
           >
             <Icon name={config.icon} size="size-3" />
@@ -114,22 +132,22 @@ const WOWCard: React.FC<{
   };
 
   return (
-    <Card className={cn(
-      "p-4 transition-all animate-fade-in",
-      config.bgColor,
-      "border-transparent"
-    )}>
+    <Card
+      className={cn('animate-fade-in p-4 transition-all', config.bgColor, 'border-transparent')}
+    >
       <div className="flex items-start gap-3">
         {/* Category Icon */}
-        <div className={cn(
-          "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
-          "bg-background/50"
-        )}>
+        <div
+          className={cn(
+            'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg',
+            'bg-background/50'
+          )}
+        >
           <Icon name={config.icon} size="size-4" className={config.color} />
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           {isEditing ? (
             <div className="space-y-2">
               <Textarea
@@ -150,13 +168,11 @@ const WOWCard: React.FC<{
           ) : (
             <>
               <p className="text-sm font-medium text-foreground">{wow.text}</p>
-              <div className="flex items-center gap-2 mt-2">
-                <Badge variant="outline" className={cn("text-[10px]", config.color)}>
+              <div className="mt-2 flex items-center gap-2">
+                <Badge variant="outline" className={cn('text-[10px]', config.color)}>
                   {config.label}
                 </Badge>
-                <span className="text-xs text-muted-foreground">
-                  {timeAgo(wow.createdAt)}
-                </span>
+                <span className="text-xs text-muted-foreground">{timeAgo(wow.createdAt)}</span>
               </div>
             </>
           )}
@@ -164,7 +180,7 @@ const WOWCard: React.FC<{
 
         {/* Actions */}
         {!isEditing && (
-          <div className="flex items-center gap-1 shrink-0">
+          <div className="flex shrink-0 items-center gap-1">
             <Button
               variant="ghost"
               size="icon"
@@ -194,14 +210,8 @@ const WOWCard: React.FC<{
 // MAIN COMPONENT
 // =============================================================================
 
-export const WOWsInputView: React.FC<WOWsInputViewProps> = ({
-  project,
-  onUpdate,
-  onNext
-}) => {
-  const [wows, setWows] = useState<WOW[]>(
-    project.project_metadata?.brief?.wows || []
-  );
+export const WOWsInputView: React.FC<WOWsInputViewProps> = ({ project, onUpdate, onNext }) => {
+  const [wows, setWows] = useState<WOW[]>(project.project_metadata?.brief?.wows || []);
   const [newText, setNewText] = useState('');
   const [category, setCategory] = useState<WOWCategory>('insight');
 
@@ -227,20 +237,24 @@ export const WOWsInputView: React.FC<WOWsInputViewProps> = ({
   }, [canAdd, newText, category, wows, onUpdate]);
 
   // Edit WOW
-  const handleEdit = useCallback(async (id: string, text: string) => {
-    const updated = wows.map(w =>
-      w.id === id ? { ...w, text } : w
-    );
-    setWows(updated);
-    await onUpdate(updated);
-  }, [wows, onUpdate]);
+  const handleEdit = useCallback(
+    async (id: string, text: string) => {
+      const updated = wows.map((w) => (w.id === id ? { ...w, text } : w));
+      setWows(updated);
+      await onUpdate(updated);
+    },
+    [wows, onUpdate]
+  );
 
   // Delete WOW
-  const handleDelete = useCallback(async (id: string) => {
-    const updated = wows.filter(w => w.id !== id);
-    setWows(updated);
-    await onUpdate(updated);
-  }, [wows, onUpdate]);
+  const handleDelete = useCallback(
+    async (id: string) => {
+      const updated = wows.filter((w) => w.id !== id);
+      setWows(updated);
+      await onUpdate(updated);
+    },
+    [wows, onUpdate]
+  );
 
   // Use suggestion
   const handleUseSuggestion = (suggestion: string) => {
@@ -248,24 +262,22 @@ export const WOWsInputView: React.FC<WOWsInputViewProps> = ({
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="animate-fade-in space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold flex items-center gap-2">
+        <h2 className="flex items-center gap-2 text-xl font-bold">
           <Icon name="lightbulb" style={{ color: PRD_PRIMARY }} />
           WOWs - Suas Descobertas
         </h2>
-        <p className="text-muted-foreground text-sm mt-1">
+        <p className="mt-1 text-sm text-muted-foreground">
           Registre os insights e descobertas que você teve durante a pesquisa
         </p>
       </div>
 
       {/* Input Section */}
-      <Card className="p-4 space-y-4">
+      <Card className="space-y-4 p-4">
         <div className="space-y-3">
-          <label className="text-sm font-medium text-foreground">
-            O que te surpreendeu?
-          </label>
+          <label className="text-sm font-medium text-foreground">O que te surpreendeu?</label>
           <Textarea
             value={newText}
             onChange={(e) => setNewText(e.target.value)}
@@ -275,7 +287,7 @@ export const WOWsInputView: React.FC<WOWsInputViewProps> = ({
           />
         </div>
 
-        <div className="flex items-center justify-between flex-wrap gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <CategorySelector selected={category} onSelect={setCategory} />
           <Button
             onClick={handleAdd}
@@ -287,11 +299,7 @@ export const WOWsInputView: React.FC<WOWsInputViewProps> = ({
           </Button>
         </div>
 
-        {isAtMax && (
-          <p className="text-xs text-amber-500">
-            Limite de {MAX_WOWS} WOWs atingido
-          </p>
-        )}
+        {isAtMax && <p className="text-xs text-amber-500">Limite de {MAX_WOWS} WOWs atingido</p>}
       </Card>
 
       {/* Suggestions */}
@@ -336,15 +344,17 @@ export const WOWsInputView: React.FC<WOWsInputViewProps> = ({
       )}
 
       {/* Progress & Actions */}
-      <div className="flex items-center justify-between pt-4 border-t">
+      <div className="flex items-center justify-between border-t pt-4">
         <div className="text-sm text-muted-foreground">
-          <span className={cn(
-            "font-mono font-medium",
-            canAdvance ? "text-emerald-500" : "text-amber-500"
-          )}>
+          <span
+            className={cn(
+              'font-mono font-medium',
+              canAdvance ? 'text-emerald-500' : 'text-amber-500'
+            )}
+          >
             {wows.length}/{MAX_WOWS}
-          </span>
-          {" "}WOWs {!canAdvance && `(mínimo ${MIN_WOWS})`}
+          </span>{' '}
+          WOWs {!canAdvance && `(mínimo ${MIN_WOWS})`}
         </div>
         <Button
           onClick={onNext}

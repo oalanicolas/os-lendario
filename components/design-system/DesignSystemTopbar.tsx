@@ -12,9 +12,7 @@ const NAV_CATEGORIES: NavCategory[] = [
   {
     label: 'Visão Geral',
     icon: 'home',
-    items: [
-      { label: 'Conceito', path: '/design/concept' },
-    ],
+    items: [{ label: 'Conceito', path: '/design/concept' }],
   },
   {
     label: 'Identidade & Marca',
@@ -113,12 +111,12 @@ const DesignSystemTopbar: React.FC = () => {
   const getCurrentLabel = (): string => {
     for (const category of NAV_CATEGORIES) {
       if (category.items) {
-        const item = category.items.find(i => location.pathname === i.path);
+        const item = category.items.find((i) => location.pathname === i.path);
         if (item) return item.label;
       }
       if (category.subcategories) {
         for (const sub of category.subcategories) {
-          const item = sub.items.find(i => location.pathname === i.path);
+          const item = sub.items.find((i) => location.pathname === i.path);
           if (item) return item.label;
         }
       }
@@ -127,27 +125,28 @@ const DesignSystemTopbar: React.FC = () => {
   };
 
   return (
-    <header className="h-16 border-b border-border/50 bg-[#0A0A0F]/95 backdrop-blur-sm sticky top-0 z-50">
-      <div className="flex items-center justify-between h-full max-w-[1400px] mx-auto w-full px-6 md:px-12">
+    <header className="sticky top-0 z-50 h-16 border-b border-border/50 bg-[#0A0A0F]/95 backdrop-blur-sm">
+      <div className="mx-auto flex h-full w-full max-w-[1400px] items-center justify-between px-6 md:px-12">
         {/* Left: Brand */}
         <div className="flex items-center gap-3">
           <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center border"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border"
             style={{
               backgroundColor: DS_ACCENT,
               borderColor: `${DS_PRIMARY}30`,
-              color: DS_PRIMARY
+              color: DS_PRIMARY,
             }}
           >
             <Icon name={DS_THEME.icon} size="size-5" />
           </div>
           <div>
-            <h1 className="text-sm font-bold leading-none tracking-tight" style={{ color: DS_PRIMARY }}>
+            <h1
+              className="text-sm font-bold leading-none tracking-tight"
+              style={{ color: DS_PRIMARY }}
+            >
               {DS_THEME.name}
             </h1>
-            <p className="text-[10px] text-muted-foreground mt-0.5">
-              {getCurrentLabel()}
-            </p>
+            <p className="mt-0.5 text-[10px] text-muted-foreground">{getCurrentLabel()}</p>
           </div>
         </div>
 
@@ -158,10 +157,10 @@ const DesignSystemTopbar: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/design/concept')}
-            className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-200 hover:opacity-90 border"
+            className="hidden items-center gap-2 rounded-xl border px-3 py-2 text-xs font-semibold transition-all duration-200 hover:opacity-90 sm:flex"
             style={{
               borderColor: `${DS_PRIMARY}50`,
-              color: DS_PRIMARY
+              color: DS_PRIMARY,
             }}
           >
             <Icon name="home" size="size-3.5" />
@@ -170,7 +169,7 @@ const DesignSystemTopbar: React.FC = () => {
         </div>
 
         {/* Mobile Menu Button */}
-        <button className="md:hidden p-2 text-muted-foreground hover:text-foreground">
+        <button className="p-2 text-muted-foreground hover:text-foreground md:hidden">
           <Icon name="menu-burger" size="size-5" />
         </button>
       </div>

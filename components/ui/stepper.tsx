@@ -1,6 +1,6 @@
-import React from "react";
-import { cn } from "../../lib/utils";
-import { Icon } from "./icon";
+import React from 'react';
+import { cn } from '../../lib/utils';
+import { Icon } from './icon';
 
 export interface Step {
   id: string | number;
@@ -16,14 +16,14 @@ interface StepperProps extends React.HTMLAttributes<HTMLDivElement> {
 const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
   ({ className, steps, currentStep, ...props }, ref) => {
     return (
-      <div ref={ref} className={cn("w-full", className)} {...props}>
-        <div className="relative flex justify-between items-center">
+      <div ref={ref} className={cn('w-full', className)} {...props}>
+        <div className="relative flex items-center justify-between">
           {/* Background Line */}
-          <div className="absolute left-0 top-4 w-full h-0.5 bg-muted -z-10" />
-          
+          <div className="absolute left-0 top-4 -z-10 h-0.5 w-full bg-muted" />
+
           {/* Active Line Progress */}
-          <div 
-            className="absolute left-0 top-4 h-0.5 bg-primary -z-10 transition-all duration-500 ease-in-out"
+          <div
+            className="absolute left-0 top-4 -z-10 h-0.5 bg-primary transition-all duration-500 ease-in-out"
             style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
           />
 
@@ -36,34 +36,30 @@ const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
               <div key={step.id} className="flex flex-col items-center gap-2 bg-card px-2">
                 <div
                   className={cn(
-                    "w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 border-2",
+                    'flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-bold transition-all duration-300',
                     isCompleted
-                      ? "bg-primary border-primary text-primary-foreground"
+                      ? 'border-primary bg-primary text-primary-foreground'
                       : isActive
-                      ? "bg-card border-primary text-primary ring-4 ring-primary/10 scale-110"
-                      : "bg-muted border-transparent text-muted-foreground"
+                        ? 'scale-110 border-primary bg-card text-primary ring-4 ring-primary/10'
+                        : 'border-transparent bg-muted text-muted-foreground'
                   )}
                 >
-                  {isCompleted ? (
-                    <Icon name="check" size="size-3" />
-                  ) : (
-                    <span>{index + 1}</span>
-                  )}
+                  {isCompleted ? <Icon name="check" size="size-3" /> : <span>{index + 1}</span>}
                 </div>
                 <div className="flex flex-col items-center text-center">
-                    <span 
-                        className={cn(
-                            "text-xs font-semibold transition-colors duration-300",
-                            isActive || isCompleted ? "text-foreground" : "text-muted-foreground"
-                        )}
-                    >
-                        {step.label}
-                    </span>
-                    {step.description && (
-                        <span className="text-[10px] text-muted-foreground hidden sm:block">
-                            {step.description}
-                        </span>
+                  <span
+                    className={cn(
+                      'text-xs font-semibold transition-colors duration-300',
+                      isActive || isCompleted ? 'text-foreground' : 'text-muted-foreground'
                     )}
+                  >
+                    {step.label}
+                  </span>
+                  {step.description && (
+                    <span className="hidden text-[10px] text-muted-foreground sm:block">
+                      {step.description}
+                    </span>
+                  )}
                 </div>
               </div>
             );
@@ -73,6 +69,6 @@ const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
     );
   }
 );
-Stepper.displayName = "Stepper";
+Stepper.displayName = 'Stepper';
 
 export { Stepper };

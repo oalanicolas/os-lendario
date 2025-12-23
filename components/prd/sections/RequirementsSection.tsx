@@ -47,7 +47,10 @@ const TYPE_CONFIG: Record<RequirementType, { label: string; prefix: string; colo
   constraint: { label: 'Restrições', prefix: 'RES', color: '#F59E0B' },
 };
 
-const PRIORITY_CONFIG: Record<RequirementPriority, { label: string; color: string; bgColor: string }> = {
+const PRIORITY_CONFIG: Record<
+  RequirementPriority,
+  { label: string; color: string; bgColor: string }
+> = {
   must: { label: 'Must', color: 'text-red-500', bgColor: 'bg-red-500/10' },
   should: { label: 'Should', color: 'text-amber-500', bgColor: 'bg-amber-500/10' },
   could: { label: 'Could', color: 'text-blue-500', bgColor: 'bg-blue-500/10' },
@@ -98,18 +101,24 @@ const RequirementRow: React.FC<{
   };
 
   return (
-    <div className={cn(
-      "flex items-center gap-3 p-3 rounded-lg border transition-all",
-      requirement.status === 'approved' && "bg-emerald-500/5 border-emerald-500/30",
-      requirement.status === 'rejected' && "bg-red-500/5 border-red-500/30"
-    )}>
+    <div
+      className={cn(
+        'flex items-center gap-3 rounded-lg border p-3 transition-all',
+        requirement.status === 'approved' && 'border-emerald-500/30 bg-emerald-500/5',
+        requirement.status === 'rejected' && 'border-red-500/30 bg-red-500/5'
+      )}
+    >
       {/* Code */}
-      <Badge variant="outline" className="font-mono text-xs shrink-0" style={{ borderColor: typeConfig.color, color: typeConfig.color }}>
+      <Badge
+        variant="outline"
+        className="shrink-0 font-mono text-xs"
+        style={{ borderColor: typeConfig.color, color: typeConfig.color }}
+      >
         {requirement.code}
       </Badge>
 
       {/* Description */}
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         {isEditing ? (
           <div className="flex gap-2">
             <Input
@@ -118,12 +127,16 @@ const RequirementRow: React.FC<{
               className="flex-1"
               autoFocus
             />
-            <Button size="sm" onClick={handleSave}>Salvar</Button>
-            <Button size="sm" variant="ghost" onClick={() => setIsEditing(false)}>Cancelar</Button>
+            <Button size="sm" onClick={handleSave}>
+              Salvar
+            </Button>
+            <Button size="sm" variant="ghost" onClick={() => setIsEditing(false)}>
+              Cancelar
+            </Button>
           </div>
         ) : (
           <p
-            className="text-sm cursor-pointer hover:text-primary"
+            className="cursor-pointer text-sm hover:text-primary"
             onClick={() => setIsEditing(true)}
           >
             {requirement.description}
@@ -132,18 +145,23 @@ const RequirementRow: React.FC<{
       </div>
 
       {/* Priority */}
-      <Badge className={cn("text-xs shrink-0", priorityConfig.bgColor, priorityConfig.color)}>
+      <Badge className={cn('shrink-0 text-xs', priorityConfig.bgColor, priorityConfig.color)}>
         {priorityConfig.label}
       </Badge>
 
       {/* Actions */}
       {!isEditing && (
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex shrink-0 items-center gap-1">
           <Button
-            variant={requirement.status === 'approved' ? "default" : "ghost"}
+            variant={requirement.status === 'approved' ? 'default' : 'ghost'}
             size="icon"
-            className={cn("h-7 w-7", requirement.status === 'approved' && "bg-emerald-600")}
-            onClick={() => onUpdate({ ...requirement, status: requirement.status === 'approved' ? 'pending' : 'approved' })}
+            className={cn('h-7 w-7', requirement.status === 'approved' && 'bg-emerald-600')}
+            onClick={() =>
+              onUpdate({
+                ...requirement,
+                status: requirement.status === 'approved' ? 'pending' : 'approved',
+              })
+            }
           >
             <Icon name="check" size="size-3" />
           </Button>
@@ -169,7 +187,7 @@ export const RequirementsSection: React.FC<RequirementsSectionProps> = ({
   content,
   briefProblem,
   briefSolution,
-  onUpdate
+  onUpdate,
 }) => {
   const { generate, isGenerating } = usePRDAI();
   const [requirements, setRequirements] = useState<RequirementsContent>(content || EMPTY_CONTENT);
@@ -178,7 +196,7 @@ export const RequirementsSection: React.FC<RequirementsSectionProps> = ({
 
   // Filter requirements
   const filteredRequirements = useMemo(() => {
-    return requirements.requirements.filter(r => {
+    return requirements.requirements.filter((r) => {
       if (r.type !== activeTab) return false;
       if (filterPriority !== 'all' && r.priority !== filterPriority) return false;
       return true;
@@ -188,15 +206,16 @@ export const RequirementsSection: React.FC<RequirementsSectionProps> = ({
   // Counts
   const counts = useMemo(() => {
     const c: Record<RequirementType, number> = { functional: 0, non_functional: 0, constraint: 0 };
-    requirements.requirements.forEach(r => c[r.type]++);
+    requirements.requirements.forEach((r) => c[r.type]++);
     return c;
   }, [requirements.requirements]);
 
   const handleGenerate = useCallback(async () => {
     try {
-      const prompt = REQUIREMENTS_PROMPT
-        .replace('{problem}', briefProblem)
-        .replace('{solution}', briefSolution);
+      const prompt = REQUIREMENTS_PROMPT.replace('{problem}', briefProblem).replace(
+        '{solution}',
+        briefSolution
+      );
 
       const result = await generate(prompt, {
         systemPrompt: REQUIREMENTS_SYSTEM,
@@ -233,30 +252,36 @@ export const RequirementsSection: React.FC<RequirementsSectionProps> = ({
     }
   }, [briefProblem, briefSolution, generate, requirements, onUpdate]);
 
-  const handleUpdateRequirement = useCallback(async (index: number, req: Requirement) => {
-    const realIndex = requirements.requirements.findIndex(r => r.id === req.id);
-    if (realIndex === -1) return;
+  const handleUpdateRequirement = useCallback(
+    async (index: number, req: Requirement) => {
+      const realIndex = requirements.requirements.findIndex((r) => r.id === req.id);
+      if (realIndex === -1) return;
 
-    const updated = {
-      ...requirements,
-      requirements: requirements.requirements.map((r, i) => i === realIndex ? req : r)
-    };
-    setRequirements(updated);
-    await onUpdate(updated);
-  }, [requirements, onUpdate]);
+      const updated = {
+        ...requirements,
+        requirements: requirements.requirements.map((r, i) => (i === realIndex ? req : r)),
+      };
+      setRequirements(updated);
+      await onUpdate(updated);
+    },
+    [requirements, onUpdate]
+  );
 
-  const handleDeleteRequirement = useCallback(async (id: string) => {
-    const updated = {
-      ...requirements,
-      requirements: requirements.requirements.filter(r => r.id !== id)
-    };
-    setRequirements(updated);
-    await onUpdate(updated);
-  }, [requirements, onUpdate]);
+  const handleDeleteRequirement = useCallback(
+    async (id: string) => {
+      const updated = {
+        ...requirements,
+        requirements: requirements.requirements.filter((r) => r.id !== id),
+      };
+      setRequirements(updated);
+      await onUpdate(updated);
+    },
+    [requirements, onUpdate]
+  );
 
   const handleAddRequirement = useCallback(async () => {
     const prefix = TYPE_CONFIG[activeTab].prefix;
-    const existingCodes = requirements.requirements.filter(r => r.type === activeTab).length;
+    const existingCodes = requirements.requirements.filter((r) => r.type === activeTab).length;
     const code = `${prefix}${String(existingCodes + 1).padStart(3, '0')}`;
 
     const newReq: Requirement = {
@@ -279,11 +304,11 @@ export const RequirementsSection: React.FC<RequirementsSectionProps> = ({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="font-bold text-lg flex items-center gap-2">
+          <h3 className="flex items-center gap-2 text-lg font-bold">
             <Icon name="list-check" style={{ color: PRD_PRIMARY }} />
             Requisitos
           </h3>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="mt-1 text-sm text-muted-foreground">
             Requisitos funcionais, não-funcionais e restrições
           </p>
         </div>
@@ -297,11 +322,16 @@ export const RequirementsSection: React.FC<RequirementsSectionProps> = ({
 
       {!hasContent && !isGenerating && (
         <Card className="p-8 text-center">
-          <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: `${PRD_PRIMARY}20` }}>
+          <div
+            className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl"
+            style={{ backgroundColor: `${PRD_PRIMARY}20` }}
+          >
             <Icon name="list-check" size="size-6" style={{ color: PRD_PRIMARY }} />
           </div>
-          <h4 className="font-bold mb-2">Gerar Requisitos</h4>
-          <p className="text-sm text-muted-foreground mb-4">A IA vai criar requisitos baseados no brief</p>
+          <h4 className="mb-2 font-bold">Gerar Requisitos</h4>
+          <p className="mb-4 text-sm text-muted-foreground">
+            A IA vai criar requisitos baseados no brief
+          </p>
           <Button onClick={handleGenerate} style={{ backgroundColor: PRD_PRIMARY }}>
             <Icon name="sparkles" className="mr-2 size-4" />
             Gerar Requisitos
@@ -311,7 +341,11 @@ export const RequirementsSection: React.FC<RequirementsSectionProps> = ({
 
       {isGenerating && !hasContent && (
         <Card className="p-8 text-center">
-          <Icon name="spinner" className="animate-spin mx-auto size-8 mb-3" style={{ color: PRD_PRIMARY }} />
+          <Icon
+            name="spinner"
+            className="mx-auto mb-3 size-8 animate-spin"
+            style={{ color: PRD_PRIMARY }}
+          />
           <p className="text-sm text-muted-foreground">Gerando requisitos...</p>
         </Card>
       )}
@@ -325,13 +359,15 @@ export const RequirementsSection: React.FC<RequirementsSectionProps> = ({
               return (
                 <Button
                   key={type}
-                  variant={activeTab === type ? "default" : "ghost"}
+                  variant={activeTab === type ? 'default' : 'ghost'}
                   size="sm"
                   onClick={() => setActiveTab(type)}
                   style={activeTab === type ? { backgroundColor: config.color } : undefined}
                 >
                   {config.label}
-                  <Badge variant="outline" className="ml-2 text-xs">{counts[type]}</Badge>
+                  <Badge variant="outline" className="ml-2 text-xs">
+                    {counts[type]}
+                  </Badge>
                 </Button>
               );
             })}
@@ -340,7 +376,7 @@ export const RequirementsSection: React.FC<RequirementsSectionProps> = ({
               {(['all', 'must', 'should', 'could'] as const).map((p) => (
                 <Button
                   key={p}
-                  variant={filterPriority === p ? "secondary" : "ghost"}
+                  variant={filterPriority === p ? 'secondary' : 'ghost'}
                   size="sm"
                   className="text-xs"
                   onClick={() => setFilterPriority(p)}
@@ -363,7 +399,7 @@ export const RequirementsSection: React.FC<RequirementsSectionProps> = ({
             ))}
 
             {filteredRequirements.length === 0 && (
-              <p className="text-sm text-muted-foreground text-center py-8">
+              <p className="py-8 text-center text-sm text-muted-foreground">
                 Nenhum requisito nesta categoria
               </p>
             )}

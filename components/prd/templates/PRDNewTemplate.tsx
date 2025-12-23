@@ -41,13 +41,15 @@ const TYPE_OPTIONS = {
   task: {
     icon: 'check-square',
     title: 'Tarefa Simples',
-    description: 'Algo pontual que precisa ser feito. Ideal para features isoladas, bugs ou melhorias pequenas.',
+    description:
+      'Algo pontual que precisa ser feito. Ideal para features isoladas, bugs ou melhorias pequenas.',
     time: '5-15 minutos',
   },
   project: {
     icon: 'folder',
     title: 'Projeto Completo',
-    description: 'Algo maior que requer planejamento estruturado. Ideal para novos produtos ou sistemas.',
+    description:
+      'Algo maior que requer planejamento estruturado. Ideal para novos produtos ou sistemas.',
     time: '30-60 minutos',
   },
 } as const;
@@ -68,32 +70,35 @@ const TypeOption: React.FC<TypeOptionProps> = ({ type, selected, onSelect }) => 
   return (
     <Card
       className={cn(
-        "cursor-pointer transition-all duration-300 hover:shadow-lg border-2",
-        selected ? "border-[#538096] bg-[#538096]/5" : "border-border hover:border-[#538096]/50"
+        'cursor-pointer border-2 transition-all duration-300 hover:shadow-lg',
+        selected ? 'border-[#538096] bg-[#538096]/5' : 'border-border hover:border-[#538096]/50'
       )}
       onClick={onSelect}
     >
-      <CardContent className="p-8 space-y-4">
+      <CardContent className="space-y-4 p-8">
         <div className="flex items-center justify-between">
           <div
-            className="w-12 h-12 rounded-full flex items-center justify-center"
+            className="flex h-12 w-12 items-center justify-center rounded-full"
             style={{ backgroundColor: PRD_ACCENT, color: PRD_PRIMARY }}
           >
             <Icon name={config.icon} size="size-6" />
           </div>
           {selected && (
-            <Icon name="check-circle" className="size-6" style={{ color: PRD_PRIMARY }} type="solid" />
+            <Icon
+              name="check-circle"
+              className="size-6"
+              style={{ color: PRD_PRIMARY }}
+              type="solid"
+            />
           )}
         </div>
         <div>
           <h4 className="text-lg font-bold">{config.title}</h4>
-          <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider">
+          <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
             {config.time}
           </p>
         </div>
-        <p className="text-sm text-muted-foreground">
-          {config.description}
-        </p>
+        <p className="text-sm text-muted-foreground">{config.description}</p>
       </CardContent>
     </Card>
   );
@@ -144,13 +149,13 @@ export const PRDNewTemplate: React.FC<PRDNewTemplateProps> = ({ setSection }) =>
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background font-sans">
+    <div className="flex min-h-screen flex-col bg-background font-sans">
       <PRDTopbar currentSection={Section.STUDIO_PRD_NEW} setSection={setSection} />
 
-      <main className="flex-1 w-full max-w-4xl mx-auto p-6 md:p-12">
-        <div className="space-y-12 animate-fade-in pb-20">
+      <main className="mx-auto w-full max-w-4xl flex-1 p-6 md:p-12">
+        <div className="animate-fade-in space-y-12 pb-20">
           {/* Header */}
-          <div className="text-center space-y-2">
+          <div className="space-y-2 text-center">
             <h1 className="text-3xl font-bold">O que você quer criar?</h1>
             <p className="text-muted-foreground">
               Escolha o tipo de documentação que melhor se encaixa na sua necessidade
@@ -158,7 +163,7 @@ export const PRDNewTemplate: React.FC<PRDNewTemplateProps> = ({ setSection }) =>
           </div>
 
           {/* Type Selection */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <TypeOption
               type="task"
               selected={prdType === 'task'}
@@ -174,14 +179,18 @@ export const PRDNewTemplate: React.FC<PRDNewTemplateProps> = ({ setSection }) =>
           {/* Name Input (appears after selection) */}
           {prdType && (
             <Card className="animate-fade-in">
-              <CardContent className="p-6 space-y-4">
+              <CardContent className="space-y-4 p-6">
                 <div className="space-y-2">
                   <Label htmlFor="project-name">
                     Nome {prdType === 'task' ? 'da Tarefa' : 'do Projeto'}
                   </Label>
                   <Input
                     id="project-name"
-                    placeholder={prdType === 'task' ? 'Ex: Corrigir bug no login' : 'Ex: Sistema de Autenticação'}
+                    placeholder={
+                      prdType === 'task'
+                        ? 'Ex: Corrigir bug no login'
+                        : 'Ex: Sistema de Autenticação'
+                    }
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     autoFocus
@@ -194,7 +203,7 @@ export const PRDNewTemplate: React.FC<PRDNewTemplateProps> = ({ setSection }) =>
                 </div>
                 {name.length >= 3 && (
                   <p className="text-xs text-muted-foreground">
-                    Slug: <code className="bg-muted px-1.5 py-0.5 rounded">{slug}</code>
+                    Slug: <code className="rounded bg-muted px-1.5 py-0.5">{slug}</code>
                   </p>
                 )}
               </CardContent>
@@ -203,14 +212,14 @@ export const PRDNewTemplate: React.FC<PRDNewTemplateProps> = ({ setSection }) =>
 
           {/* Error Message */}
           {error && (
-            <div className="flex items-center gap-2 text-sm text-destructive bg-destructive/10 px-4 py-3 rounded-lg">
+            <div className="flex items-center gap-2 rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">
               <Icon name="exclamation-circle" size="size-4" />
               {error}
             </div>
           )}
 
           {/* Actions */}
-          <div className="flex justify-end gap-4 pt-8 border-t border-border">
+          <div className="flex justify-end gap-4 border-t border-border pt-8">
             <Button variant="ghost" onClick={handleCancel}>
               Cancelar
             </Button>

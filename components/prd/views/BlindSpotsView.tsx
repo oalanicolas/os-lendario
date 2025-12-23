@@ -63,14 +63,14 @@ const AddBlindSpotInput: React.FC<{ onAdd: (title: string) => void }> = ({ onAdd
   };
 
   return (
-    <Card className="p-4 border-dashed bg-muted/20">
+    <Card className="border-dashed bg-muted/20 p-4">
       <div className="flex items-center gap-3">
         <Icon name="plus" className="text-muted-foreground" size="size-5" />
         <Input
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="Adicionar ponto cego manualmente..."
-          className="flex-1 bg-transparent border-0 focus-visible:ring-0"
+          className="flex-1 border-0 bg-transparent focus-visible:ring-0"
           onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
         />
         {value.trim().length >= 3 && (
@@ -87,30 +87,23 @@ const AddBlindSpotInput: React.FC<{ onAdd: (title: string) => void }> = ({ onAdd
 // MAIN COMPONENT
 // =============================================================================
 
-export const BlindSpotsView: React.FC<BlindSpotsViewProps> = ({
-  project,
-  onUpdate,
-  onNext
-}) => {
+export const BlindSpotsView: React.FC<BlindSpotsViewProps> = ({ project, onUpdate, onNext }) => {
   const { generate, isGenerating, error, progress } = usePRDAI();
   const [blindSpots, setBlindSpots] = useState<BlindSpot[]>(
     project.project_metadata?.brief?.blindSpots || []
   );
 
   const uploadContent = project.project_metadata?.upload?.content || '';
-  const addressedCount = blindSpots.filter(bs => bs.selected).length;
+  const addressedCount = blindSpots.filter((bs) => bs.selected).length;
   const canAdvance = addressedCount >= 2;
 
   // Generate blind spots
   const handleGenerate = useCallback(async () => {
     try {
-      const result = await generate(
-        BLIND_SPOTS_PROMPT.replace('{content}', uploadContent),
-        {
-          systemPrompt: BLIND_SPOTS_SYSTEM,
-          temperature: 0.8,
-        }
-      );
+      const result = await generate(BLIND_SPOTS_PROMPT.replace('{content}', uploadContent), {
+        systemPrompt: BLIND_SPOTS_SYSTEM,
+        temperature: 0.8,
+      });
 
       // Parse response
       let parsed: Array<{ title: string; description: string; category: BlindSpotCategory }>;
@@ -144,54 +137,64 @@ export const BlindSpotsView: React.FC<BlindSpotsViewProps> = ({
   }, [generate, uploadContent, onUpdate]);
 
   // Handle status change
-  const handleStatusChange = useCallback(async (id: string, status: BlindSpotStatus) => {
-    const updated = blindSpots.map(bs =>
-      bs.id === id ? { ...bs, selected: status === 'considered' } : bs
-    );
-    setBlindSpots(updated);
-    await onUpdate(updated);
-  }, [blindSpots, onUpdate]);
+  const handleStatusChange = useCallback(
+    async (id: string, status: BlindSpotStatus) => {
+      const updated = blindSpots.map((bs) =>
+        bs.id === id ? { ...bs, selected: status === 'considered' } : bs
+      );
+      setBlindSpots(updated);
+      await onUpdate(updated);
+    },
+    [blindSpots, onUpdate]
+  );
 
   // Handle edit
-  const handleEdit = useCallback(async (id: string, title: string, description: string) => {
-    const updated = blindSpots.map(bs =>
-      bs.id === id ? { ...bs, title, description } : bs
-    );
-    setBlindSpots(updated);
-    await onUpdate(updated);
-  }, [blindSpots, onUpdate]);
+  const handleEdit = useCallback(
+    async (id: string, title: string, description: string) => {
+      const updated = blindSpots.map((bs) => (bs.id === id ? { ...bs, title, description } : bs));
+      setBlindSpots(updated);
+      await onUpdate(updated);
+    },
+    [blindSpots, onUpdate]
+  );
 
   // Handle delete
-  const handleDelete = useCallback(async (id: string) => {
-    const updated = blindSpots.filter(bs => bs.id !== id);
-    setBlindSpots(updated);
-    await onUpdate(updated);
-  }, [blindSpots, onUpdate]);
+  const handleDelete = useCallback(
+    async (id: string) => {
+      const updated = blindSpots.filter((bs) => bs.id !== id);
+      setBlindSpots(updated);
+      await onUpdate(updated);
+    },
+    [blindSpots, onUpdate]
+  );
 
   // Handle add manual
-  const handleAddManual = useCallback(async (title: string) => {
-    const newBlindSpot: BlindSpot = {
-      id: `bs-manual-${Date.now()}`,
-      title,
-      description: 'Ponto cego adicionado manualmente',
-      category: 'Técnico',
-      selected: false,
-    };
-    const updated = [...blindSpots, newBlindSpot];
-    setBlindSpots(updated);
-    await onUpdate(updated);
-  }, [blindSpots, onUpdate]);
+  const handleAddManual = useCallback(
+    async (title: string) => {
+      const newBlindSpot: BlindSpot = {
+        id: `bs-manual-${Date.now()}`,
+        title,
+        description: 'Ponto cego adicionado manualmente',
+        category: 'Técnico',
+        selected: false,
+      };
+      const updated = [...blindSpots, newBlindSpot];
+      setBlindSpots(updated);
+      await onUpdate(updated);
+    },
+    [blindSpots, onUpdate]
+  );
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="animate-fade-in space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold flex items-center gap-2">
+          <h2 className="flex items-center gap-2 text-xl font-bold">
             <Icon name="lightbulb" style={{ color: PRD_PRIMARY }} />
             Pontos Cegos (QA)
           </h2>
-          <p className="text-muted-foreground text-sm mt-1">
+          <p className="mt-1 text-sm text-muted-foreground">
             A IA identificou aspectos que você pode ter esquecido de considerar
           </p>
         </div>
@@ -207,13 +210,13 @@ export const BlindSpotsView: React.FC<BlindSpotsViewProps> = ({
       {blindSpots.length === 0 && !isGenerating && (
         <Card className="p-12 text-center">
           <div
-            className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
+            className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl"
             style={{ backgroundColor: `${PRD_PRIMARY}20` }}
           >
             <Icon name="lightbulb" size="size-8" style={{ color: PRD_PRIMARY }} />
           </div>
-          <h3 className="text-lg font-bold mb-2">Vamos identificar pontos cegos</h3>
-          <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+          <h3 className="mb-2 text-lg font-bold">Vamos identificar pontos cegos</h3>
+          <p className="mx-auto mb-6 max-w-md text-muted-foreground">
             A IA vai analisar sua ideia e sugerir aspectos que você pode ter esquecido de considerar
           </p>
           <Button onClick={handleGenerate} style={{ backgroundColor: PRD_PRIMARY }}>
@@ -226,13 +229,17 @@ export const BlindSpotsView: React.FC<BlindSpotsViewProps> = ({
       {/* Loading State */}
       {isGenerating && (
         <Card className="p-12 text-center">
-          <Icon name="spinner" className="animate-spin mx-auto size-12 mb-4" style={{ color: PRD_PRIMARY }} />
-          <h3 className="text-lg font-bold mb-2">Analisando sua ideia...</h3>
+          <Icon
+            name="spinner"
+            className="mx-auto mb-4 size-12 animate-spin"
+            style={{ color: PRD_PRIMARY }}
+          />
+          <h3 className="mb-2 text-lg font-bold">Analisando sua ideia...</h3>
           <p className="text-muted-foreground">
             Identificando pontos cegos e áreas não consideradas
           </p>
           {progress > 0 && (
-            <div className="w-48 h-1.5 bg-muted rounded-full mx-auto mt-4 overflow-hidden">
+            <div className="mx-auto mt-4 h-1.5 w-48 overflow-hidden rounded-full bg-muted">
               <div
                 className="h-full rounded-full transition-all duration-300"
                 style={{ width: `${progress}%`, backgroundColor: PRD_PRIMARY }}
@@ -244,7 +251,7 @@ export const BlindSpotsView: React.FC<BlindSpotsViewProps> = ({
 
       {/* Error State */}
       {error && (
-        <Card className="p-6 border-destructive/50 bg-destructive/5">
+        <Card className="border-destructive/50 bg-destructive/5 p-6">
           <div className="flex items-center gap-3 text-destructive">
             <Icon name="exclamation-circle" size="size-5" />
             <div>
@@ -279,15 +286,17 @@ export const BlindSpotsView: React.FC<BlindSpotsViewProps> = ({
 
       {/* Progress & Actions */}
       {blindSpots.length > 0 && !isGenerating && (
-        <div className="flex items-center justify-between pt-4 border-t">
+        <div className="flex items-center justify-between border-t pt-4">
           <div className="text-sm text-muted-foreground">
-            <span className={cn(
-              "font-mono font-medium",
-              canAdvance ? "text-emerald-500" : "text-amber-500"
-            )}>
+            <span
+              className={cn(
+                'font-mono font-medium',
+                canAdvance ? 'text-emerald-500' : 'text-amber-500'
+              )}
+            >
               {addressedCount}/{blindSpots.length}
-            </span>
-            {" "}pontos endereçados {!canAdvance && "(mínimo 2)"}
+            </span>{' '}
+            pontos endereçados {!canAdvance && '(mínimo 2)'}
           </div>
           <Button
             onClick={onNext}

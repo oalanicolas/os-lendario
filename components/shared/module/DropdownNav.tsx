@@ -49,23 +49,23 @@ const DropdownNav: React.FC<DropdownNavProps> = ({ categories, primaryColor }) =
 
   const isActiveCategory = (category: NavCategory) => {
     if (category.items) {
-      return category.items.some(item => location.pathname === item.path);
+      return category.items.some((item) => location.pathname === item.path);
     }
     if (category.subcategories) {
-      return category.subcategories.some(sub =>
-        sub.items.some(item => location.pathname === item.path)
+      return category.subcategories.some((sub) =>
+        sub.items.some((item) => location.pathname === item.path)
       );
     }
     return false;
   };
 
   return (
-    <nav className="hidden md:flex items-center">
+    <nav className="hidden items-center md:flex">
       <div
-        className="flex items-center rounded-xl p-1 border gap-0.5"
+        className="flex items-center gap-0.5 rounded-xl border p-1"
         style={{
           backgroundColor: `${primaryColor}08`,
-          borderColor: `${primaryColor}20`
+          borderColor: `${primaryColor}20`,
         }}
       >
         {categories.map((category) => {
@@ -81,14 +81,12 @@ const DropdownNav: React.FC<DropdownNavProps> = ({ categories, primaryColor }) =
             >
               <button
                 className={cn(
-                  "px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200",
-                  isActive
-                    ? "bg-background shadow-sm"
-                    : `hover:bg-[${primaryColor}]/10`
+                  'rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-200',
+                  isActive ? 'bg-background shadow-sm' : `hover:bg-[${primaryColor}]/10`
                 )}
                 style={{
                   color: isActive ? primaryColor : 'inherit',
-                  ...((!isActive) && { ['--tw-bg-opacity' as string]: 0.1 })
+                  ...(!isActive && { ['--tw-bg-opacity' as string]: 0.1 }),
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive) {
@@ -104,70 +102,73 @@ const DropdownNav: React.FC<DropdownNavProps> = ({ categories, primaryColor }) =
                 <span className="flex items-center gap-1.5">
                   <Icon name={category.icon} size="size-3.5" />
                   <span className="hidden lg:inline">{category.label}</span>
-                  <Icon name="chevron-down" size="size-2.5" className={cn(
-                    "transition-transform opacity-50",
-                    isOpen && "rotate-180"
-                  )} />
+                  <Icon
+                    name="chevron-down"
+                    size="size-2.5"
+                    className={cn('opacity-50 transition-transform', isOpen && 'rotate-180')}
+                  />
                 </span>
               </button>
 
               {/* Dropdown with bridge */}
               {isOpen && (
-                <div className="absolute top-full left-0 pt-2 z-50">
+                <div className="absolute left-0 top-full z-50 pt-2">
                   {/* Invisible bridge to prevent gap */}
                   <div className="absolute -top-2 left-0 right-0 h-4" />
-                  <div className="py-2 min-w-[220px] bg-card border border-border rounded-lg shadow-xl">
+                  <div className="min-w-[220px] rounded-lg border border-border bg-card py-2 shadow-xl">
                     {/* Simple items */}
-                    {category.items && category.items.map((item) => {
-                      const isItemActive = location.pathname === item.path;
-                      return (
-                        <button
-                          key={item.path}
-                          onClick={() => {
-                            navigate(item.path);
-                            setOpenDropdown(null);
-                          }}
-                          className={cn(
-                            "w-full text-left px-4 py-2 text-sm transition-colors",
-                            isItemActive
-                              ? "bg-primary/10 text-primary font-medium"
-                              : "hover:bg-muted text-muted-foreground hover:text-foreground"
-                          )}
-                        >
-                          {item.label}
-                        </button>
-                      );
-                    })}
+                    {category.items &&
+                      category.items.map((item) => {
+                        const isItemActive = location.pathname === item.path;
+                        return (
+                          <button
+                            key={item.path}
+                            onClick={() => {
+                              navigate(item.path);
+                              setOpenDropdown(null);
+                            }}
+                            className={cn(
+                              'w-full px-4 py-2 text-left text-sm transition-colors',
+                              isItemActive
+                                ? 'bg-primary/10 font-medium text-primary'
+                                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                            )}
+                          >
+                            {item.label}
+                          </button>
+                        );
+                      })}
 
                     {/* Subcategories */}
-                    {category.subcategories && category.subcategories.map((sub, subIdx) => (
-                      <div key={sub.label}>
-                        {subIdx > 0 && <div className="border-t border-border my-2" />}
-                        <div className="px-4 py-1.5 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
-                          {sub.label}
+                    {category.subcategories &&
+                      category.subcategories.map((sub, subIdx) => (
+                        <div key={sub.label}>
+                          {subIdx > 0 && <div className="my-2 border-t border-border" />}
+                          <div className="px-4 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                            {sub.label}
+                          </div>
+                          {sub.items.map((item) => {
+                            const isItemActive = location.pathname === item.path;
+                            return (
+                              <button
+                                key={item.path}
+                                onClick={() => {
+                                  navigate(item.path);
+                                  setOpenDropdown(null);
+                                }}
+                                className={cn(
+                                  'w-full px-4 py-1.5 text-left text-sm transition-colors',
+                                  isItemActive
+                                    ? 'bg-primary/10 font-medium text-primary'
+                                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                                )}
+                              >
+                                {item.label}
+                              </button>
+                            );
+                          })}
                         </div>
-                        {sub.items.map((item) => {
-                          const isItemActive = location.pathname === item.path;
-                          return (
-                            <button
-                              key={item.path}
-                              onClick={() => {
-                                navigate(item.path);
-                                setOpenDropdown(null);
-                              }}
-                              className={cn(
-                                "w-full text-left px-4 py-1.5 text-sm transition-colors",
-                                isItemActive
-                                  ? "bg-primary/10 text-primary font-medium"
-                                  : "hover:bg-muted text-muted-foreground hover:text-foreground"
-                              )}
-                            >
-                              {item.label}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    ))}
+                      ))}
                   </div>
                 </div>
               )}

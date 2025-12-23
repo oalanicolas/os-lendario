@@ -8,7 +8,14 @@ import { Icon } from '../../ui/icon';
 import { Badge } from '../../ui/badge';
 import { Progress } from '../../ui/progress';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '../../ui/accordion';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '../../ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '../../ui/dialog';
 import { cn } from '../../../lib/utils';
 
 // =============================================================================
@@ -60,24 +67,23 @@ const ResearchTopicCard: React.FC<{
   onMarkRead: () => void;
 }> = ({ topic, onMarkRead }) => {
   return (
-    <AccordionItem value={topic.id} className="border rounded-lg overflow-hidden">
-      <AccordionTrigger className="px-4 hover:no-underline hover:bg-muted/50">
-        <div className="flex items-center justify-between w-full pr-2">
+    <AccordionItem value={topic.id} className="overflow-hidden rounded-lg border">
+      <AccordionTrigger className="px-4 hover:bg-muted/50 hover:no-underline">
+        <div className="flex w-full items-center justify-between pr-2">
           <div className="flex items-center gap-3">
-            <div className={cn(
-              "w-6 h-6 rounded-full flex items-center justify-center",
-              topic.isRead ? "bg-emerald-500/20" : "bg-muted"
-            )}>
+            <div
+              className={cn(
+                'flex h-6 w-6 items-center justify-center rounded-full',
+                topic.isRead ? 'bg-emerald-500/20' : 'bg-muted'
+              )}
+            >
               <Icon
-                name={topic.isRead ? "check" : "circle"}
+                name={topic.isRead ? 'check' : 'circle'}
                 size="size-3"
-                className={topic.isRead ? "text-emerald-500" : "text-muted-foreground"}
+                className={topic.isRead ? 'text-emerald-500' : 'text-muted-foreground'}
               />
             </div>
-            <span className={cn(
-              "font-medium text-left",
-              topic.isRead && "text-muted-foreground"
-            )}>
+            <span className={cn('text-left font-medium', topic.isRead && 'text-muted-foreground')}>
               {topic.title}
             </span>
           </div>
@@ -86,9 +92,7 @@ const ResearchTopicCard: React.FC<{
               {topic.readingTimeMinutes} min
             </Badge>
             {topic.isRead && (
-              <Badge className="bg-emerald-500/10 text-emerald-600 text-xs">
-                Lido
-              </Badge>
+              <Badge className="bg-emerald-500/10 text-xs text-emerald-600">Lido</Badge>
             )}
           </div>
         </div>
@@ -96,20 +100,15 @@ const ResearchTopicCard: React.FC<{
       <AccordionContent className="px-4 pb-4">
         <div className="space-y-4 pt-2">
           {/* Summary */}
-          <p className="text-sm font-medium text-foreground">
-            {topic.summary}
-          </p>
+          <p className="text-sm font-medium text-foreground">{topic.summary}</p>
 
           {/* Full Content */}
-          <div className="text-sm text-muted-foreground whitespace-pre-line">
-            {topic.content}
-          </div>
+          <div className="whitespace-pre-line text-sm text-muted-foreground">{topic.content}</div>
 
           {/* Sources */}
           {topic.sources.length > 0 && (
-            <div className="text-xs text-muted-foreground pt-2 border-t">
-              <span className="font-medium">Fontes sugeridas:</span>{' '}
-              {topic.sources.join(', ')}
+            <div className="border-t pt-2 text-xs text-muted-foreground">
+              <span className="font-medium">Fontes sugeridas:</span> {topic.sources.join(', ')}
             </div>
           )}
 
@@ -138,11 +137,7 @@ const ResearchTopicCard: React.FC<{
 // MAIN COMPONENT
 // =============================================================================
 
-export const ResearchView: React.FC<ResearchViewProps> = ({
-  project,
-  onUpdate,
-  onNext
-}) => {
+export const ResearchView: React.FC<ResearchViewProps> = ({ project, onUpdate, onNext }) => {
   const { generate, isGenerating, error, progress } = usePRDAI();
   const [topics, setTopics] = useState<ResearchTopic[]>(
     project.project_metadata?.brief?.researchTopics || []
@@ -150,20 +145,17 @@ export const ResearchView: React.FC<ResearchViewProps> = ({
   const [showSkipWarning, setShowSkipWarning] = useState(false);
 
   const uploadContent = project.project_metadata?.upload?.content || '';
-  const readCount = topics.filter(t => t.isRead).length;
+  const readCount = topics.filter((t) => t.isRead).length;
   const readPercent = topics.length > 0 ? Math.round((readCount / topics.length) * 100) : 0;
   const canAdvance = readPercent >= 50 || project.project_metadata?.brief?.researchSkipped;
 
   // Generate research topics
   const handleGenerate = useCallback(async () => {
     try {
-      const result = await generate(
-        RESEARCH_PROMPT.replace('{content}', uploadContent),
-        {
-          systemPrompt: RESEARCH_SYSTEM,
-          temperature: 0.7,
-        }
-      );
+      const result = await generate(RESEARCH_PROMPT.replace('{content}', uploadContent), {
+        systemPrompt: RESEARCH_SYSTEM,
+        temperature: 0.7,
+      });
 
       // Parse response
       let parsed: Array<Omit<ResearchTopic, 'id' | 'isRead'>>;
@@ -194,13 +186,14 @@ export const ResearchView: React.FC<ResearchViewProps> = ({
   }, [generate, uploadContent, onUpdate]);
 
   // Mark topic as read
-  const handleMarkRead = useCallback(async (topicId: string) => {
-    const updated = topics.map(t =>
-      t.id === topicId ? { ...t, isRead: true } : t
-    );
-    setTopics(updated);
-    await onUpdate(updated);
-  }, [topics, onUpdate]);
+  const handleMarkRead = useCallback(
+    async (topicId: string) => {
+      const updated = topics.map((t) => (t.id === topicId ? { ...t, isRead: true } : t));
+      setTopics(updated);
+      await onUpdate(updated);
+    },
+    [topics, onUpdate]
+  );
 
   // Skip research
   const handleSkip = useCallback(async () => {
@@ -210,15 +203,15 @@ export const ResearchView: React.FC<ResearchViewProps> = ({
   }, [topics, onUpdate, onNext]);
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="animate-fade-in space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold flex items-center gap-2">
+          <h2 className="flex items-center gap-2 text-xl font-bold">
             <Icon name="search" style={{ color: PRD_PRIMARY }} />
             Pesquisa de Contexto
           </h2>
-          <p className="text-muted-foreground text-sm mt-1">
+          <p className="mt-1 text-sm text-muted-foreground">
             Entenda o cenário antes de definir seu projeto
           </p>
         </div>
@@ -237,14 +230,15 @@ export const ResearchView: React.FC<ResearchViewProps> = ({
       {topics.length === 0 && !isGenerating && (
         <Card className="p-12 text-center">
           <div
-            className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
+            className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl"
             style={{ backgroundColor: `${PRD_PRIMARY}20` }}
           >
             <Icon name="search" size="size-8" style={{ color: PRD_PRIMARY }} />
           </div>
-          <h3 className="text-lg font-bold mb-2">Pesquisa de Mercado</h3>
-          <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-            A IA vai buscar informações relevantes sobre seu domínio para contextualizar melhor seu projeto
+          <h3 className="mb-2 text-lg font-bold">Pesquisa de Mercado</h3>
+          <p className="mx-auto mb-6 max-w-md text-muted-foreground">
+            A IA vai buscar informações relevantes sobre seu domínio para contextualizar melhor seu
+            projeto
           </p>
           <Button onClick={handleGenerate} style={{ backgroundColor: PRD_PRIMARY }}>
             <Icon name="sparkles" className="mr-2 size-4" />
@@ -256,13 +250,15 @@ export const ResearchView: React.FC<ResearchViewProps> = ({
       {/* Loading State */}
       {isGenerating && (
         <Card className="p-12 text-center">
-          <Icon name="spinner" className="animate-spin mx-auto size-12 mb-4" style={{ color: PRD_PRIMARY }} />
-          <h3 className="text-lg font-bold mb-2">Pesquisando...</h3>
-          <p className="text-muted-foreground">
-            Buscando informações relevantes para seu projeto
-          </p>
+          <Icon
+            name="spinner"
+            className="mx-auto mb-4 size-12 animate-spin"
+            style={{ color: PRD_PRIMARY }}
+          />
+          <h3 className="mb-2 text-lg font-bold">Pesquisando...</h3>
+          <p className="text-muted-foreground">Buscando informações relevantes para seu projeto</p>
           {progress > 0 && (
-            <div className="w-48 h-1.5 bg-muted rounded-full mx-auto mt-4 overflow-hidden">
+            <div className="mx-auto mt-4 h-1.5 w-48 overflow-hidden rounded-full bg-muted">
               <div
                 className="h-full rounded-full transition-all duration-300"
                 style={{ width: `${progress}%`, backgroundColor: PRD_PRIMARY }}
@@ -274,7 +270,7 @@ export const ResearchView: React.FC<ResearchViewProps> = ({
 
       {/* Error State */}
       {error && (
-        <Card className="p-6 border-destructive/50 bg-destructive/5">
+        <Card className="border-destructive/50 bg-destructive/5 p-6">
           <div className="flex items-center gap-3 text-destructive">
             <Icon name="exclamation-circle" size="size-5" />
             <div>
@@ -315,16 +311,18 @@ export const ResearchView: React.FC<ResearchViewProps> = ({
 
       {/* Progress & Actions */}
       {topics.length > 0 && !isGenerating && (
-        <div className="flex items-center justify-between pt-4 border-t">
+        <div className="flex items-center justify-between border-t pt-4">
           <div className="space-y-2">
             <div className="text-sm text-muted-foreground">
-              <span className={cn(
-                "font-mono font-medium",
-                canAdvance ? "text-emerald-500" : "text-amber-500"
-              )}>
+              <span
+                className={cn(
+                  'font-mono font-medium',
+                  canAdvance ? 'text-emerald-500' : 'text-amber-500'
+                )}
+              >
                 {readCount}/{topics.length}
-              </span>
-              {" "}tópicos lidos ({readPercent}%) {!canAdvance && "- mínimo 50%"}
+              </span>{' '}
+              tópicos lidos ({readPercent}%) {!canAdvance && '- mínimo 50%'}
             </div>
             <Progress value={readPercent} className="h-2 w-48" />
           </div>
@@ -348,8 +346,8 @@ export const ResearchView: React.FC<ResearchViewProps> = ({
               Pular Pesquisa?
             </DialogTitle>
             <DialogDescription>
-              A pesquisa ajuda a criar um brief mais completo e informado.
-              Pular esta etapa pode resultar em um PRD menos contextualizado sobre o mercado.
+              A pesquisa ajuda a criar um brief mais completo e informado. Pular esta etapa pode
+              resultar em um PRD menos contextualizado sobre o mercado.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

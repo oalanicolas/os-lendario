@@ -67,28 +67,26 @@ export const StudioSidebar: React.FC<StudioSidebarProps> = ({
 
   return (
     <div
-      className="w-64 border-r border-border bg-card/50 flex flex-col shrink-0"
+      className="flex w-64 shrink-0 flex-col border-r border-border bg-card/50"
       style={{ height }}
     >
       {/* Header */}
-      <div className="p-4 border-b border-border">
+      <div className="border-b border-border p-4">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-2"
+          className="mb-2 flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <Icon name="arrow-left" size="size-3" />
           <span>{backLabel}</span>
         </button>
-        <h3 className="font-bold text-foreground truncate">{title}</h3>
-        {subtitle && (
-          <p className="text-xs text-muted-foreground truncate mt-0.5">{subtitle}</p>
-        )}
+        <h3 className="truncate font-bold text-foreground">{title}</h3>
+        {subtitle && <p className="mt-0.5 truncate text-xs text-muted-foreground">{subtitle}</p>}
       </div>
 
       {/* Pipeline Steps */}
       <ScrollArea className="flex-1">
-        <div className="p-4 space-y-2">
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">
+        <div className="space-y-2 p-4">
+          <p className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">
             Pipeline
           </p>
           {pipeline.map((step) => {
@@ -102,12 +100,12 @@ export const StudioSidebar: React.FC<StudioSidebarProps> = ({
                 onClick={() => isClickable && onStepClick(step.key)}
                 disabled={!isClickable}
                 className={cn(
-                  "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all text-left",
+                  'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-all',
                   isActive
-                    ? "bg-primary/10 font-medium ring-1 ring-primary/20"
+                    ? 'bg-primary/10 font-medium ring-1 ring-primary/20'
                     : step.status === 'pending'
-                      ? "text-muted-foreground/50 cursor-not-allowed"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                      ? 'cursor-not-allowed text-muted-foreground/50'
+                      : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 )}
                 style={isActive ? { color: primaryColor } : undefined}
               >
@@ -130,8 +128,8 @@ export const StudioSidebar: React.FC<StudioSidebarProps> = ({
 
       {/* Auto-save indicator */}
       {showAutoSave && (
-        <div className="p-4 border-t border-border bg-muted/20">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+        <div className="border-t border-border bg-muted/20 p-4">
+          <div className="mb-1 flex items-center gap-2 text-xs text-muted-foreground">
             {isSaving ? (
               <>
                 <Icon name="spinner" size="size-3" className="animate-spin" />

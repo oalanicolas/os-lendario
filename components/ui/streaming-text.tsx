@@ -9,12 +9,12 @@ interface StreamingTextProps {
   startDelay?: number;
 }
 
-export const StreamingText: React.FC<StreamingTextProps> = ({ 
-  text, 
-  speed = 20, 
-  className, 
+export const StreamingText: React.FC<StreamingTextProps> = ({
+  text,
+  speed = 20,
+  className,
   onComplete,
-  startDelay = 0
+  startDelay = 0,
 }) => {
   const [displayedText, setDisplayedText] = useState('');
   const [started, setStarted] = useState(false);
@@ -24,33 +24,33 @@ export const StreamingText: React.FC<StreamingTextProps> = ({
     let interval: ReturnType<typeof setInterval>;
 
     startTimeout = setTimeout(() => {
-        setStarted(true);
-        let i = 0;
-        interval = setInterval(() => {
-            setDisplayedText((prev) => {
-                if (i >= text.length) {
-                    clearInterval(interval);
-                    if(onComplete) onComplete();
-                    return text;
-                }
-                const nextChar = text.charAt(i);
-                i++;
-                return prev + nextChar;
-            });
-        }, speed);
+      setStarted(true);
+      let i = 0;
+      interval = setInterval(() => {
+        setDisplayedText((prev) => {
+          if (i >= text.length) {
+            clearInterval(interval);
+            if (onComplete) onComplete();
+            return text;
+          }
+          const nextChar = text.charAt(i);
+          i++;
+          return prev + nextChar;
+        });
+      }, speed);
     }, startDelay);
 
     return () => {
-        clearTimeout(startTimeout);
-        clearInterval(interval);
+      clearTimeout(startTimeout);
+      clearInterval(interval);
     };
   }, [text, speed, startDelay, onComplete]);
 
   return (
-    <span className={cn("inline-block", className)}>
+    <span className={cn('inline-block', className)}>
       {displayedText}
       {displayedText.length < text.length && (
-        <span className="inline-block w-1.5 h-4 ml-0.5 bg-primary align-middle animate-pulse" />
+        <span className="ml-0.5 inline-block h-4 w-1.5 animate-pulse bg-primary align-middle" />
       )}
     </span>
   );

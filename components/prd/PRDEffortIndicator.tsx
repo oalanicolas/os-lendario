@@ -74,20 +74,14 @@ export const PRDEffortIndicator: React.FC<PRDEffortIndicatorProps> = ({
 
   return (
     <div
-      className={cn(
-        "inline-flex items-center",
-        config.gap,
-        className
-      )}
+      className={cn('inline-flex items-center', config.gap, className)}
       title={`${human}% do trabalho é feito por você, ${ai}% é assistido pela IA`}
     >
       {/* Human Section */}
-      <div className={cn("flex items-center gap-1", config.text)}>
+      <div className={cn('flex items-center gap-1', config.text)}>
         <Icon name="user" className={COLORS.humanText} size={config.icon} />
         {human > 0 && (
-          <span className={cn("font-mono font-medium", COLORS.humanText)}>
-            {human}%
-          </span>
+          <span className={cn('font-mono font-medium', COLORS.humanText)}>{human}%</span>
         )}
       </div>
 
@@ -95,29 +89,25 @@ export const PRDEffortIndicator: React.FC<PRDEffortIndicatorProps> = ({
       {showBar && (
         <div
           className={cn(
-            "flex rounded-full overflow-hidden bg-muted/50",
+            'flex overflow-hidden rounded-full bg-muted/50',
             config.bar,
             config.barWidth
           )}
         >
           <div
-            className={cn("transition-all duration-300", COLORS.human)}
+            className={cn('transition-all duration-300', COLORS.human)}
             style={{ width: `${human}%` }}
           />
           <div
-            className={cn("transition-all duration-300", COLORS.ai)}
+            className={cn('transition-all duration-300', COLORS.ai)}
             style={{ width: `${ai}%` }}
           />
         </div>
       )}
 
       {/* AI Section */}
-      <div className={cn("flex items-center gap-1", config.text)}>
-        {ai > 0 && (
-          <span className={cn("font-mono font-medium", COLORS.aiText)}>
-            {ai}%
-          </span>
-        )}
+      <div className={cn('flex items-center gap-1', config.text)}>
+        {ai > 0 && <span className={cn('font-mono font-medium', COLORS.aiText)}>{ai}%</span>}
         <Icon name="robot" className={COLORS.aiText} size={config.icon} />
       </div>
     </div>

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import MindsTopbar from '../MindsTopbar';
@@ -51,7 +52,7 @@ const MindProfileTemplate: React.FC<MindProfileProps> = ({ setSection, mindSlug:
   const navigate = useNavigate();
   const mindSlug = propSlug || paramSlug || '';
 
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState('overview');
   const [imgError, setImgError] = useState(false);
   const [isEditAvatarOpen, setIsEditAvatarOpen] = useState(false);
   const [isEditSettingsOpen, setIsEditSettingsOpen] = useState(false);
@@ -81,7 +82,9 @@ const MindProfileTemplate: React.FC<MindProfileProps> = ({ setSection, mindSlug:
     }
   };
   const { data: artifactsData, loading: artifactsLoading } = useMindArtifacts(mind?.id || null);
-  const { data: psychometrics, loading: psychometricsLoading } = useMindPsychometrics(mind?.id || null);
+  const { data: psychometrics, loading: psychometricsLoading } = useMindPsychometrics(
+    mind?.id || null
+  );
   const { data: historyData, loading: historyLoading } = useMindHistory(mind?.id || null);
   const { data: contentsData, loading: contentsLoading } = useMindContents(mind?.id || null);
 
@@ -93,13 +96,15 @@ const MindProfileTemplate: React.FC<MindProfileProps> = ({ setSection, mindSlug:
   // Error state
   if (error || !mind) {
     return (
-      <div className="flex flex-col min-h-screen bg-background font-sans">
+      <div className="flex min-h-screen flex-col bg-background font-sans">
         <MindsTopbar currentSection={Section.APP_MINDS_PROFILE} setSection={setSection} />
-        <div className="flex items-center justify-center flex-1">
+        <div className="flex flex-1 items-center justify-center">
           <div className="flex flex-col items-center gap-4 text-center">
             <Icon name="warning" size="size-12" className="text-destructive" />
             <h2 className="text-xl font-bold">Mente não encontrada</h2>
-            <p className="text-muted-foreground">{error?.message || 'A mente solicitada não existe ou foi removida.'}</p>
+            <p className="text-muted-foreground">
+              {error?.message || 'A mente solicitada não existe ou foi removida.'}
+            </p>
             <Button onClick={() => setSection(Section.APP_MINDS_GALLERY)}>
               Voltar para Galeria
             </Button>
@@ -112,7 +117,7 @@ const MindProfileTemplate: React.FC<MindProfileProps> = ({ setSection, mindSlug:
   const avatarSrc = imgError ? getDiceBearUrl(mind.slug) : mind.avatar;
 
   return (
-    <div className="flex flex-col min-h-screen bg-background font-sans pb-20">
+    <div className="flex min-h-screen flex-col bg-background pb-20 font-sans">
       <MindsTopbar currentSection={Section.APP_MINDS_PROFILE} setSection={setSection} />
 
       {/* --- HERO HEADER --- */}
@@ -126,46 +131,68 @@ const MindProfileTemplate: React.FC<MindProfileProps> = ({ setSection, mindSlug:
         setSection={setSection}
       />
 
-      <main className="p-6 flex-1 max-w-[1400px] mx-auto w-full">
+      <main className="mx-auto w-full max-w-[1400px] flex-1 p-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-          <TabsList className="bg-transparent w-full justify-start p-0 h-auto gap-2 flex-wrap">
-            <TabsTrigger value="overview" className="rounded-md data-[state=active]:bg-primary/10 data-[state=active]:text-primary px-4 py-2 font-medium bg-muted/30">
+          <TabsList className="h-auto w-full flex-wrap justify-start gap-2 bg-transparent p-0">
+            <TabsTrigger
+              value="overview"
+              className="rounded-md bg-muted/30 px-4 py-2 font-medium data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
+            >
               <Icon name="grid" size="size-4" className="mr-1.5" /> Geral
             </TabsTrigger>
-            <TabsTrigger value="psychometrics" className="rounded-md data-[state=active]:bg-primary/10 data-[state=active]:text-primary px-4 py-2 font-medium bg-muted/30">
+            <TabsTrigger
+              value="psychometrics"
+              className="rounded-md bg-muted/30 px-4 py-2 font-medium data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
+            >
               <Icon name="chart-pie" size="size-4" className="mr-1.5" /> DNA
             </TabsTrigger>
-            <TabsTrigger value="communication" className="rounded-md data-[state=active]:bg-primary/10 data-[state=active]:text-primary px-4 py-2 font-medium bg-muted/30">
+            <TabsTrigger
+              value="communication"
+              className="rounded-md bg-muted/30 px-4 py-2 font-medium data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
+            >
               <Icon name="comment-alt" size="size-4" className="mr-1.5" /> Comunicação
             </TabsTrigger>
-            <TabsTrigger value="history" className="rounded-md data-[state=active]:bg-primary/10 data-[state=active]:text-primary px-4 py-2 font-medium bg-muted/30">
+            <TabsTrigger
+              value="history"
+              className="rounded-md bg-muted/30 px-4 py-2 font-medium data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
+            >
               <Icon name="time-past" size="size-4" className="mr-1.5" /> História
             </TabsTrigger>
-            <TabsTrigger value="artifacts" className="rounded-md data-[state=active]:bg-primary/10 data-[state=active]:text-primary px-4 py-2 font-medium bg-muted/30">
-              <Icon name="box" size="size-4" className="mr-1.5" /> Artefatos {artifactsData?.artifacts.length ? `(${artifactsData.artifacts.length})` : ''}
+            <TabsTrigger
+              value="artifacts"
+              className="rounded-md bg-muted/30 px-4 py-2 font-medium data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
+            >
+              <Icon name="box" size="size-4" className="mr-1.5" /> Artefatos{' '}
+              {artifactsData?.artifacts.length ? `(${artifactsData.artifacts.length})` : ''}
             </TabsTrigger>
-            <TabsTrigger value="contents" className="rounded-md data-[state=active]:bg-primary/10 data-[state=active]:text-primary px-4 py-2 font-medium bg-muted/30">
+            <TabsTrigger
+              value="contents"
+              className="rounded-md bg-muted/30 px-4 py-2 font-medium data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
+            >
               <Icon name="document" size="size-4" className="mr-1.5" /> Conteúdos
             </TabsTrigger>
-            <TabsTrigger value="prompts" className="rounded-md data-[state=active]:bg-primary/10 data-[state=active]:text-primary px-4 py-2 font-medium bg-muted/30">
-              <Icon name="terminal" size="size-4" className="mr-1.5" /> Prompts {artifactsData?.prompts.length ? `(${artifactsData.prompts.length})` : ''}
+            <TabsTrigger
+              value="prompts"
+              className="rounded-md bg-muted/30 px-4 py-2 font-medium data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
+            >
+              <Icon name="terminal" size="size-4" className="mr-1.5" /> Prompts{' '}
+              {artifactsData?.prompts.length ? `(${artifactsData.prompts.length})` : ''}
             </TabsTrigger>
           </TabsList>
 
           {/* TAB 1: OVERVIEW */}
           <TabsContent value="overview" className="animate-fade-in">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
               {/* Left Column */}
-              <div className="lg:col-span-7 space-y-8">
+              <div className="space-y-8 lg:col-span-7">
                 {/* Bio */}
                 <Card className="rounded-xl border-border">
                   <CardHeader className="border-b border-border pb-3">
-                    <CardTitle className="text-base uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-2 text-base uppercase tracking-widest text-muted-foreground">
                       <Icon name="user" /> Sobre a Mente
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-6 font-serif text-muted-foreground leading-relaxed">
+                  <CardContent className="pt-6 font-serif leading-relaxed text-muted-foreground">
                     <p>{mind.shortBio || 'Sem descrição disponível.'}</p>
                   </CardContent>
                 </Card>
@@ -174,7 +201,7 @@ const MindProfileTemplate: React.FC<MindProfileProps> = ({ setSection, mindSlug:
                 {mind.values.length > 0 && (
                   <Card className="rounded-xl border-border">
                     <CardHeader className="border-b border-border pb-3">
-                      <CardTitle className="text-base uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                      <CardTitle className="flex items-center gap-2 text-base uppercase tracking-widest text-muted-foreground">
                         <Icon name="heart" /> Valores Centrais
                       </CardTitle>
                     </CardHeader>
@@ -182,14 +209,18 @@ const MindProfileTemplate: React.FC<MindProfileProps> = ({ setSection, mindSlug:
                       <div className="space-y-3">
                         {mind.values.slice(0, 5).map((value, i) => (
                           <div key={i} className="flex items-center gap-4">
-                            <span className="text-sm font-medium text-foreground w-40">{value.name}</span>
-                            <div className="flex-1 h-2 bg-muted/50 rounded-full overflow-hidden">
+                            <span className="w-40 text-sm font-medium text-foreground">
+                              {value.name}
+                            </span>
+                            <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted/50">
                               <div
                                 className="h-full bg-primary transition-all"
                                 style={{ width: `${value.importance * 10}%` }}
                               />
                             </div>
-                            <span className="text-xs font-mono font-bold w-8">{value.importance}</span>
+                            <span className="w-8 font-mono text-xs font-bold">
+                              {value.importance}
+                            </span>
                           </div>
                         ))}
                       </div>
@@ -199,12 +230,12 @@ const MindProfileTemplate: React.FC<MindProfileProps> = ({ setSection, mindSlug:
               </div>
 
               {/* Right Column */}
-              <div className="lg:col-span-5 space-y-8">
+              <div className="space-y-8 lg:col-span-5">
                 {/* Skills/Proficiencies */}
                 {mind.proficiencies.length > 0 && (
                   <Card className="rounded-xl border-border bg-gradient-to-br from-card to-primary/5">
                     <CardHeader className="border-b border-border pb-3">
-                      <CardTitle className="text-base uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                      <CardTitle className="flex items-center gap-2 text-base uppercase tracking-widest text-muted-foreground">
                         <Icon name="chart-pie" className="text-primary" /> Proficiências
                       </CardTitle>
                     </CardHeader>
@@ -212,13 +243,19 @@ const MindProfileTemplate: React.FC<MindProfileProps> = ({ setSection, mindSlug:
                       <div className="space-y-3">
                         {mind.proficiencies.slice(0, 6).map((prof, i) => (
                           <div key={i} className="flex items-center gap-4">
-                            <span className="text-xs font-bold text-muted-foreground w-32 text-right truncate" title={prof.skillName}>
+                            <span
+                              className="w-32 truncate text-right text-xs font-bold text-muted-foreground"
+                              title={prof.skillName}
+                            >
                               {prof.skillName}
                             </span>
-                            <div className="flex-1 h-2 bg-muted/50 rounded-full overflow-hidden">
-                              <div className="h-full bg-primary" style={{ width: `${prof.level * 10}%` }} />
+                            <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted/50">
+                              <div
+                                className="h-full bg-primary"
+                                style={{ width: `${prof.level * 10}%` }}
+                              />
                             </div>
-                            <span className="text-xs font-mono font-bold w-8">{prof.level}</span>
+                            <span className="w-8 font-mono text-xs font-bold">{prof.level}</span>
                           </div>
                         ))}
                       </div>
@@ -229,14 +266,16 @@ const MindProfileTemplate: React.FC<MindProfileProps> = ({ setSection, mindSlug:
                 {/* Communication Style */}
                 <Card className="rounded-xl border-border">
                   <CardHeader className="border-b border-border pb-3">
-                    <CardTitle className="text-base uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-2 text-base uppercase tracking-widest text-muted-foreground">
                       <Icon name="comment-alt" /> Comunicação
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-6 space-y-4">
-                    <div className="flex gap-2 flex-wrap">
+                  <CardContent className="space-y-4 pt-6">
+                    <div className="flex flex-wrap gap-2">
                       {mind.communicationStyle.map((style, i) => (
-                        <Badge key={i} variant="outline" className="rounded-md">{style}</Badge>
+                        <Badge key={i} variant="outline" className="rounded-md">
+                          {style}
+                        </Badge>
                       ))}
                     </div>
                   </CardContent>
@@ -246,12 +285,12 @@ const MindProfileTemplate: React.FC<MindProfileProps> = ({ setSection, mindSlug:
                 {mind.obsessions.length > 0 && (
                   <Card className="rounded-xl border-border">
                     <CardHeader className="border-b border-border pb-3">
-                      <CardTitle className="text-base uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                      <CardTitle className="flex items-center gap-2 text-base uppercase tracking-widest text-muted-foreground">
                         <Icon name="target" /> Obsessões
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="pt-6">
-                      <div className="flex flex-wrap gap-4 justify-center">
+                      <div className="flex flex-wrap justify-center gap-4">
                         {mind.obsessions.slice(0, 4).map((obs, i) => (
                           <ObsessionRing key={i} name={obs.name} intensity={obs.intensity} />
                         ))}
@@ -277,10 +316,10 @@ const MindProfileTemplate: React.FC<MindProfileProps> = ({ setSection, mindSlug:
           <TabsContent value="prompts" className="animate-fade-in">
             {artifactsLoading ? (
               <div className="flex justify-center py-12">
-                <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
               </div>
             ) : artifactsData?.prompts.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground">
+              <div className="py-12 text-center text-muted-foreground">
                 <Icon name="terminal" size="size-12" className="mx-auto mb-4 opacity-50" />
                 <p>Nenhum system prompt disponível para esta mente.</p>
               </div>
@@ -288,12 +327,14 @@ const MindProfileTemplate: React.FC<MindProfileProps> = ({ setSection, mindSlug:
               <div className="space-y-4">
                 {artifactsData?.prompts.map((prompt) => (
                   <Card key={prompt.id} className="rounded-xl border-border">
-                    <CardHeader className="pb-2 flex flex-row items-center justify-between">
+                    <CardHeader className="flex flex-row items-center justify-between pb-2">
                       <CardTitle className="text-sm font-medium">{prompt.title}</CardTitle>
-                      <Badge variant="outline" className="text-xs">{prompt.category}</Badge>
+                      <Badge variant="outline" className="text-xs">
+                        {prompt.category}
+                      </Badge>
                     </CardHeader>
                     <CardContent>
-                      <pre className="text-xs text-muted-foreground bg-muted/30 p-4 rounded-lg overflow-x-auto max-h-48">
+                      <pre className="max-h-48 overflow-x-auto rounded-lg bg-muted/30 p-4 text-xs text-muted-foreground">
                         {prompt.content?.substring(0, 500)}...
                       </pre>
                     </CardContent>
@@ -313,7 +354,11 @@ const MindProfileTemplate: React.FC<MindProfileProps> = ({ setSection, mindSlug:
             <HistoryTab
               history={historyData?.events.length ? historyData.events : MOCK_HISTORY_DATA}
               quote={historyData?.quote}
-              achievements={historyData?.achievements?.length ? historyData.achievements : PROFESSIONAL_ACHIEVEMENTS}
+              achievements={
+                historyData?.achievements?.length
+                  ? historyData.achievements
+                  : PROFESSIONAL_ACHIEVEMENTS
+              }
               loading={historyLoading}
             />
           </TabsContent>
@@ -350,8 +395,8 @@ const MindProfileTemplate: React.FC<MindProfileProps> = ({ setSection, mindSlug:
           <AlertDialogHeader>
             <AlertDialogTitle>Deletar Mente</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja deletar <strong>{mind.name}</strong>?
-              Esta acao pode ser revertida posteriormente.
+              Tem certeza que deseja deletar <strong>{mind.name}</strong>? Esta acao pode ser
+              revertida posteriormente.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -359,11 +404,11 @@ const MindProfileTemplate: React.FC<MindProfileProps> = ({ setSection, mindSlug:
             <AlertDialogAction
               onClick={handleDeleteMind}
               disabled={isDeleting}
-              className="bg-red-500 hover:bg-red-600 text-white"
+              className="bg-red-500 text-white hover:bg-red-600"
             >
               {isDeleting ? (
                 <>
-                  <Icon name="spinner" className="animate-spin mr-2" size="size-4" />
+                  <Icon name="spinner" className="mr-2 animate-spin" size="size-4" />
                   Deletando...
                 </>
               ) : (

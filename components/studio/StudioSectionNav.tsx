@@ -39,7 +39,7 @@ export const StudioSectionNav: React.FC<StudioSectionNavProps> = ({
   className,
 }) => {
   return (
-    <div className={cn("w-64 shrink-0", className)}>
+    <div className={cn('w-64 shrink-0', className)}>
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
@@ -56,21 +56,21 @@ export const StudioSectionNav: React.FC<StudioSectionNavProps> = ({
                   key={section.id}
                   onClick={() => onSectionClick(section.id)}
                   className={cn(
-                    "w-full flex items-center justify-between px-3 py-2 rounded-md text-sm transition-colors text-left gap-2",
+                    'flex w-full items-center justify-between gap-2 rounded-md px-3 py-2 text-left text-sm transition-colors',
                     isActive
-                      ? "bg-primary/10 font-medium"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                      ? 'bg-primary/10 font-medium'
+                      : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                   )}
                   style={isActive ? { color: primaryColor } : undefined}
                 >
-                  <div className="flex items-center gap-2 min-w-0">
+                  <div className="flex min-w-0 items-center gap-2">
                     <Icon name={section.icon} size="size-3" className="shrink-0" />
                     <span className="truncate">{section.title}</span>
                   </div>
                   {showCompletedIcon && section.isComplete && (
                     <Icon
                       name="check-circle"
-                      className="text-emerald-500 size-3 shrink-0"
+                      className="size-3 shrink-0 text-emerald-500"
                       type="solid"
                     />
                   )}
@@ -113,22 +113,18 @@ export const StudioSectionContent: React.FC<StudioSectionContentProps> = ({
       <CardHeader>
         <div className="flex items-center gap-3">
           <div
-            className="w-10 h-10 rounded-lg flex items-center justify-center"
+            className="flex h-10 w-10 items-center justify-center rounded-lg"
             style={{ backgroundColor: `${primaryColor}20` }}
           >
             <Icon name={icon} size="size-5" style={{ color: primaryColor }} />
           </div>
           <div>
             <CardTitle>{title}</CardTitle>
-            {description && (
-              <p className="text-sm text-muted-foreground mt-0.5">{description}</p>
-            )}
+            {description && <p className="mt-0.5 text-sm text-muted-foreground">{description}</p>}
           </div>
         </div>
       </CardHeader>
-      <CardContent>
-        {children}
-      </CardContent>
+      <CardContent>{children}</CardContent>
     </Card>
   );
 };
@@ -155,11 +151,9 @@ export const StudioTwoColumn: React.FC<StudioTwoColumnProps> = ({
   className,
 }) => {
   return (
-    <div className={cn("flex", gap, className)}>
+    <div className={cn('flex', gap, className)}>
       {navigation}
-      <div className="flex-1 space-y-6">
-        {children}
-      </div>
+      <div className="flex-1 space-y-6">{children}</div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { cn } from "../../lib/utils";
+import React, { useState, useEffect, useRef } from 'react';
+import { cn } from '../../lib/utils';
 
 interface ContextMenuProps {
   trigger: React.ReactNode;
@@ -23,17 +23,17 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ trigger, children }) => {
         setVisible(false);
       }
     };
-    document.addEventListener("click", handleClick);
-    return () => document.removeEventListener("click", handleClick);
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
   }, []);
 
   return (
-    <div onContextMenu={handleContextMenu} className="w-full h-full">
+    <div onContextMenu={handleContextMenu} className="h-full w-full">
       {trigger}
       {visible && (
         <div
           ref={menuRef}
-          className="absolute z-50 min-w-[8rem] overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md animate-accordion-down"
+          className="absolute z-50 min-w-[8rem] animate-accordion-down overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md"
           style={{ top: position.y, left: position.x }}
         >
           {children}

@@ -49,7 +49,7 @@ const CourseBrief: React.FC<CourseBriefProps> = ({ setSection }) => {
   }, [course]);
 
   const handleFieldChange = (field: keyof BriefData, value: string) => {
-    setBriefData(prev => ({ ...prev, [field]: value }));
+    setBriefData((prev) => ({ ...prev, [field]: value }));
     setHasChanges(true);
   };
 
@@ -90,34 +90,36 @@ const CourseBrief: React.FC<CourseBriefProps> = ({ setSection }) => {
 
   if (loading || !course) {
     return (
-      <div className="flex flex-col min-h-screen bg-background font-sans">
+      <div className="flex min-h-screen flex-col bg-background font-sans">
         <CreatorTopbar currentSection={Section.APP_CREATOR_COURSES} setSection={setSection} />
-        <main className="w-full mx-auto p-6 md:p-12 max-w-[1400px]">
+        <main className="mx-auto w-full max-w-[1400px] p-6 md:p-12">
           {/* Breadcrumb skeleton */}
           <div className="mb-8">
-            <div className="h-4 w-40 bg-muted rounded animate-pulse mb-2" />
+            <div className="mb-2 h-4 w-40 animate-pulse rounded bg-muted" />
             <div className="flex items-center justify-between">
-              <div className="h-8 w-48 bg-muted rounded animate-pulse" />
-              <div className="h-9 w-24 bg-muted rounded animate-pulse" />
+              <div className="h-8 w-48 animate-pulse rounded bg-muted" />
+              <div className="h-9 w-24 animate-pulse rounded bg-muted" />
             </div>
           </div>
 
-          <div className="max-w-4xl mx-auto space-y-6">
+          <div className="mx-auto max-w-4xl space-y-6">
             <Card>
-              <CardContent className="p-6 space-y-6">
+              <CardContent className="space-y-6 p-6">
                 {/* 3 textareas skeleton */}
                 {[1, 2, 3].map((i) => (
                   <div key={i} className="space-y-2">
-                    <div className="h-4 w-48 bg-muted rounded animate-pulse" />
-                    <div className={`${i === 1 ? 'h-24' : 'h-16'} w-full bg-muted/60 rounded animate-pulse`} />
+                    <div className="h-4 w-48 animate-pulse rounded bg-muted" />
+                    <div
+                      className={`${i === 1 ? 'h-24' : 'h-16'} w-full animate-pulse rounded bg-muted/60`}
+                    />
                   </div>
                 ))}
               </CardContent>
             </Card>
 
             <div className="flex justify-end gap-4">
-              <div className="h-9 w-24 bg-muted rounded animate-pulse" />
-              <div className="h-9 w-48 bg-muted rounded animate-pulse" />
+              <div className="h-9 w-24 animate-pulse rounded bg-muted" />
+              <div className="h-9 w-48 animate-pulse rounded bg-muted" />
             </div>
           </div>
         </main>
@@ -126,9 +128,9 @@ const CourseBrief: React.FC<CourseBriefProps> = ({ setSection }) => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background font-sans pb-20">
+    <div className="flex min-h-screen flex-col bg-background pb-20 font-sans">
       <CreatorTopbar currentSection={Section.APP_CREATOR_COURSES} setSection={setSection} />
-      <main className="w-full mx-auto p-6 md:p-12 max-w-[1400px]">
+      <main className="mx-auto w-full max-w-[1400px] p-6 md:p-12">
         <CourseBreadcrumb
           items={[
             { label: 'Cursos', href: '/creator/cursos' },
@@ -143,9 +145,9 @@ const CourseBrief: React.FC<CourseBriefProps> = ({ setSection }) => {
           }
         />
 
-        <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
+        <div className="mx-auto max-w-4xl animate-fade-in space-y-6">
           <Card>
-            <CardContent className="p-6 space-y-6">
+            <CardContent className="space-y-6 p-6">
               <div className="space-y-2">
                 <Label htmlFor="dream_outcome">Qual é a promessa principal? (Dream Outcome)</Label>
                 <Textarea
@@ -177,11 +179,14 @@ const CourseBrief: React.FC<CourseBriefProps> = ({ setSection }) => {
             </CardContent>
           </Card>
 
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between">
             <div className="text-sm text-muted-foreground">
               {hasChanges && (
                 <span className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: STUDIO_GOLD }} />
+                  <span
+                    className="h-2 w-2 animate-pulse rounded-full"
+                    style={{ backgroundColor: STUDIO_GOLD }}
+                  />
                   Alterações não salvas
                 </span>
               )}
@@ -194,10 +199,10 @@ const CourseBrief: React.FC<CourseBriefProps> = ({ setSection }) => {
                 variant="outline"
                 onClick={handleSave}
                 disabled={!hasChanges || isSaving}
-                className="hover:border-[#538096]/50 hover:text-[#538096]"
+                className="hover:border-studio-primary/50 hover:text-studio-primary"
               >
                 {isSaving ? (
-                  <Icon name="spinner" className="animate-spin mr-2" size="size-4" />
+                  <Icon name="spinner" className="mr-2 animate-spin" size="size-4" />
                 ) : (
                   <Icon name="check" className="mr-2" size="size-4" />
                 )}

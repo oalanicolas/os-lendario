@@ -18,23 +18,23 @@ const CourseResearch: React.FC<CourseResearchProps> = ({ setSection }) => {
 
   if (loading || !course) {
     return (
-      <div className="flex flex-col min-h-screen bg-background font-sans">
+      <div className="flex min-h-screen flex-col bg-background font-sans">
         <CreatorTopbar currentSection={Section.APP_CREATOR_COURSES} setSection={setSection} />
-        <main className="w-full mx-auto p-6 md:p-12 max-w-[1400px]">
+        <main className="mx-auto w-full max-w-[1400px] p-6 md:p-12">
           {/* Breadcrumb skeleton */}
           <div className="mb-8">
-            <div className="h-4 w-44 bg-muted rounded animate-pulse mb-2" />
+            <div className="mb-2 h-4 w-44 animate-pulse rounded bg-muted" />
             <div className="flex items-center justify-between">
-              <div className="h-8 w-48 bg-muted rounded animate-pulse" />
-              <div className="h-9 w-24 bg-muted rounded animate-pulse" />
+              <div className="h-8 w-48 animate-pulse rounded bg-muted" />
+              <div className="h-9 w-24 animate-pulse rounded bg-muted" />
             </div>
           </div>
 
-          <div className="flex flex-col items-center justify-center min-h-[40vh]">
-            <div className="h-12 w-12 rounded-full bg-muted animate-pulse mb-4" />
-            <div className="h-8 w-48 bg-muted rounded animate-pulse mb-2" />
-            <div className="h-4 w-32 bg-muted/60 rounded animate-pulse mb-4" />
-            <div className="h-9 w-40 bg-muted rounded animate-pulse" />
+          <div className="flex min-h-[40vh] flex-col items-center justify-center">
+            <div className="mb-4 h-12 w-12 animate-pulse rounded-full bg-muted" />
+            <div className="mb-2 h-8 w-48 animate-pulse rounded bg-muted" />
+            <div className="mb-4 h-4 w-32 animate-pulse rounded bg-muted/60" />
+            <div className="h-9 w-40 animate-pulse rounded bg-muted" />
           </div>
         </main>
       </div>
@@ -42,9 +42,9 @@ const CourseResearch: React.FC<CourseResearchProps> = ({ setSection }) => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background font-sans pb-20">
+    <div className="flex min-h-screen flex-col bg-background pb-20 font-sans">
       <CreatorTopbar currentSection={Section.APP_CREATOR_COURSES} setSection={setSection} />
-      <main className="w-full mx-auto p-6 md:p-12 max-w-[1400px]">
+      <main className="mx-auto w-full max-w-[1400px] p-6 md:p-12">
         <CourseBreadcrumb
           items={[
             { label: 'Cursos', href: '/creator/cursos' },
@@ -59,10 +59,10 @@ const CourseResearch: React.FC<CourseResearchProps> = ({ setSection }) => {
           }
         />
 
-        <div className="flex flex-col items-center justify-center min-h-[40vh] animate-fade-in text-center">
-          <Icon name="search" className="text-muted-foreground mb-4" size="size-12" />
-          <h2 className="text-2xl font-bold mb-2">Pesquisa de Mercado</h2>
-          <p className="text-muted-foreground mb-4">Em desenvolvimento</p>
+        <div className="flex min-h-[40vh] animate-fade-in flex-col items-center justify-center text-center">
+          <Icon name="search" className="mb-4 text-muted-foreground" size="size-12" />
+          <h2 className="mb-2 text-2xl font-bold">Pesquisa de Mercado</h2>
+          <p className="mb-4 text-muted-foreground">Em desenvolvimento</p>
           <Button onClick={() => navigate(`/creator/cursos/${slug}/curriculo`)}>
             Ir para Currículo <Icon name="arrow-right" className="ml-2" />
           </Button>

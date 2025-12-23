@@ -84,14 +84,16 @@ export function useMindHistory(mindId: string | null): UseMindHistoryResult {
       // Query content_projects linked to this mind, then get contents with mind_history type
       const { data: projectData, error: projectError } = await supabase
         .from('content_projects')
-        .select(`
+        .select(
+          `
           id,
           contents!inner (
             id,
             content,
             content_type
           )
-        `)
+        `
+        )
         .eq('persona_mind_id', mindId)
         .eq('contents.content_type', 'mind_history')
         .single();
@@ -104,7 +106,7 @@ export function useMindHistory(mindId: string | null): UseMindHistoryResult {
             events: [],
             achievements: [],
             contentId: null,
-            projectId: null
+            projectId: null,
           });
           return;
         }
@@ -121,7 +123,7 @@ export function useMindHistory(mindId: string | null): UseMindHistoryResult {
           events: [],
           achievements: [],
           contentId: null,
-          projectId: (projectData as any)?.id || null
+          projectId: (projectData as any)?.id || null,
         });
         return;
       }
@@ -135,7 +137,7 @@ export function useMindHistory(mindId: string | null): UseMindHistoryResult {
           events: [],
           achievements: [],
           contentId: historyContent.id,
-          projectId: (projectData as any)?.id || null
+          projectId: (projectData as any)?.id || null,
         });
         return;
       }
@@ -145,7 +147,7 @@ export function useMindHistory(mindId: string | null): UseMindHistoryResult {
         events: parsed.events,
         achievements: parsed.achievements || [],
         contentId: historyContent.id,
-        projectId: (projectData as any)?.id || null
+        projectId: (projectData as any)?.id || null,
       });
     } catch (err) {
       console.error('Error fetching mind history:', err);
@@ -164,7 +166,7 @@ export function useMindHistory(mindId: string | null): UseMindHistoryResult {
     data,
     loading,
     error,
-    refetch: fetchHistory
+    refetch: fetchHistory,
   };
 }
 

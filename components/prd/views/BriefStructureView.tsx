@@ -1,5 +1,10 @@
 import React, { useState, useCallback } from 'react';
-import { PRDProject, BriefStructure, BriefClassification, BriefComplexity } from '../../../types/prd';
+import {
+  PRDProject,
+  BriefStructure,
+  BriefClassification,
+  BriefComplexity,
+} from '../../../types/prd';
 import { usePRDAI } from '../../../hooks/prd/usePRDAI';
 import { PRD_PRIMARY } from '../prd-tokens';
 import { Card } from '../../ui/card';
@@ -21,7 +26,10 @@ interface BriefStructureViewProps {
   onNext: () => void;
 }
 
-type SectionKey = keyof Pick<BriefStructure, 'problem' | 'solution' | 'targetAudience' | 'differentials' | 'risks' | 'successMetrics'>;
+type SectionKey = keyof Pick<
+  BriefStructure,
+  'problem' | 'solution' | 'targetAudience' | 'differentials' | 'risks' | 'successMetrics'
+>;
 
 interface SectionConfig {
   key: SectionKey;
@@ -37,12 +45,54 @@ interface SectionConfig {
 // =============================================================================
 
 const SECTIONS: SectionConfig[] = [
-  { key: 'problem', label: 'Problema', icon: 'exclamation-circle', required: true, isArray: false, placeholder: 'Descreva o problema que você está resolvendo...' },
-  { key: 'solution', label: 'Solução', icon: 'lightbulb', required: true, isArray: false, placeholder: 'Descreva a solução proposta...' },
-  { key: 'targetAudience', label: 'Público-Alvo', icon: 'users', required: true, isArray: false, placeholder: 'Descreva o público-alvo...' },
-  { key: 'differentials', label: 'Diferenciais', icon: 'star', required: false, isArray: true, placeholder: 'Adicionar diferencial...' },
-  { key: 'risks', label: 'Riscos', icon: 'exclamation-triangle', required: false, isArray: true, placeholder: 'Adicionar risco...' },
-  { key: 'successMetrics', label: 'Métricas de Sucesso', icon: 'chart-line', required: true, isArray: true, placeholder: 'Adicionar métrica...' },
+  {
+    key: 'problem',
+    label: 'Problema',
+    icon: 'exclamation-circle',
+    required: true,
+    isArray: false,
+    placeholder: 'Descreva o problema que você está resolvendo...',
+  },
+  {
+    key: 'solution',
+    label: 'Solução',
+    icon: 'lightbulb',
+    required: true,
+    isArray: false,
+    placeholder: 'Descreva a solução proposta...',
+  },
+  {
+    key: 'targetAudience',
+    label: 'Público-Alvo',
+    icon: 'users',
+    required: true,
+    isArray: false,
+    placeholder: 'Descreva o público-alvo...',
+  },
+  {
+    key: 'differentials',
+    label: 'Diferenciais',
+    icon: 'star',
+    required: false,
+    isArray: true,
+    placeholder: 'Adicionar diferencial...',
+  },
+  {
+    key: 'risks',
+    label: 'Riscos',
+    icon: 'exclamation-triangle',
+    required: false,
+    isArray: true,
+    placeholder: 'Adicionar risco...',
+  },
+  {
+    key: 'successMetrics',
+    label: 'Métricas de Sucesso',
+    icon: 'chart-line',
+    required: true,
+    isArray: true,
+    placeholder: 'Adicionar métrica...',
+  },
 ];
 
 const COMPLEXITY_LABELS: Record<BriefComplexity, { label: string; color: string }> = {
@@ -94,9 +144,12 @@ Complexidade:
 - "high": Sistema complexo, múltiplos componentes`;
 
 const SECTION_PROMPTS: Record<SectionKey, string> = {
-  problem: 'Reescreva a seção PROBLEMA do brief de forma mais clara e detalhada, mantendo o contexto original.',
-  solution: 'Reescreva a seção SOLUÇÃO do brief de forma mais clara e detalhada, mantendo o contexto original.',
-  targetAudience: 'Reescreva a seção PÚBLICO-ALVO do brief de forma mais clara e detalhada, mantendo o contexto original.',
+  problem:
+    'Reescreva a seção PROBLEMA do brief de forma mais clara e detalhada, mantendo o contexto original.',
+  solution:
+    'Reescreva a seção SOLUÇÃO do brief de forma mais clara e detalhada, mantendo o contexto original.',
+  targetAudience:
+    'Reescreva a seção PÚBLICO-ALVO do brief de forma mais clara e detalhada, mantendo o contexto original.',
   differentials: 'Gere 3-5 diferenciais competitivos para este produto.',
   risks: 'Identifique 3-5 riscos principais para este projeto.',
   successMetrics: 'Defina 3-5 métricas de sucesso mensuráveis para este produto.',
@@ -114,7 +167,7 @@ const BriefSection: React.FC<{
   isRegenerating: boolean;
 }> = ({ config, value, onChange, onRegenerate, isRegenerating }) => {
   const isEmpty = config.isArray
-    ? (value as string[]).filter(v => v.trim()).length === 0
+    ? (value as string[]).filter((v) => v.trim()).length === 0
     : !(value as string).trim();
 
   const handleArrayItemChange = (index: number, newValue: string) => {
@@ -133,16 +186,20 @@ const BriefSection: React.FC<{
   };
 
   return (
-    <Card className={cn(
-      "p-4 transition-all",
-      config.required && isEmpty && "border-amber-500/50 bg-amber-500/5"
-    )}>
-      <div className="flex items-center justify-between mb-3">
+    <Card
+      className={cn(
+        'p-4 transition-all',
+        config.required && isEmpty && 'border-amber-500/50 bg-amber-500/5'
+      )}
+    >
+      <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon name={config.icon} className="text-muted-foreground" size="size-4" />
           <h3 className="font-bold text-foreground">{config.label}</h3>
           {config.required && (
-            <Badge variant="outline" className="text-[10px]">Obrigatório</Badge>
+            <Badge variant="outline" className="text-[10px]">
+              Obrigatório
+            </Badge>
           )}
         </div>
         <Button
@@ -153,8 +210,8 @@ const BriefSection: React.FC<{
           className="h-8"
         >
           <Icon
-            name={isRegenerating ? "spinner" : "refresh"}
-            className={cn("mr-1.5 size-3", isRegenerating && "animate-spin")}
+            name={isRegenerating ? 'spinner' : 'refresh'}
+            className={cn('mr-1.5 size-3', isRegenerating && 'animate-spin')}
           />
           Regenerar
         </Button>
@@ -164,7 +221,7 @@ const BriefSection: React.FC<{
         <div className="space-y-2">
           {(value as string[]).map((item, i) => (
             <div key={i} className="flex items-center gap-2">
-              <span className="text-muted-foreground text-sm">•</span>
+              <span className="text-sm text-muted-foreground">•</span>
               <Input
                 value={item}
                 onChange={(e) => handleArrayItemChange(i, e.target.value)}
@@ -174,7 +231,7 @@ const BriefSection: React.FC<{
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-muted-foreground hover:text-destructive shrink-0"
+                className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
                 onClick={() => handleRemoveItem(i)}
               >
                 <Icon name="cross" size="size-3" />
@@ -210,7 +267,7 @@ const BriefSection: React.FC<{
 export const BriefStructureView: React.FC<BriefStructureViewProps> = ({
   project,
   onUpdate,
-  onNext
+  onNext,
 }) => {
   const { generate, isGenerating, error, progress } = usePRDAI();
   const [structure, setStructure] = useState<BriefStructure | null>(
@@ -223,27 +280,28 @@ export const BriefStructureView: React.FC<BriefStructureViewProps> = ({
   const uploadContent = project.project_metadata?.upload?.content || '';
 
   // Build context strings
-  const blindSpotsContext = brief?.blindSpots
-    ?.filter(bs => bs.selected)
-    .map(bs => `- ${bs.title}: ${bs.description}`)
-    .join('\n') || 'Nenhum ponto cego identificado';
+  const blindSpotsContext =
+    brief?.blindSpots
+      ?.filter((bs) => bs.selected)
+      .map((bs) => `- ${bs.title}: ${bs.description}`)
+      .join('\n') || 'Nenhum ponto cego identificado';
 
-  const researchContext = brief?.researchTopics
-    ?.filter(t => t.isRead)
-    .map(t => `- ${t.title}: ${t.summary}`)
-    .join('\n') || 'Nenhuma pesquisa realizada';
+  const researchContext =
+    brief?.researchTopics
+      ?.filter((t) => t.isRead)
+      .map((t) => `- ${t.title}: ${t.summary}`)
+      .join('\n') || 'Nenhuma pesquisa realizada';
 
-  const wowsContext = brief?.wows
-    ?.map(w => `- [${w.category}] ${w.text}`)
-    .join('\n') || 'Nenhum WOW registrado';
+  const wowsContext =
+    brief?.wows?.map((w) => `- [${w.category}] ${w.text}`).join('\n') || 'Nenhum WOW registrado';
 
   // Check if all required sections are filled
-  const isComplete = structure && SECTIONS
-    .filter(s => s.required)
-    .every(s => {
+  const isComplete =
+    structure &&
+    SECTIONS.filter((s) => s.required).every((s) => {
       const value = structure[s.key];
       if (s.isArray) {
-        return (value as string[]).filter(v => v.trim()).length > 0;
+        return (value as string[]).filter((v) => v.trim()).length > 0;
       }
       return (value as string).trim().length > 0;
     });
@@ -251,8 +309,7 @@ export const BriefStructureView: React.FC<BriefStructureViewProps> = ({
   // Generate full brief
   const handleGenerate = useCallback(async () => {
     try {
-      const prompt = BRIEF_PROMPT
-        .replace('{uploadContent}', uploadContent)
+      const prompt = BRIEF_PROMPT.replace('{uploadContent}', uploadContent)
         .replace('{blindSpots}', blindSpotsContext)
         .replace('{research}', researchContext)
         .replace('{wows}', wowsContext);
@@ -283,13 +340,14 @@ export const BriefStructureView: React.FC<BriefStructureViewProps> = ({
   }, [generate, uploadContent, blindSpotsContext, researchContext, wowsContext, onUpdate]);
 
   // Regenerate single section
-  const handleRegenerateSection = useCallback(async (key: SectionKey) => {
-    if (!structure) return;
+  const handleRegenerateSection = useCallback(
+    async (key: SectionKey) => {
+      if (!structure) return;
 
-    setRegeneratingSection(key);
-    try {
-      const sectionConfig = SECTIONS.find(s => s.key === key);
-      const prompt = `${SECTION_PROMPTS[key]}
+      setRegeneratingSection(key);
+      try {
+        const sectionConfig = SECTIONS.find((s) => s.key === key);
+        const prompt = `${SECTION_PROMPTS[key]}
 
 Contexto atual:
 Problema: ${structure.problem}
@@ -298,40 +356,45 @@ Público: ${structure.targetAudience}
 
 Responda APENAS com ${sectionConfig?.isArray ? 'um array JSON de strings' : 'o texto da seção'}.`;
 
-      const result = await generate(prompt, {
-        systemPrompt: BRIEF_SYSTEM,
-        temperature: 0.8,
-      });
+        const result = await generate(prompt, {
+          systemPrompt: BRIEF_SYSTEM,
+          temperature: 0.8,
+        });
 
-      let newValue: string | string[];
-      if (sectionConfig?.isArray) {
-        try {
-          const jsonMatch = result.content.match(/\[[\s\S]*\]/);
-          newValue = jsonMatch ? JSON.parse(jsonMatch[0]) : [result.content];
-        } catch {
-          newValue = [result.content];
+        let newValue: string | string[];
+        if (sectionConfig?.isArray) {
+          try {
+            const jsonMatch = result.content.match(/\[[\s\S]*\]/);
+            newValue = jsonMatch ? JSON.parse(jsonMatch[0]) : [result.content];
+          } catch {
+            newValue = [result.content];
+          }
+        } else {
+          newValue = result.content.replace(/^["']|["']$/g, '').trim();
         }
-      } else {
-        newValue = result.content.replace(/^["']|["']$/g, '').trim();
-      }
 
-      const updated = { ...structure, [key]: newValue };
-      setStructure(updated);
-      await onUpdate(updated);
-    } catch (err) {
-      console.error('Failed to regenerate section:', err);
-    } finally {
-      setRegeneratingSection(null);
-    }
-  }, [structure, generate, onUpdate]);
+        const updated = { ...structure, [key]: newValue };
+        setStructure(updated);
+        await onUpdate(updated);
+      } catch (err) {
+        console.error('Failed to regenerate section:', err);
+      } finally {
+        setRegeneratingSection(null);
+      }
+    },
+    [structure, generate, onUpdate]
+  );
 
   // Handle section value change
-  const handleSectionChange = useCallback(async (key: SectionKey, value: string | string[]) => {
-    if (!structure) return;
-    const updated = { ...structure, [key]: value };
-    setStructure(updated);
-    await onUpdate(updated);
-  }, [structure, onUpdate]);
+  const handleSectionChange = useCallback(
+    async (key: SectionKey, value: string | string[]) => {
+      if (!structure) return;
+      const updated = { ...structure, [key]: value };
+      setStructure(updated);
+      await onUpdate(updated);
+    },
+    [structure, onUpdate]
+  );
 
   // Format preview
   const formatPreview = () => {
@@ -348,13 +411,13 @@ ${structure.solution}
 ${structure.targetAudience}
 
 ## Diferenciais
-${structure.differentials.map(d => `- ${d}`).join('\n')}
+${structure.differentials.map((d) => `- ${d}`).join('\n')}
 
 ## Riscos
-${structure.risks.map(r => `- ${r}`).join('\n')}
+${structure.risks.map((r) => `- ${r}`).join('\n')}
 
 ## Métricas de Sucesso
-${structure.successMetrics.map(m => `- ${m}`).join('\n')}
+${structure.successMetrics.map((m) => `- ${m}`).join('\n')}
 
 ---
 Classificação: ${structure.classification === 'task' ? 'Tarefa Simples' : 'Projeto Completo'}
@@ -362,15 +425,15 @@ Complexidade: ${COMPLEXITY_LABELS[structure.estimatedComplexity].label}`;
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="animate-fade-in space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold flex items-center gap-2">
+          <h2 className="flex items-center gap-2 text-xl font-bold">
             <Icon name="document-text" style={{ color: PRD_PRIMARY }} />
             Brief Estruturado
           </h2>
-          <p className="text-muted-foreground text-sm mt-1">
+          <p className="mt-1 text-sm text-muted-foreground">
             Revise e ajuste o brief antes de gerar o PRD
           </p>
         </div>
@@ -392,13 +455,13 @@ Complexidade: ${COMPLEXITY_LABELS[structure.estimatedComplexity].label}`;
       {!structure && !isGenerating && (
         <Card className="p-12 text-center">
           <div
-            className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
+            className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl"
             style={{ backgroundColor: `${PRD_PRIMARY}20` }}
           >
             <Icon name="document-text" size="size-8" style={{ color: PRD_PRIMARY }} />
           </div>
-          <h3 className="text-lg font-bold mb-2">Gerar Brief Estruturado</h3>
-          <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+          <h3 className="mb-2 text-lg font-bold">Gerar Brief Estruturado</h3>
+          <p className="mx-auto mb-6 max-w-md text-muted-foreground">
             A IA vai analisar seu upload, pontos cegos, pesquisa e WOWs para gerar um brief completo
           </p>
           <Button onClick={handleGenerate} style={{ backgroundColor: PRD_PRIMARY }}>
@@ -411,13 +474,15 @@ Complexidade: ${COMPLEXITY_LABELS[structure.estimatedComplexity].label}`;
       {/* Loading State */}
       {isGenerating && !structure && (
         <Card className="p-12 text-center">
-          <Icon name="spinner" className="animate-spin mx-auto size-12 mb-4" style={{ color: PRD_PRIMARY }} />
-          <h3 className="text-lg font-bold mb-2">Gerando Brief...</h3>
-          <p className="text-muted-foreground">
-            Analisando contexto e estruturando o brief
-          </p>
+          <Icon
+            name="spinner"
+            className="mx-auto mb-4 size-12 animate-spin"
+            style={{ color: PRD_PRIMARY }}
+          />
+          <h3 className="mb-2 text-lg font-bold">Gerando Brief...</h3>
+          <p className="text-muted-foreground">Analisando contexto e estruturando o brief</p>
           {progress > 0 && (
-            <div className="w-48 h-1.5 bg-muted rounded-full mx-auto mt-4 overflow-hidden">
+            <div className="mx-auto mt-4 h-1.5 w-48 overflow-hidden rounded-full bg-muted">
               <div
                 className="h-full rounded-full transition-all duration-300"
                 style={{ width: `${progress}%`, backgroundColor: PRD_PRIMARY }}
@@ -429,7 +494,7 @@ Complexidade: ${COMPLEXITY_LABELS[structure.estimatedComplexity].label}`;
 
       {/* Error State */}
       {error && (
-        <Card className="p-6 border-destructive/50 bg-destructive/5">
+        <Card className="border-destructive/50 bg-destructive/5 p-6">
           <div className="flex items-center gap-3 text-destructive">
             <Icon name="exclamation-circle" size="size-5" />
             <div>
@@ -458,11 +523,11 @@ Complexidade: ${COMPLEXITY_LABELS[structure.estimatedComplexity].label}`;
           ))}
 
           {/* Classification Card */}
-          <Card className="p-4 bg-muted/30">
+          <Card className="bg-muted/30 p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center"
+                  className="flex h-12 w-12 items-center justify-center rounded-xl"
                   style={{ backgroundColor: `${PRD_PRIMARY}20` }}
                 >
                   <Icon name="chart-pie" size="size-6" style={{ color: PRD_PRIMARY }} />
@@ -471,7 +536,12 @@ Complexidade: ${COMPLEXITY_LABELS[structure.estimatedComplexity].label}`;
                   <p className="font-bold text-foreground">
                     {structure.classification === 'task' ? 'Tarefa Simples' : 'Projeto Completo'}
                   </p>
-                  <p className={cn("text-sm", COMPLEXITY_LABELS[structure.estimatedComplexity].color)}>
+                  <p
+                    className={cn(
+                      'text-sm',
+                      COMPLEXITY_LABELS[structure.estimatedComplexity].color
+                    )}
+                  >
                     Complexidade: {COMPLEXITY_LABELS[structure.estimatedComplexity].label}
                   </p>
                 </div>
@@ -489,10 +559,10 @@ Complexidade: ${COMPLEXITY_LABELS[structure.estimatedComplexity].label}`;
 
       {/* Progress & Actions */}
       {structure && (
-        <div className="flex items-center justify-between pt-4 border-t">
+        <div className="flex items-center justify-between border-t pt-4">
           <div className="text-sm text-muted-foreground">
             {isComplete ? (
-              <span className="text-emerald-500 font-medium">Brief completo</span>
+              <span className="font-medium text-emerald-500">Brief completo</span>
             ) : (
               <span className="text-amber-500">Preencha todas as seções obrigatórias</span>
             )}
@@ -510,12 +580,15 @@ Complexidade: ${COMPLEXITY_LABELS[structure.estimatedComplexity].label}`;
 
       {/* Preview Dialog */}
       <Dialog open={showPreview} onOpenChange={setShowPreview}>
-        <DialogContent onClose={() => setShowPreview(false)} className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogContent
+          onClose={() => setShowPreview(false)}
+          className="max-h-[80vh] max-w-2xl overflow-y-auto"
+        >
           <DialogHeader>
             <DialogTitle>Preview do Brief</DialogTitle>
           </DialogHeader>
           <div className="prose prose-sm dark:prose-invert max-w-none">
-            <pre className="whitespace-pre-wrap text-sm bg-muted p-4 rounded-lg overflow-x-auto">
+            <pre className="overflow-x-auto whitespace-pre-wrap rounded-lg bg-muted p-4 text-sm">
               {formatPreview()}
             </pre>
           </div>
@@ -529,9 +602,7 @@ Complexidade: ${COMPLEXITY_LABELS[structure.estimatedComplexity].label}`;
               <Icon name="clipboard" className="mr-2 size-4" />
               Copiar
             </Button>
-            <Button onClick={() => setShowPreview(false)}>
-              Fechar
-            </Button>
+            <Button onClick={() => setShowPreview(false)}>Fechar</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

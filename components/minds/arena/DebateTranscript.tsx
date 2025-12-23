@@ -32,25 +32,33 @@ export const DebateTranscript: React.FC<DebateTranscriptProps> = ({
   }, [history, streamedText]);
 
   return (
-    <ScrollArea className="flex-1 p-6 space-y-8">
-      <div className="max-w-3xl mx-auto space-y-8 pb-20">
+    <ScrollArea className="flex-1 space-y-8 p-6">
+      <div className="mx-auto max-w-3xl space-y-8 pb-20">
         {history.map((turn, i) => (
           <div
             key={i}
-            className={cn("flex gap-6 animate-fade-in", turn.speaker.id === clone1.id ? "flex-row" : "flex-row-reverse")}
+            className={cn(
+              'flex animate-fade-in gap-6',
+              turn.speaker.id === clone1.id ? 'flex-row' : 'flex-row-reverse'
+            )}
           >
-            <Avatar className="w-12 h-12 border-2 border-border shrink-0">
+            <Avatar className="h-12 w-12 shrink-0 border-2 border-border">
               <AvatarFallback className="bg-card font-bold">{turn.speaker.avatar}</AvatarFallback>
             </Avatar>
-            <div className={cn("flex-1 space-y-2", turn.speaker.id === clone1.id ? "text-left" : "text-right")}>
+            <div
+              className={cn(
+                'flex-1 space-y-2',
+                turn.speaker.id === clone1.id ? 'text-left' : 'text-right'
+              )}
+            >
               <div
-                className="flex items-baseline gap-2 justify-start"
+                className="flex items-baseline justify-start gap-2"
                 style={{ flexDirection: turn.speaker.id === clone1.id ? 'row' : 'row-reverse' }}
               >
                 <span className="font-bold text-foreground">{turn.speaker.name}</span>
-                <span className="text-xs text-muted-foreground font-mono">Round {turn.round}</span>
+                <span className="font-mono text-xs text-muted-foreground">Round {turn.round}</span>
               </div>
-              <p className="text-muted-foreground font-serif text-lg leading-relaxed whitespace-pre-wrap">
+              <p className="whitespace-pre-wrap font-serif text-lg leading-relaxed text-muted-foreground">
                 {turn.text}
               </p>
             </div>
@@ -59,22 +67,34 @@ export const DebateTranscript: React.FC<DebateTranscriptProps> = ({
 
         {isStreaming && activeSpeaker && (
           <div
-            className={cn("flex gap-6", activeSpeaker.id === clone1.id ? "flex-row" : "flex-row-reverse")}
+            className={cn(
+              'flex gap-6',
+              activeSpeaker.id === clone1.id ? 'flex-row' : 'flex-row-reverse'
+            )}
           >
-            <Avatar className="w-12 h-12 border-2 border-primary shadow-[0_0_15px_-3px_var(--primary)] shrink-0 animate-pulse">
-              <AvatarFallback className="bg-card font-bold text-foreground">{activeSpeaker.avatar}</AvatarFallback>
+            <Avatar className="h-12 w-12 shrink-0 animate-pulse border-2 border-primary shadow-[0_0_15px_-3px_var(--primary)]">
+              <AvatarFallback className="bg-card font-bold text-foreground">
+                {activeSpeaker.avatar}
+              </AvatarFallback>
             </Avatar>
-            <div className={cn("flex-1 space-y-2", activeSpeaker.id === clone1.id ? "text-left" : "text-right")}>
+            <div
+              className={cn(
+                'flex-1 space-y-2',
+                activeSpeaker.id === clone1.id ? 'text-left' : 'text-right'
+              )}
+            >
               <div
-                className="flex items-baseline gap-2 justify-start"
+                className="flex items-baseline justify-start gap-2"
                 style={{ flexDirection: activeSpeaker.id === clone1.id ? 'row' : 'row-reverse' }}
               >
                 <span className="font-bold text-primary">{activeSpeaker.name}</span>
-                <span className="text-xs text-muted-foreground font-mono animate-pulse">Pensando...</span>
+                <span className="animate-pulse font-mono text-xs text-muted-foreground">
+                  Pensando...
+                </span>
               </div>
-              <p className="text-foreground font-serif text-lg leading-relaxed">
+              <p className="font-serif text-lg leading-relaxed text-foreground">
                 {streamedText}
-                <span className="inline-block w-2 h-5 bg-primary ml-1 animate-pulse align-middle"></span>
+                <span className="ml-1 inline-block h-5 w-2 animate-pulse bg-primary align-middle"></span>
               </p>
             </div>
           </div>

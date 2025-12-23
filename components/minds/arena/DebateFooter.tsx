@@ -19,22 +19,26 @@ export const DebateFooter: React.FC<DebateFooterProps> = ({
   onExit,
 }) => {
   return (
-    <div className="p-4 border-t border-border bg-card flex justify-between items-center">
-      <Button variant="ghost" onClick={onExit} className="text-muted-foreground hover:text-foreground">
+    <div className="flex items-center justify-between border-t border-border bg-card p-4">
+      <Button
+        variant="ghost"
+        onClick={onExit}
+        className="text-muted-foreground hover:text-foreground"
+      >
         <Icon name="arrow-left" className="mr-2" /> Sair
       </Button>
       <div className="flex gap-4">
         <Button
-          variant={userVoted ? "outline" : "default"}
-          className={cn(userVoted ? "opacity-50" : "bg-white text-background hover:bg-primary/90")}
+          variant={userVoted ? 'outline' : 'default'}
+          className={cn(userVoted ? 'opacity-50' : 'bg-white text-background hover:bg-primary/90')}
           onClick={() => onVote('c1')}
           disabled={userVoted}
         >
           Vote {clone1Name}
         </Button>
         <Button
-          variant={userVoted ? "outline" : "default"}
-          className={cn(userVoted ? "opacity-50" : "bg-white text-background hover:bg-primary/90")}
+          variant={userVoted ? 'outline' : 'default'}
+          className={cn(userVoted ? 'opacity-50' : 'bg-white text-background hover:bg-primary/90')}
           onClick={() => onVote('c2')}
           disabled={userVoted}
         >

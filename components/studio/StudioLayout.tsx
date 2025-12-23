@@ -72,13 +72,11 @@ export const StudioLayout: React.FC<StudioLayoutProps> = ({
   className,
 }) => {
   return (
-    <div className={cn("flex flex-col min-h-screen bg-background font-sans", className)}>
+    <div className={cn('flex min-h-screen flex-col bg-background font-sans', className)}>
       {topbar}
       <div className="flex flex-1 overflow-hidden">
         {sidebar}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {children}
-        </div>
+        <div className="flex flex-1 flex-col overflow-hidden">{children}</div>
       </div>
     </div>
   );
@@ -99,28 +97,21 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
   primaryColor = STUDIO_PRIMARY,
 }) => {
   return (
-    <div className="h-16 border-b border-border bg-card flex items-center justify-between px-6 shrink-0">
+    <div className="flex h-16 shrink-0 items-center justify-between border-b border-border bg-card px-6">
       <div>
         <h1 className="text-lg font-bold">{title}</h1>
-        {description && (
-          <p className="text-xs text-muted-foreground">{description}</p>
-        )}
+        {description && <p className="text-xs text-muted-foreground">{description}</p>}
       </div>
       <div className="flex items-center gap-4">
         {progress !== undefined && (
           <div className="flex items-center gap-2 text-sm">
             <span className="text-muted-foreground">Progresso:</span>
-            <Progress value={progress} className="w-24 h-2" />
+            <Progress value={progress} className="h-2 w-24" />
             <span className="font-mono text-xs">{progress}%</span>
           </div>
         )}
         {showSave && onSave && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onSave}
-            disabled={isSaving}
-          >
+          <Button variant="outline" size="sm" onClick={onSave} disabled={isSaving}>
             {isSaving ? (
               <Icon name="spinner" className="mr-2 size-4 animate-spin" />
             ) : (
@@ -147,9 +138,7 @@ export const StudioContent: React.FC<StudioContentProps> = ({
 }) => {
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className={cn(maxWidth, 'mx-auto', padding, className)}>
-        {children}
-      </div>
+      <div className={cn(maxWidth, 'mx-auto', padding, className)}>{children}</div>
     </div>
   );
 };
@@ -158,14 +147,9 @@ export const StudioContent: React.FC<StudioContentProps> = ({
 // FOOTER COMPONENT
 // =============================================================================
 
-export const StudioFooter: React.FC<StudioFooterProps> = ({
-  left,
-  center,
-  right,
-  className,
-}) => {
+export const StudioFooter: React.FC<StudioFooterProps> = ({ left, center, right, className }) => {
   return (
-    <div className={cn("flex justify-between items-center pt-4 border-t border-border", className)}>
+    <div className={cn('flex items-center justify-between border-t border-border pt-4', className)}>
       <div>{left}</div>
       <div>{center}</div>
       <div>{right}</div>

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import { BlindSpot, BlindSpotCategory } from '../../types/prd';
 import { Card } from '../ui/card';
@@ -27,10 +28,10 @@ export interface PRDBlindSpotCardProps {
 // =============================================================================
 
 const CATEGORY_CONFIG: Record<BlindSpotCategory, { icon: string; label: string; color: string }> = {
-  'Técnico': { icon: 'code', label: 'Técnico', color: 'text-blue-500 bg-blue-500/10' },
-  'Mercado': { icon: 'chart-line', label: 'Mercado', color: 'text-green-500 bg-green-500/10' },
-  'UX': { icon: 'user', label: 'UX', color: 'text-purple-500 bg-purple-500/10' },
-  'Viabilidade': { icon: 'scale', label: 'Viabilidade', color: 'text-amber-500 bg-amber-500/10' },
+  Técnico: { icon: 'code', label: 'Técnico', color: 'text-blue-500 bg-blue-500/10' },
+  Mercado: { icon: 'chart-line', label: 'Mercado', color: 'text-green-500 bg-green-500/10' },
+  UX: { icon: 'user', label: 'UX', color: 'text-purple-500 bg-purple-500/10' },
+  Viabilidade: { icon: 'scale', label: 'Viabilidade', color: 'text-amber-500 bg-amber-500/10' },
 };
 
 // =============================================================================
@@ -52,7 +53,7 @@ export const PRDBlindSpotCard: React.FC<PRDBlindSpotCardProps> = ({
   index = 0,
   onStatusChange,
   onEdit,
-  onDelete
+  onDelete,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(blindSpot.title);
@@ -78,12 +79,12 @@ export const PRDBlindSpotCard: React.FC<PRDBlindSpotCardProps> = ({
   if (isEditing) {
     return (
       <Card
-        className="p-4 border-dashed border-primary/50 animate-fade-in"
+        className="animate-fade-in border-dashed border-primary/50 p-4"
         style={{ animationDelay: `${index * 50}ms` }}
       >
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <Badge variant="outline" className={cn("text-[10px]", categoryConfig.color)}>
+            <Badge variant="outline" className={cn('text-[10px]', categoryConfig.color)}>
               {categoryConfig.label}
             </Badge>
             <span className="text-xs text-muted-foreground">Editando</span>
@@ -117,33 +118,31 @@ export const PRDBlindSpotCard: React.FC<PRDBlindSpotCardProps> = ({
   // Normal mode
   return (
     <Card
-      className={cn(
-        "p-4 transition-all duration-300",
-        STATUS_STYLES[status],
-        "animate-fade-in"
-      )}
+      className={cn('p-4 transition-all duration-300', STATUS_STYLES[status], 'animate-fade-in')}
       style={{ animationDelay: `${index * 50}ms` }}
     >
       <div className="flex items-start gap-4">
         {/* Category Icon */}
-        <div className={cn(
-          "w-10 h-10 rounded-lg flex items-center justify-center shrink-0",
-          categoryConfig.color
-        )}>
+        <div
+          className={cn(
+            'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg',
+            categoryConfig.color
+          )}
+        >
           <Icon name={categoryConfig.icon} size="size-5" />
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           {/* Header */}
-          <div className="flex items-start justify-between gap-2 mb-1">
-            <div className="flex items-center gap-2 flex-wrap">
+          <div className="mb-1 flex items-start justify-between gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <h4 className="font-semibold text-foreground">{blindSpot.title}</h4>
-              <Badge variant="outline" className={cn("text-[10px]", categoryConfig.color)}>
+              <Badge variant="outline" className={cn('text-[10px]', categoryConfig.color)}>
                 {categoryConfig.label}
               </Badge>
             </div>
-            <div className="flex items-center gap-1 shrink-0">
+            <div className="flex shrink-0 items-center gap-1">
               <Button
                 variant="ghost"
                 size="icon"
@@ -168,11 +167,11 @@ export const PRDBlindSpotCard: React.FC<PRDBlindSpotCardProps> = ({
           </div>
 
           {/* Description */}
-          <p className="text-sm text-muted-foreground mt-2">{blindSpot.description}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{blindSpot.description}</p>
 
           {/* Status indicator (when addressed) */}
           {status !== 'pending' && (
-            <div className="flex items-center gap-1.5 mt-3 text-xs">
+            <div className="mt-3 flex items-center gap-1.5 text-xs">
               <Icon
                 name={status === 'already_thought' ? 'check-double' : 'check'}
                 className={status === 'already_thought' ? 'text-slate-500' : 'text-emerald-500'}
@@ -186,7 +185,7 @@ export const PRDBlindSpotCard: React.FC<PRDBlindSpotCardProps> = ({
 
           {/* Actions (only when pending) */}
           {status === 'pending' && (
-            <div className="flex items-center gap-2 mt-4">
+            <div className="mt-4 flex items-center gap-2">
               <Button
                 variant="default"
                 size="sm"

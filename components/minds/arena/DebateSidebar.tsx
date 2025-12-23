@@ -14,15 +14,15 @@ interface DebateSidebarProps {
 
 export const DebateSidebar: React.FC<DebateSidebarProps> = ({ clone1, clone2 }) => {
   return (
-    <div className="w-full lg:w-80 flex flex-col gap-6">
+    <div className="flex w-full flex-col gap-6 lg:w-80">
       {/* Fidelity Score Card */}
-      <Card className="bg-card border-border">
-        <CardHeader className="py-3 border-b border-border">
+      <Card className="border-border bg-card">
+        <CardHeader className="border-b border-border py-3">
           <CardTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
             Fidelity Score (Live)
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-4 space-y-4">
+        <CardContent className="space-y-4 p-4">
           <div className="space-y-1">
             <div className="flex justify-between text-xs text-foreground">
               <span>{clone1.name}</span>
@@ -41,29 +41,34 @@ export const DebateSidebar: React.FC<DebateSidebarProps> = ({ clone1, clone2 }) 
       </Card>
 
       {/* Community Chat Card */}
-      <Card className="bg-card border-border flex-1 flex flex-col min-h-[300px]">
-        <CardHeader className="py-3 border-b border-border flex flex-row justify-between items-center">
+      <Card className="flex min-h-[300px] flex-1 flex-col border-border bg-card">
+        <CardHeader className="flex flex-row items-center justify-between border-b border-border py-3">
           <CardTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
             Chat da Comunidade
           </CardTitle>
-          <Badge variant="outline" className="text-[9px] border-border text-muted-foreground">
+          <Badge variant="outline" className="border-border text-[9px] text-muted-foreground">
             234 online
           </Badge>
         </CardHeader>
         <ScrollArea className="flex-1 p-4">
           <div className="space-y-3">
             <ChatMessage user="CryptoKing" text="Elon está destruindo nesse round!" time="14:02" />
-            <ChatMessage user="Sarah_AI" text="O argumento sobre segurança do Sam é muito sólido." time="14:03" />
-            <ChatMessage user="Dev_Junior" text="Alguém mais notou a referência ao paper de 2019?" time="14:03" />
+            <ChatMessage
+              user="Sarah_AI"
+              text="O argumento sobre segurança do Sam é muito sólido."
+              time="14:03"
+            />
+            <ChatMessage
+              user="Dev_Junior"
+              text="Alguém mais notou a referência ao paper de 2019?"
+              time="14:03"
+            />
             <ChatMessage user="Anon" text="Team Open Source sempre!" time="14:04" />
             <ChatMessage user="Mod_Bot" text="Votação para o próximo round aberta." time="14:05" />
           </div>
         </ScrollArea>
-        <div className="p-3 border-t border-border">
-          <Input
-            placeholder="Comente algo..."
-            className="bg-input border-border h-9 text-xs"
-          />
+        <div className="border-t border-border p-3">
+          <Input placeholder="Comente algo..." className="h-9 border-border bg-input text-xs" />
         </div>
       </Card>
     </div>

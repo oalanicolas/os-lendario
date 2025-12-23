@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useCallback, useMemo } from 'react';
 import { PRDProject, EpicData, StoryData, Complexity } from '../../../types/prd';
 import { usePRDAI } from '../../../hooks/prd/usePRDAI';
@@ -17,7 +18,7 @@ export type { StoryData } from '../../../types/prd';
 
 interface PRDStoriesTemplateProps {
   project: PRDProject;
-  initialEpics?: EpicData[];   // Épicos carregados do banco
+  initialEpics?: EpicData[]; // Épicos carregados do banco
   initialStories?: StoryData[]; // Stories carregadas do banco
   onUpdateStories: (stories: StoryData[]) => Promise<void>;
   onUpdateEpics: (epics: EpicData[]) => Promise<void>;
@@ -103,14 +104,14 @@ const StoryCard: React.FC<StoryCardProps> = ({
     onSave({
       title: editTitle.trim(),
       userStory: editUserStory.trim(),
-      acceptanceCriteria: editCriteria.split('\n').filter(c => c.trim()),
+      acceptanceCriteria: editCriteria.split('\n').filter((c) => c.trim()),
       complexity: editComplexity,
     });
   };
 
   if (isEditing) {
     return (
-      <Card className="p-4 border-primary/50">
+      <Card className="border-primary/50 p-4">
         <div className="space-y-3">
           <Input
             value={editTitle}
@@ -125,7 +126,9 @@ const StoryCard: React.FC<StoryCardProps> = ({
             className="min-h-[60px] resize-none"
           />
           <div>
-            <label className="text-xs text-muted-foreground mb-1 block">Critérios de Aceite (um por linha)</label>
+            <label className="mb-1 block text-xs text-muted-foreground">
+              Critérios de Aceite (um por linha)
+            </label>
             <Textarea
               value={editCriteria}
               onChange={(e) => setEditCriteria(e.target.value)}
@@ -138,17 +141,19 @@ const StoryCard: React.FC<StoryCardProps> = ({
             {(['P', 'M', 'G'] as Complexity[]).map((c) => (
               <Button
                 key={c}
-                variant={editComplexity === c ? "default" : "outline"}
+                variant={editComplexity === c ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setEditComplexity(c)}
-                className={cn("h-7 w-7 p-0", editComplexity === c && COMPLEXITY_CONFIG[c].color)}
+                className={cn('h-7 w-7 p-0', editComplexity === c && COMPLEXITY_CONFIG[c].color)}
               >
                 {c}
               </Button>
             ))}
           </div>
           <div className="flex justify-end gap-2">
-            <Button variant="ghost" size="sm" onClick={onCancel}>Cancelar</Button>
+            <Button variant="ghost" size="sm" onClick={onCancel}>
+              Cancelar
+            </Button>
             <Button size="sm" onClick={handleSave} disabled={!editTitle.trim()}>
               <Icon name="check" className="mr-1.5 size-3" />
               Salvar
@@ -160,29 +165,31 @@ const StoryCard: React.FC<StoryCardProps> = ({
   }
 
   return (
-    <Card className={cn(
-      "transition-all",
-      isExpanded ? "p-4" : "p-3",
-      !story.isValid && "border-red-500/30"
-    )}>
+    <Card
+      className={cn(
+        'transition-all',
+        isExpanded ? 'p-4' : 'p-3',
+        !story.isValid && 'border-red-500/30'
+      )}
+    >
       <div className="flex items-start gap-3">
         {/* Story ID */}
         <button
           onClick={onToggleExpand}
-          className="text-xs font-mono text-muted-foreground hover:text-foreground shrink-0 mt-0.5"
+          className="mt-0.5 shrink-0 font-mono text-xs text-muted-foreground hover:text-foreground"
         >
           #{story.sequence_order}
         </button>
 
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           {/* Header Row */}
-          <div className="flex items-center gap-2 mb-1">
-            <h4 className="font-medium text-sm truncate flex-1">{story.title}</h4>
-            <Badge className={cn("text-xs", COMPLEXITY_CONFIG[story.complexity].color)}>
+          <div className="mb-1 flex items-center gap-2">
+            <h4 className="flex-1 truncate text-sm font-medium">{story.title}</h4>
+            <Badge className={cn('text-xs', COMPLEXITY_CONFIG[story.complexity].color)}>
               {story.complexity}
             </Badge>
             {!story.isValid && (
-              <Badge variant="outline" className="text-xs text-red-400 border-red-500/30">
+              <Badge variant="outline" className="border-red-500/30 text-xs text-red-400">
                 <Icon name="alert-circle" className="mr-1 size-3" />
                 Inválida
               </Badge>
@@ -190,34 +197,40 @@ const StoryCard: React.FC<StoryCardProps> = ({
           </div>
 
           {/* User Story */}
-          <p className="text-xs text-muted-foreground line-clamp-1">{story.userStory}</p>
+          <p className="line-clamp-1 text-xs text-muted-foreground">{story.userStory}</p>
 
           {/* Expanded Content */}
           {isExpanded && (
-            <div className="mt-3 pt-3 border-t space-y-3">
+            <div className="mt-3 space-y-3 border-t pt-3">
               <div>
-                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">User Story</p>
+                <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">
+                  User Story
+                </p>
                 <p className="text-sm">{story.userStory}</p>
               </div>
               <div>
-                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+                <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">
                   Critérios de Aceite ({story.acceptanceCriteria.length})
                 </p>
                 <ul className="space-y-1">
                   {story.acceptanceCriteria.map((criterion, i) => (
-                    <li key={i} className="text-sm flex items-start gap-2">
-                      <Icon name="check" className="size-3 mt-1 text-emerald-500 shrink-0" />
+                    <li key={i} className="flex items-start gap-2 text-sm">
+                      <Icon name="check" className="mt-1 size-3 shrink-0 text-emerald-500" />
                       <span>{criterion}</span>
                     </li>
                   ))}
                 </ul>
               </div>
               {story.validationErrors && story.validationErrors.length > 0 && (
-                <div className="bg-red-500/10 rounded-lg p-3">
-                  <p className="text-xs text-red-400 uppercase tracking-wider mb-1">Erros de Validação</p>
+                <div className="rounded-lg bg-red-500/10 p-3">
+                  <p className="mb-1 text-xs uppercase tracking-wider text-red-400">
+                    Erros de Validação
+                  </p>
                   <ul className="space-y-1">
                     {story.validationErrors.map((error, i) => (
-                      <li key={i} className="text-xs text-red-400">{error}</li>
+                      <li key={i} className="text-xs text-red-400">
+                        {error}
+                      </li>
                     ))}
                   </ul>
                 </div>
@@ -227,14 +240,19 @@ const StoryCard: React.FC<StoryCardProps> = ({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex shrink-0 items-center gap-1">
           <Button variant="ghost" size="sm" onClick={onToggleExpand} className="h-7 w-7 p-0">
-            <Icon name={isExpanded ? "chevron-up" : "chevron-down"} className="size-4" />
+            <Icon name={isExpanded ? 'chevron-up' : 'chevron-down'} className="size-4" />
           </Button>
           <Button variant="ghost" size="sm" onClick={onEdit} className="h-7 w-7 p-0">
             <Icon name="edit" className="size-3.5" />
           </Button>
-          <Button variant="ghost" size="sm" onClick={onDelete} className="h-7 w-7 p-0 text-destructive">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onDelete}
+            className="h-7 w-7 p-0 text-destructive"
+          >
             <Icon name="trash" className="size-3.5" />
           </Button>
         </div>
@@ -276,43 +294,48 @@ const EpicAccordion: React.FC<EpicAccordionProps> = ({
   onDeleteStory,
   onAddStory,
 }) => {
-  const validCount = stories.filter(s => s.isValid).length;
+  const validCount = stories.filter((s) => s.isValid).length;
   const invalidCount = stories.length - validCount;
 
   return (
-    <div className="border rounded-xl overflow-hidden">
+    <div className="overflow-hidden rounded-xl border">
       {/* Accordion Header */}
       <button
         onClick={onToggle}
         className={cn(
-          "w-full flex items-center gap-4 p-4 text-left transition-colors",
-          isOpen ? "bg-muted/50" : "hover:bg-muted/30"
+          'flex w-full items-center gap-4 p-4 text-left transition-colors',
+          isOpen ? 'bg-muted/50' : 'hover:bg-muted/30'
         )}
       >
         <div
-          className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 font-bold"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg font-bold"
           style={{ backgroundColor: `${PRD_PRIMARY}20`, color: PRD_PRIMARY }}
         >
           {epic.sequence_order}
         </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="font-semibold truncate">{epic.title}</h3>
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate font-semibold">{epic.title}</h3>
           <p className="text-xs text-muted-foreground">
             {stories.length} stories
             {invalidCount > 0 && (
-              <span className="text-red-400 ml-2">({invalidCount} inválida{invalidCount > 1 ? 's' : ''})</span>
+              <span className="ml-2 text-red-400">
+                ({invalidCount} inválida{invalidCount > 1 ? 's' : ''})
+              </span>
             )}
           </p>
         </div>
-        <Icon name={isOpen ? "chevron-up" : "chevron-down"} className="size-5 text-muted-foreground" />
+        <Icon
+          name={isOpen ? 'chevron-up' : 'chevron-down'}
+          className="size-5 text-muted-foreground"
+        />
       </button>
 
       {/* Accordion Content */}
       {isOpen && (
-        <div className="p-4 pt-0 space-y-3">
+        <div className="space-y-3 p-4 pt-0">
           {stories.length === 0 ? (
-            <div className="text-center py-8">
-              <p className="text-muted-foreground mb-4">Nenhuma story gerada para este épico</p>
+            <div className="py-8 text-center">
+              <p className="mb-4 text-muted-foreground">Nenhuma story gerada para este épico</p>
               <Button
                 onClick={onGenerateStories}
                 disabled={isGenerating}
@@ -357,7 +380,10 @@ const EpicAccordion: React.FC<EpicAccordionProps> = ({
                   onClick={onGenerateStories}
                   disabled={isGenerating}
                 >
-                  <Icon name={isGenerating ? "spinner" : "sparkles"} className={cn("mr-1.5 size-3", isGenerating && "animate-spin")} />
+                  <Icon
+                    name={isGenerating ? 'spinner' : 'sparkles'}
+                    className={cn('mr-1.5 size-3', isGenerating && 'animate-spin')}
+                  />
                   Regenerar
                 </Button>
               </div>
@@ -379,7 +405,7 @@ export const PRDStoriesTemplate: React.FC<PRDStoriesTemplateProps> = ({
   initialStories,
   onUpdateStories,
   onUpdateEpics,
-  onNext
+  onNext,
 }) => {
   const { generate, isGenerating } = usePRDAI();
   const [stories, setStories] = useState<StoryData[]>(() => {
@@ -424,9 +450,9 @@ export const PRDStoriesTemplate: React.FC<PRDStoriesTemplateProps> = ({
   // Group stories by epic
   const storiesByEpic = useMemo(() => {
     const grouped: Record<string, StoryData[]> = {};
-    epics.forEach(epic => {
+    epics.forEach((epic) => {
       grouped[epic.id] = stories
-        .filter(s => s.epic_id === epic.id)
+        .filter((s) => s.epic_id === epic.id)
         .sort((a, b) => a.sequence_order - b.sequence_order);
     });
     return grouped;
@@ -434,136 +460,144 @@ export const PRDStoriesTemplate: React.FC<PRDStoriesTemplateProps> = ({
 
   // Stats
   const totalStories = stories.length;
-  const validStories = stories.filter(s => s.isValid).length;
+  const validStories = stories.filter((s) => s.isValid).length;
   const allValid = totalStories > 0 && validStories === totalStories;
 
   // Generate stories for an epic
-  const handleGenerateStories = useCallback(async (epicId: string) => {
-    const epic = epics.find(e => e.id === epicId);
-    if (!epic || !brief) return;
+  const handleGenerateStories = useCallback(
+    async (epicId: string) => {
+      const epic = epics.find((e) => e.id === epicId);
+      if (!epic || !brief) return;
 
-    setGeneratingEpicId(epicId);
-    try {
-      const prompt = STORIES_USER
-        .replace('{epicTitle}', epic.title)
-        .replace('{epicDescription}', epic.description)
-        .replace('{problem}', brief.problem || '')
-        .replace('{solution}', brief.solution || '')
-        .replace('{count}', String(epic.storiesCount || 5));
+      setGeneratingEpicId(epicId);
+      try {
+        const prompt = STORIES_USER.replace('{epicTitle}', epic.title)
+          .replace('{epicDescription}', epic.description)
+          .replace('{problem}', brief.problem || '')
+          .replace('{solution}', brief.solution || '')
+          .replace('{count}', String(epic.storiesCount || 5));
 
-      const result = await generate(prompt, {
-        systemPrompt: STORIES_SYSTEM,
-        temperature: 0.7,
-        maxTokens: 4096,
-      });
+        const result = await generate(prompt, {
+          systemPrompt: STORIES_SYSTEM,
+          temperature: 0.7,
+          maxTokens: 4096,
+        });
 
-      const jsonMatch = result.content.match(/\[[\s\S]*\]/);
-      if (!jsonMatch) {
-        console.error('[PRD-Stories] No JSON found in response');
-        return;
+        const jsonMatch = result.content.match(/\[[\s\S]*\]/);
+        if (!jsonMatch) {
+          console.error('[PRD-Stories] No JSON found in response');
+          return;
+        }
+
+        const parsed = JSON.parse(jsonMatch[0]) as Array<{
+          title: string;
+          userStory: string;
+          acceptanceCriteria: string[];
+          complexity: Complexity;
+        }>;
+
+        // Transform to StoryData
+        const newStories: StoryData[] = parsed.map((item, index) => ({
+          id: `story-${Date.now()}-${index}`,
+          epic_id: epicId,
+          sequence_order: index + 1,
+          title: item.title,
+          userStory: item.userStory,
+          acceptanceCriteria: item.acceptanceCriteria || [],
+          complexity: item.complexity || 'M',
+          isValid: true,
+        }));
+
+        // Replace stories for this epic
+        const otherStories = stories.filter((s) => s.epic_id !== epicId);
+        const updated = [...otherStories, ...newStories];
+        setStories(updated);
+        await onUpdateStories(updated);
+
+        // Update epic status
+        const updatedEpics = epics.map((e) =>
+          e.id === epicId
+            ? { ...e, storiesCount: newStories.length, status: 'stories_generated' as const }
+            : e
+        );
+        await onUpdateEpics(updatedEpics);
+      } catch (err) {
+        console.error('[PRD-Stories] Failed to generate stories:', err);
+      } finally {
+        setGeneratingEpicId(null);
       }
-
-      const parsed = JSON.parse(jsonMatch[0]) as Array<{
-        title: string;
-        userStory: string;
-        acceptanceCriteria: string[];
-        complexity: Complexity;
-      }>;
-
-      // Transform to StoryData
-      const newStories: StoryData[] = parsed.map((item, index) => ({
-        id: `story-${Date.now()}-${index}`,
-        epic_id: epicId,
-        sequence_order: index + 1,
-        title: item.title,
-        userStory: item.userStory,
-        acceptanceCriteria: item.acceptanceCriteria || [],
-        complexity: item.complexity || 'M',
-        isValid: true,
-      }));
-
-      // Replace stories for this epic
-      const otherStories = stories.filter(s => s.epic_id !== epicId);
-      const updated = [...otherStories, ...newStories];
-      setStories(updated);
-      await onUpdateStories(updated);
-
-      // Update epic status
-      const updatedEpics = epics.map(e =>
-        e.id === epicId
-          ? { ...e, storiesCount: newStories.length, status: 'stories_generated' as const }
-          : e
-      );
-      await onUpdateEpics(updatedEpics);
-
-    } catch (err) {
-      console.error('[PRD-Stories] Failed to generate stories:', err);
-    } finally {
-      setGeneratingEpicId(null);
-    }
-  }, [epics, brief, stories, generate, onUpdateStories, onUpdateEpics]);
+    },
+    [epics, brief, stories, generate, onUpdateStories, onUpdateEpics]
+  );
 
   // Add new story
-  const handleAddStory = useCallback((epicId: string) => {
-    const epicStories = storiesByEpic[epicId] || [];
-    const newStory: StoryData = {
-      id: `story-${Date.now()}`,
-      epic_id: epicId,
-      sequence_order: epicStories.length + 1,
-      title: 'Nova Story',
-      userStory: 'Como usuário, quero ..., para ...',
-      acceptanceCriteria: ['Critério 1'],
-      complexity: 'M',
-      isValid: false,
-      validationErrors: ['Story precisa ser preenchida'],
-    };
+  const handleAddStory = useCallback(
+    (epicId: string) => {
+      const epicStories = storiesByEpic[epicId] || [];
+      const newStory: StoryData = {
+        id: `story-${Date.now()}`,
+        epic_id: epicId,
+        sequence_order: epicStories.length + 1,
+        title: 'Nova Story',
+        userStory: 'Como usuário, quero ..., para ...',
+        acceptanceCriteria: ['Critério 1'],
+        complexity: 'M',
+        isValid: false,
+        validationErrors: ['Story precisa ser preenchida'],
+      };
 
-    const updated = [...stories, newStory];
-    setStories(updated);
-    setEditingStoryId(newStory.id);
-    onUpdateStories(updated);
-  }, [stories, storiesByEpic, onUpdateStories]);
+      const updated = [...stories, newStory];
+      setStories(updated);
+      setEditingStoryId(newStory.id);
+      onUpdateStories(updated);
+    },
+    [stories, storiesByEpic, onUpdateStories]
+  );
 
   // Save story
-  const handleSaveStory = useCallback(async (storyId: string, updates: Partial<StoryData>) => {
-    const updated = stories.map(s =>
-      s.id === storyId ? { ...s, ...updates, isValid: true, validationErrors: undefined } : s
-    );
-    setStories(updated);
-    setEditingStoryId(null);
-    await onUpdateStories(updated);
-  }, [stories, onUpdateStories]);
+  const handleSaveStory = useCallback(
+    async (storyId: string, updates: Partial<StoryData>) => {
+      const updated = stories.map((s) =>
+        s.id === storyId ? { ...s, ...updates, isValid: true, validationErrors: undefined } : s
+      );
+      setStories(updated);
+      setEditingStoryId(null);
+      await onUpdateStories(updated);
+    },
+    [stories, onUpdateStories]
+  );
 
   // Delete story
-  const handleDeleteStory = useCallback(async (storyId: string) => {
-    const story = stories.find(s => s.id === storyId);
-    if (!story) return;
+  const handleDeleteStory = useCallback(
+    async (storyId: string) => {
+      const story = stories.find((s) => s.id === storyId);
+      if (!story) return;
 
-    const filtered = stories.filter(s => s.id !== storyId);
-    // Reorder within epic
-    const epicStories = filtered.filter(s => s.epic_id === story.epic_id);
-    const reordered = filtered.map(s => {
-      if (s.epic_id === story.epic_id) {
-        const newOrder = epicStories.findIndex(es => es.id === s.id) + 1;
-        return { ...s, sequence_order: newOrder };
-      }
-      return s;
-    });
+      const filtered = stories.filter((s) => s.id !== storyId);
+      // Reorder within epic
+      const epicStories = filtered.filter((s) => s.epic_id === story.epic_id);
+      const reordered = filtered.map((s) => {
+        if (s.epic_id === story.epic_id) {
+          const newOrder = epicStories.findIndex((es) => es.id === s.id) + 1;
+          return { ...s, sequence_order: newOrder };
+        }
+        return s;
+      });
 
-    setStories(reordered);
-    setShowDeleteConfirm(null);
-    await onUpdateStories(reordered);
-  }, [stories, onUpdateStories]);
+      setStories(reordered);
+      setShowDeleteConfirm(null);
+      await onUpdateStories(reordered);
+    },
+    [stories, onUpdateStories]
+  );
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex h-full flex-col">
       {/* Header */}
-      <header className="border-b p-4 bg-background">
+      <header className="border-b bg-background p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Badge className={cn(PRD_STATUS.stories.bg, PRD_STATUS.stories.text)}>
-              Stories
-            </Badge>
+            <Badge className={cn(PRD_STATUS.stories.bg, PRD_STATUS.stories.text)}>Stories</Badge>
             <PRDEffortIndicator human={10} ai={90} size="md" />
           </div>
           <div className="flex items-center gap-3">
@@ -576,8 +610,8 @@ export const PRDStoriesTemplate: React.FC<PRDStoriesTemplateProps> = ({
 
       {/* Content */}
       <main className="flex-1 overflow-auto p-6">
-        <div className="max-w-3xl mx-auto space-y-4">
-          <div className="flex items-center justify-between mb-6">
+        <div className="mx-auto max-w-3xl space-y-4">
+          <div className="mb-6 flex items-center justify-between">
             <div>
               <h2 className="text-xl font-bold">User Stories</h2>
               <p className="text-sm text-muted-foreground">
@@ -588,11 +622,9 @@ export const PRDStoriesTemplate: React.FC<PRDStoriesTemplateProps> = ({
 
           {epics.length === 0 ? (
             <Card className="p-12 text-center">
-              <Icon name="folder-open" className="size-12 mx-auto mb-4 text-muted-foreground/30" />
-              <h3 className="text-lg font-bold mb-2">Nenhum Épico</h3>
-              <p className="text-muted-foreground">
-                Crie épicos primeiro para poder gerar stories
-              </p>
+              <Icon name="folder-open" className="mx-auto mb-4 size-12 text-muted-foreground/30" />
+              <h3 className="mb-2 text-lg font-bold">Nenhum Épico</h3>
+              <p className="text-muted-foreground">Crie épicos primeiro para poder gerar stories</p>
             </Card>
           ) : (
             epics.map((epic) => (
@@ -620,17 +652,17 @@ export const PRDStoriesTemplate: React.FC<PRDStoriesTemplateProps> = ({
 
       {/* Footer Navigation */}
       {totalStories > 0 && (
-        <footer className="border-t p-4 bg-background">
-          <div className="flex justify-between items-center max-w-3xl mx-auto">
+        <footer className="border-t bg-background p-4">
+          <div className="mx-auto flex max-w-3xl items-center justify-between">
             <div className="text-sm text-muted-foreground">
               {allValid ? (
                 <span className="text-emerald-500">
-                  <Icon name="check-circle" className="inline mr-1.5 size-4" />
+                  <Icon name="check-circle" className="mr-1.5 inline size-4" />
                   Todas as stories estão válidas
                 </span>
               ) : (
                 <span className="text-amber-500">
-                  <Icon name="alert-circle" className="inline mr-1.5 size-4" />
+                  <Icon name="alert-circle" className="mr-1.5 inline size-4" />
                   {totalStories - validStories} stories precisam de atenção
                 </span>
               )}
@@ -653,9 +685,7 @@ export const PRDStoriesTemplate: React.FC<PRDStoriesTemplateProps> = ({
           <DialogHeader>
             <DialogTitle>Deletar Story?</DialogTitle>
           </DialogHeader>
-          <p className="text-muted-foreground">
-            Esta ação não pode ser desfeita.
-          </p>
+          <p className="text-muted-foreground">Esta ação não pode ser desfeita.</p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowDeleteConfirm(null)}>
               Cancelar

@@ -17,13 +17,15 @@ const FidelityBadge: React.FC<FidelityBadgeProps> = ({
 }) => {
   if (score === null) {
     return (
-      <div className={cn(
-        "flex items-center gap-1 text-muted-foreground",
-        size === 'sm' && "text-[10px]",
-        size === 'md' && "text-xs",
-        size === 'lg' && "text-sm",
-        className
-      )}>
+      <div
+        className={cn(
+          'flex items-center gap-1 text-muted-foreground',
+          size === 'sm' && 'text-[10px]',
+          size === 'md' && 'text-xs',
+          size === 'lg' && 'text-sm',
+          className
+        )}
+      >
         <Icon name="minus-circle" className="size-3" />
         {showLabel && <span>--</span>}
       </div>
@@ -74,18 +76,20 @@ const FidelityBadge: React.FC<FidelityBadgeProps> = ({
   };
 
   return (
-    <div className={cn(
-      "inline-flex items-center rounded-full border font-medium",
-      config.bgColor,
-      config.borderColor,
-      config.color,
-      sizeClasses[size],
-      className
-    )}>
+    <div
+      className={cn(
+        'inline-flex items-center rounded-full border font-medium',
+        config.bgColor,
+        config.borderColor,
+        config.color,
+        sizeClasses[size],
+        className
+      )}
+    >
       <Icon name={config.icon} className={iconSizes[size]} />
       <span className="font-mono font-bold">{score}%</span>
       {showLabel && size !== 'sm' && (
-        <span className="text-muted-foreground font-normal">Fidelidade</span>
+        <span className="font-normal text-muted-foreground">Fidelidade</span>
       )}
     </div>
   );

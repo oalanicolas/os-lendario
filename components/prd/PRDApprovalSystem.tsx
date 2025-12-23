@@ -32,7 +32,7 @@ const APPROVAL_OPTIONS = [
     icon: 'check',
     color: 'bg-emerald-600 hover:bg-emerald-700',
     textColor: 'text-emerald-500',
-    description: 'Conteúdo está correto e completo'
+    description: 'Conteúdo está correto e completo',
   },
   {
     key: '2',
@@ -41,7 +41,7 @@ const APPROVAL_OPTIONS = [
     icon: 'edit',
     color: 'bg-amber-600 hover:bg-amber-700',
     textColor: 'text-amber-500',
-    description: 'Precisa de pequenas modificações'
+    description: 'Precisa de pequenas modificações',
   },
   {
     key: '3',
@@ -50,7 +50,7 @@ const APPROVAL_OPTIONS = [
     icon: 'cross',
     color: 'bg-red-600 hover:bg-red-700',
     textColor: 'text-red-500',
-    description: 'Regenerar completamente'
+    description: 'Regenerar completamente',
   },
 ];
 
@@ -71,7 +71,7 @@ export const PRDApprovalSystem: React.FC<PRDApprovalSystemProps> = ({
   onAdjust,
   onReject,
   disabled = false,
-  showKeyboardHints = true
+  showKeyboardHints = true,
 }) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedbackType, setFeedbackType] = useState<'adjust' | 'reject' | null>(null);
@@ -153,7 +153,7 @@ export const PRDApprovalSystem: React.FC<PRDApprovalSystemProps> = ({
       {/* Current Status */}
       <div className="flex items-center gap-2 text-sm">
         <span className="text-muted-foreground">Status atual:</span>
-        <div className={cn("flex items-center gap-1.5", statusDisplay.color)}>
+        <div className={cn('flex items-center gap-1.5', statusDisplay.color)}>
           <Icon name={statusDisplay.icon} size="size-4" />
           <span className="font-medium">{statusDisplay.label}</span>
         </div>
@@ -161,11 +161,13 @@ export const PRDApprovalSystem: React.FC<PRDApprovalSystemProps> = ({
 
       {/* Feedback Form */}
       {showFeedback && feedbackType && (
-        <Card className={cn(
-          "p-4 animate-fade-in border-l-4",
-          feedbackType === 'adjust' && "border-l-amber-500 bg-amber-500/5",
-          feedbackType === 'reject' && "border-l-red-500 bg-red-500/5"
-        )}>
+        <Card
+          className={cn(
+            'animate-fade-in border-l-4 p-4',
+            feedbackType === 'adjust' && 'border-l-amber-500 bg-amber-500/5',
+            feedbackType === 'reject' && 'border-l-red-500 bg-red-500/5'
+          )}
+        >
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Icon
@@ -174,7 +176,9 @@ export const PRDApprovalSystem: React.FC<PRDApprovalSystemProps> = ({
                 className={feedbackType === 'adjust' ? 'text-amber-500' : 'text-red-500'}
               />
               <span className="font-medium">
-                {feedbackType === 'adjust' ? 'Descreva os ajustes necessários' : 'Motivo da rejeição'}
+                {feedbackType === 'adjust'
+                  ? 'Descreva os ajustes necessários'
+                  : 'Motivo da rejeição'}
               </span>
             </div>
 
@@ -199,8 +203,8 @@ export const PRDApprovalSystem: React.FC<PRDApprovalSystemProps> = ({
                 onClick={handleSubmitFeedback}
                 disabled={!feedback.trim()}
                 className={cn(
-                  feedbackType === 'adjust' && "bg-amber-600 hover:bg-amber-700",
-                  feedbackType === 'reject' && "bg-red-600 hover:bg-red-700"
+                  feedbackType === 'adjust' && 'bg-amber-600 hover:bg-amber-700',
+                  feedbackType === 'reject' && 'bg-red-600 hover:bg-red-700'
                 )}
               >
                 {feedbackType === 'adjust' ? 'Solicitar Ajuste' : 'Rejeitar'}
@@ -222,7 +226,7 @@ export const PRDApprovalSystem: React.FC<PRDApprovalSystemProps> = ({
             return (
               <Button
                 key={option.key}
-                variant={isActive ? "default" : "outline"}
+                variant={isActive ? 'default' : 'outline'}
                 size="sm"
                 disabled={disabled}
                 onClick={() => {
@@ -230,15 +234,12 @@ export const PRDApprovalSystem: React.FC<PRDApprovalSystemProps> = ({
                   else if (option.action === 'adjust') handleStartAdjust();
                   else if (option.action === 'reject') handleStartReject();
                 }}
-                className={cn(
-                  "flex-1 min-w-[120px] transition-all",
-                  isActive && option.color
-                )}
+                className={cn('min-w-[120px] flex-1 transition-all', isActive && option.color)}
               >
                 <Icon name={option.icon} className="mr-1.5 size-4" />
                 {option.label}
                 {showKeyboardHints && (
-                  <kbd className="ml-2 px-1.5 py-0.5 bg-background/50 rounded text-[10px] font-mono">
+                  <kbd className="ml-2 rounded bg-background/50 px-1.5 py-0.5 font-mono text-[10px]">
                     {option.key}
                   </kbd>
                 )}
@@ -253,7 +254,7 @@ export const PRDApprovalSystem: React.FC<PRDApprovalSystemProps> = ({
         <div className="grid grid-cols-3 gap-2 text-xs text-muted-foreground">
           {APPROVAL_OPTIONS.map((option) => (
             <div key={option.key} className="text-center">
-              <span className={cn("font-medium", option.textColor)}>{option.label}:</span>
+              <span className={cn('font-medium', option.textColor)}>{option.label}:</span>
               <span className="ml-1">{option.description}</span>
             </div>
           ))}

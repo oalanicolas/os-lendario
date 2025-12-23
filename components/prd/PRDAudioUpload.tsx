@@ -48,7 +48,7 @@ export const PRDAudioUpload: React.FC<PRDAudioUploadProps> = ({
   audioDuration,
   onAudioChange,
   projectId,
-  disabled = false
+  disabled = false,
 }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -70,7 +70,7 @@ export const PRDAudioUpload: React.FC<PRDAudioUploadProps> = ({
       streamRef.current = stream;
 
       const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4'
+        mimeType: MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4',
       });
       mediaRecorderRef.current = mediaRecorder;
       chunksRef.current = [];
@@ -84,7 +84,7 @@ export const PRDAudioUpload: React.FC<PRDAudioUploadProps> = ({
       mediaRecorder.onstop = async () => {
         const mimeType = mediaRecorder.mimeType || 'audio/webm';
         const blob = new Blob(chunksRef.current, { type: mimeType });
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach((track) => track.stop());
 
         // Create local URL for preview
         const localUrl = URL.createObjectURL(blob);
@@ -97,7 +97,7 @@ export const PRDAudioUpload: React.FC<PRDAudioUploadProps> = ({
           // Mock mode - just use local URL
           onAudioChange({
             url: localUrl,
-            duration: recordingDuration
+            duration: recordingDuration,
           });
         }
       };
@@ -108,7 +108,7 @@ export const PRDAudioUpload: React.FC<PRDAudioUploadProps> = ({
 
       // Duration timer
       timerRef.current = setInterval(() => {
-        setRecordingDuration(prev => {
+        setRecordingDuration((prev) => {
           if (prev >= MAX_DURATION_SECONDS - 1) {
             stopRecording();
             return prev;
@@ -116,7 +116,6 @@ export const PRDAudioUpload: React.FC<PRDAudioUploadProps> = ({
           return prev + 1;
         });
       }, 1000);
-
     } catch (err) {
       setError('Não foi possível acessar o microfone. Verifique as permissões.');
       console.error('Recording error:', err);
@@ -148,15 +147,12 @@ export const PRDAudioUpload: React.FC<PRDAudioUploadProps> = ({
 
       if (uploadError) throw uploadError;
 
-      const { data: urlData } = supabase.storage
-        .from('prd-audio')
-        .getPublicUrl(data.path);
+      const { data: urlData } = supabase.storage.from('prd-audio').getPublicUrl(data.path);
 
       onAudioChange({
         url: urlData.publicUrl,
-        duration: recordingDuration
+        duration: recordingDuration,
       });
-
     } catch (err) {
       setError('Erro ao fazer upload do áudio. Usando preview local.');
       console.error('Upload error:', err);
@@ -164,7 +160,7 @@ export const PRDAudioUpload: React.FC<PRDAudioUploadProps> = ({
       if (localAudioUrl) {
         onAudioChange({
           url: localAudioUrl,
-          duration: recordingDuration
+          duration: recordingDuration,
         });
       }
     } finally {
@@ -198,7 +194,7 @@ export const PRDAudioUpload: React.FC<PRDAudioUploadProps> = ({
         // Mock mode
         onAudioChange({
           url: URL.createObjectURL(file),
-          duration
+          duration,
         });
         return;
       }
@@ -212,15 +208,12 @@ export const PRDAudioUpload: React.FC<PRDAudioUploadProps> = ({
 
         if (uploadError) throw uploadError;
 
-        const { data: urlData } = supabase.storage
-          .from('prd-audio')
-          .getPublicUrl(data.path);
+        const { data: urlData } = supabase.storage.from('prd-audio').getPublicUrl(data.path);
 
         onAudioChange({
           url: urlData.publicUrl,
-          duration
+          duration,
         });
-
       } catch (err) {
         setError('Erro ao fazer upload do arquivo.');
         console.error('File upload error:', err);
@@ -246,7 +239,7 @@ export const PRDAudioUpload: React.FC<PRDAudioUploadProps> = ({
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
       if (streamRef.current) {
-        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current.getTracks().forEach((track) => track.stop());
       }
       if (localAudioUrl) {
         URL.revokeObjectURL(localAudioUrl);
@@ -257,12 +250,12 @@ export const PRDAudioUpload: React.FC<PRDAudioUploadProps> = ({
   // If has audio, show player
   if (audioUrl) {
     return (
-      <Card className="p-4 bg-muted/30">
+      <Card className="bg-muted/30 p-4">
         <div className="flex items-center gap-4">
-          <Icon name="music" size="size-5" className="text-muted-foreground shrink-0" />
-          <audio src={audioUrl} controls className="flex-1 h-10" />
+          <Icon name="music" size="size-5" className="shrink-0 text-muted-foreground" />
+          <audio src={audioUrl} controls className="h-10 flex-1" />
           {audioDuration && (
-            <span className="text-sm text-muted-foreground font-mono shrink-0">
+            <span className="shrink-0 font-mono text-sm text-muted-foreground">
               {formatDuration(audioDuration)}
             </span>
           )}
@@ -282,15 +275,17 @@ export const PRDAudioUpload: React.FC<PRDAudioUploadProps> = ({
 
   // Recording/Upload interface
   return (
-    <Card className={cn(
-      "p-4 border-dashed transition-all bg-muted/30",
-      isRecording && "border-red-500/50 bg-red-500/5"
-    )}>
+    <Card
+      className={cn(
+        'border-dashed bg-muted/30 p-4 transition-all',
+        isRecording && 'border-red-500/50 bg-red-500/5'
+      )}
+    >
       <div className="flex flex-col items-center gap-4">
         {/* Recording indicator */}
         {isRecording && (
           <div className="flex items-center gap-2 text-red-500">
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+            <span className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
             <span className="font-mono text-lg">{formatDuration(recordingDuration)}</span>
             <span className="text-xs text-muted-foreground">
               / {formatDuration(MAX_DURATION_SECONDS)}
@@ -301,12 +296,12 @@ export const PRDAudioUpload: React.FC<PRDAudioUploadProps> = ({
         {/* Buttons */}
         <div className="flex items-center gap-4">
           <Button
-            variant={isRecording ? "destructive" : "outline"}
+            variant={isRecording ? 'destructive' : 'outline'}
             onClick={isRecording ? stopRecording : startRecording}
             disabled={disabled || isUploading}
           >
-            <Icon name={isRecording ? "stop" : "microphone"} className="mr-2 size-4" />
-            {isRecording ? "Parar" : "Gravar Áudio"}
+            <Icon name={isRecording ? 'stop' : 'microphone'} className="mr-2 size-4" />
+            {isRecording ? 'Parar' : 'Gravar Áudio'}
           </Button>
 
           <span className="text-sm text-muted-foreground">ou</span>
@@ -332,19 +327,17 @@ export const PRDAudioUpload: React.FC<PRDAudioUploadProps> = ({
         {/* Loading state */}
         {isUploading && (
           <div className="flex items-center gap-2 text-muted-foreground">
-            <Icon name="spinner" className="animate-spin size-4" />
+            <Icon name="spinner" className="size-4 animate-spin" />
             <span className="text-sm">Fazendo upload...</span>
           </div>
         )}
 
         {/* Error */}
-        {error && (
-          <p className="text-sm text-destructive">{error}</p>
-        )}
+        {error && <p className="text-sm text-destructive">{error}</p>}
 
         {/* Help text */}
         {!isRecording && !isUploading && (
-          <p className="text-xs text-muted-foreground text-center">
+          <p className="text-center text-xs text-muted-foreground">
             Máximo: {formatDuration(MAX_DURATION_SECONDS)} de áudio ou {MAX_FILE_SIZE_MB}MB
           </p>
         )}

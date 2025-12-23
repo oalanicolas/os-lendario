@@ -12,72 +12,101 @@ import { Separator } from '../../ui/separator';
 
 const MarketingTemplatesPage: React.FC = () => {
   return (
-    <div className="space-y-12 animate-fade-in pb-20">
-      
+    <div className="animate-fade-in space-y-12 pb-20">
       {/* Header */}
-      <div className="relative rounded-2xl overflow-hidden bg-card border border-border">
-          <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
-              <Icon name="document" className="text-[12rem] rotate-12" />
+      <div className="relative overflow-hidden rounded-2xl border border-border bg-card">
+        <div className="pointer-events-none absolute right-0 top-0 p-12 opacity-5">
+          <Icon name="document" className="rotate-12 text-[12rem]" />
+        </div>
+        <div className="relative z-10 space-y-6 p-8 md:p-12">
+          <div className="flex items-center gap-3">
+            <Badge
+              variant="outline"
+              className="border-primary/50 bg-background/50 text-primary backdrop-blur-sm"
+            >
+              Templates v2.0
+            </Badge>
+            <span className="font-mono text-xs text-muted-foreground">
+              Otimizados com Metodologias Científicas
+            </span>
+            <Badge variant="success" className="ml-auto">
+              Score: 93.3%
+            </Badge>
           </div>
-          <div className="relative z-10 p-8 md:p-12 space-y-6">
-              <div className="flex items-center gap-3">
-                  <Badge variant="outline" className="bg-background/50 backdrop-blur-sm border-primary/50 text-primary">Templates v2.0</Badge>
-                  <span className="text-xs font-mono text-muted-foreground">Otimizados com Metodologias Científicas</span>
-                  <Badge variant="success" className="ml-auto">Score: 93.3%</Badge>
-              </div>
-              <h2 className="text-4xl md:text-6xl font-sans font-bold tracking-tight max-w-4xl">
-                Guia de <span className="text-primary">Copywriting</span>.
-              </h2>
-              <p className="font-serif text-xl text-muted-foreground max-w-3xl leading-relaxed">
-                  Estruturas validadas baseadas em Hopkins, Reeves, Schwartz, Hormozi, Georgi e Dunford.
-                  Copie, cole e preencha para alta conversão.
-              </p>
-              
-              <div className="flex flex-wrap gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground pt-4">
-                  <span>Mestres:</span>
-                  <span className="text-foreground">Hopkins</span> • 
-                  <span className="text-foreground">Reeves</span> • 
-                  <span className="text-foreground">Schwartz</span> • 
-                  <span className="text-foreground">Hormozi</span> • 
-                  <span className="text-foreground">Georgi</span> • 
-                  <span className="text-foreground">Dunford</span>
-              </div>
+          <h2 className="max-w-4xl font-sans text-4xl font-bold tracking-tight md:text-6xl">
+            Guia de <span className="text-primary">Copywriting</span>.
+          </h2>
+          <p className="max-w-3xl font-serif text-xl leading-relaxed text-muted-foreground">
+            Estruturas validadas baseadas em Hopkins, Reeves, Schwartz, Hormozi, Georgi e Dunford.
+            Copie, cole e preencha para alta conversão.
+          </p>
+
+          <div className="flex flex-wrap gap-2 pt-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            <span>Mestres:</span>
+            <span className="text-foreground">Hopkins</span> •
+            <span className="text-foreground">Reeves</span> •
+            <span className="text-foreground">Schwartz</span> •
+            <span className="text-foreground">Hormozi</span> •
+            <span className="text-foreground">Georgi</span> •
+            <span className="text-foreground">Dunford</span>
           </div>
-          <div className="h-1 w-full bg-gradient-to-r from-primary via-background to-primary/20"></div>
+        </div>
+        <div className="h-1 w-full bg-gradient-to-r from-primary via-background to-primary/20"></div>
       </div>
 
       {/* Main Content */}
       <Tabs defaultValue="advertorial" className="w-full">
-        <TabsList className="mb-8 flex-wrap h-auto gap-2 bg-transparent p-0 border-b border-border w-full justify-start rounded-none">
-            <TabsTrigger value="advertorial" className="rounded-t-lg rounded-b-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-muted/50 px-6 py-3">
-                <Icon name="file-edit" className="mr-2 size-4" /> Advertorial
-            </TabsTrigger>
-            <TabsTrigger value="salespage" className="rounded-t-lg rounded-b-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-muted/50 px-6 py-3">
-                <Icon name="shopping-cart" className="mr-2 size-4" /> Página de Vendas
-            </TabsTrigger>
-            <TabsTrigger value="capture" className="rounded-t-lg rounded-b-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-muted/50 px-6 py-3">
-                <Icon name="magnet" className="mr-2 size-4" /> Captura (Lead)
-            </TabsTrigger>
-            <TabsTrigger value="vsl" className="rounded-t-lg rounded-b-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-muted/50 px-6 py-3">
-                <Icon name="play-circle" className="mr-2 size-4" /> VSL & Vídeo
-            </TabsTrigger>
-            <TabsTrigger value="webinar" className="rounded-t-lg rounded-b-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-muted/50 px-6 py-3">
-                <Icon name="presentation" className="mr-2 size-4" /> Webinário
-            </TabsTrigger>
-            <TabsTrigger value="thankyou" className="rounded-t-lg rounded-b-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-muted/50 px-6 py-3">
-                <Icon name="check-circle" className="mr-2 size-4" /> Obrigado / Upsell
-            </TabsTrigger>
-            <TabsTrigger value="checklist" className="rounded-t-lg rounded-b-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-muted/50 px-6 py-3 text-primary font-bold bg-primary/5 ml-auto">
-                <Icon name="list-check" className="mr-2 size-4" /> Checklist Científico
-            </TabsTrigger>
+        <TabsList className="mb-8 h-auto w-full flex-wrap justify-start gap-2 rounded-none border-b border-border bg-transparent p-0">
+          <TabsTrigger
+            value="advertorial"
+            className="rounded-b-none rounded-t-lg border-b-2 border-transparent px-6 py-3 data-[state=active]:border-primary data-[state=active]:bg-muted/50"
+          >
+            <Icon name="file-edit" className="mr-2 size-4" /> Advertorial
+          </TabsTrigger>
+          <TabsTrigger
+            value="salespage"
+            className="rounded-b-none rounded-t-lg border-b-2 border-transparent px-6 py-3 data-[state=active]:border-primary data-[state=active]:bg-muted/50"
+          >
+            <Icon name="shopping-cart" className="mr-2 size-4" /> Página de Vendas
+          </TabsTrigger>
+          <TabsTrigger
+            value="capture"
+            className="rounded-b-none rounded-t-lg border-b-2 border-transparent px-6 py-3 data-[state=active]:border-primary data-[state=active]:bg-muted/50"
+          >
+            <Icon name="magnet" className="mr-2 size-4" /> Captura (Lead)
+          </TabsTrigger>
+          <TabsTrigger
+            value="vsl"
+            className="rounded-b-none rounded-t-lg border-b-2 border-transparent px-6 py-3 data-[state=active]:border-primary data-[state=active]:bg-muted/50"
+          >
+            <Icon name="play-circle" className="mr-2 size-4" /> VSL & Vídeo
+          </TabsTrigger>
+          <TabsTrigger
+            value="webinar"
+            className="rounded-b-none rounded-t-lg border-b-2 border-transparent px-6 py-3 data-[state=active]:border-primary data-[state=active]:bg-muted/50"
+          >
+            <Icon name="presentation" className="mr-2 size-4" /> Webinário
+          </TabsTrigger>
+          <TabsTrigger
+            value="thankyou"
+            className="rounded-b-none rounded-t-lg border-b-2 border-transparent px-6 py-3 data-[state=active]:border-primary data-[state=active]:bg-muted/50"
+          >
+            <Icon name="check-circle" className="mr-2 size-4" /> Obrigado / Upsell
+          </TabsTrigger>
+          <TabsTrigger
+            value="checklist"
+            className="ml-auto rounded-b-none rounded-t-lg border-b-2 border-transparent bg-primary/5 px-6 py-3 font-bold text-primary data-[state=active]:border-primary data-[state=active]:bg-muted/50"
+          >
+            <Icon name="list-check" className="mr-2 size-4" /> Checklist Científico
+          </TabsTrigger>
         </TabsList>
 
         {/* --- 1. ADVERTORIAL --- */}
-        <TabsContent value="advertorial" className="space-y-8 animate-fade-in">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2">
-                    <CodeBlock title="Estrutura de Advertorial (Pré-Venda)" language="bash">
-{`# HEADLINE DE NOTÍCIA/DESCOBERTA
+        <TabsContent value="advertorial" className="animate-fade-in space-y-8">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <div className="lg:col-span-2">
+              <CodeBlock title="Estrutura de Advertorial (Pré-Venda)" language="bash">
+                {`# HEADLINE DE NOTÍCIA/DESCOBERTA
 [Profissional/Pessoa comum] de [Localização] descobre [método/sistema] que [resultado específico + NÚMERO] em [tempo]
 
 ---
@@ -126,40 +155,52 @@ A única diferença entre você e [nome do depoimento] é que [ele/ela] descobri
 
 [BOTÃO: "Quero Saber Mais" / "Ver Como Funciona"]
 [Elemento de urgência com justificativa real]`}
-                    </CodeBlock>
-                </div>
-                <div className="space-y-6">
-                    <Card className="bg-primary/5 border-primary/20">
-                        <CardHeader>
-                            <CardTitle className="text-lg flex items-center gap-2">
-                                <Icon name="lightbulb-on" /> Princípios Ativos
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4 text-sm">
-                            <div>
-                                <Badge variant="outline" className="mb-1">SCHWARTZ Nível 3-4</Badge>
-                                <p className="text-muted-foreground">Formato editorial reduz resistência de mercados sofisticados.</p>
-                            </div>
-                            <div>
-                                <Badge variant="outline" className="mb-1">HOPKINS</Badge>
-                                <p className="text-muted-foreground">Específico mensurável obrigatório na headline.</p>
-                            </div>
-                            <div>
-                                <Badge variant="outline" className="mb-1">GEORGI (UMP)</Badge>
-                                <p className="text-muted-foreground">O inimigo deve ser NOMEADO explicitamente para externalizar a culpa.</p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
+              </CodeBlock>
             </div>
+            <div className="space-y-6">
+              <Card className="border-primary/20 bg-primary/5">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <Icon name="lightbulb-on" /> Princípios Ativos
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 text-sm">
+                  <div>
+                    <Badge variant="outline" className="mb-1">
+                      SCHWARTZ Nível 3-4
+                    </Badge>
+                    <p className="text-muted-foreground">
+                      Formato editorial reduz resistência de mercados sofisticados.
+                    </p>
+                  </div>
+                  <div>
+                    <Badge variant="outline" className="mb-1">
+                      HOPKINS
+                    </Badge>
+                    <p className="text-muted-foreground">
+                      Específico mensurável obrigatório na headline.
+                    </p>
+                  </div>
+                  <div>
+                    <Badge variant="outline" className="mb-1">
+                      GEORGI (UMP)
+                    </Badge>
+                    <p className="text-muted-foreground">
+                      O inimigo deve ser NOMEADO explicitamente para externalizar a culpa.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* --- 2. SALES PAGE --- */}
-        <TabsContent value="salespage" className="space-y-8 animate-fade-in">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2">
-                    <CodeBlock title="Sales Page Long Form (Integrada)" language="bash">
-{`# HEADLINE PRINCIPAL
+        <TabsContent value="salespage" className="animate-fade-in space-y-8">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <div className="lg:col-span-2">
+              <CodeBlock title="Sales Page Long Form (Integrada)" language="bash">
+                {`# HEADLINE PRINCIPAL
 [Resultado específico] + [Tempo] + [Sem objeção comum]
 
 ### USP EM UMA LINHA (1ª aparição):
@@ -247,44 +288,60 @@ Se [condição], eu [ação de reversão].
 
 ### P.S.: [Resumo do benefício]
 ### P.P.S.: [Consequência de não agir] + USP (3ª aparição)`}
-                    </CodeBlock>
-                </div>
-                <div className="space-y-6">
-                    <Card className="bg-primary/5 border-primary/20">
-                        <CardHeader>
-                            <CardTitle className="text-lg flex items-center gap-2">
-                                <Icon name="lightbulb-on" /> Princípios Ativos
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4 text-sm">
-                            <div>
-                                <Badge variant="outline" className="mb-1">REEVES (USP)</Badge>
-                                <p className="text-muted-foreground">Single Selling Proposition repetida 3x para fixação.</p>
-                            </div>
-                            <div>
-                                <Badge variant="outline" className="mb-1">DUNFORD (Positioning)</Badge>
-                                <p className="text-muted-foreground">Quadro comparativo de alternativas competitivas.</p>
-                            </div>
-                            <div>
-                                <Badge variant="outline" className="mb-1">HORMOZI (Value Equation)</Badge>
-                                <p className="text-muted-foreground">Minimizar esforço e tempo em cada passo do plano.</p>
-                            </div>
-                            <div>
-                                <Badge variant="outline" className="mb-1">SCHWARTZ</Badge>
-                                <p className="text-muted-foreground">Admissão danosa aumenta credibilidade; Objeções tratadas ANTES do preço.</p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
+              </CodeBlock>
             </div>
+            <div className="space-y-6">
+              <Card className="border-primary/20 bg-primary/5">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <Icon name="lightbulb-on" /> Princípios Ativos
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 text-sm">
+                  <div>
+                    <Badge variant="outline" className="mb-1">
+                      REEVES (USP)
+                    </Badge>
+                    <p className="text-muted-foreground">
+                      Single Selling Proposition repetida 3x para fixação.
+                    </p>
+                  </div>
+                  <div>
+                    <Badge variant="outline" className="mb-1">
+                      DUNFORD (Positioning)
+                    </Badge>
+                    <p className="text-muted-foreground">
+                      Quadro comparativo de alternativas competitivas.
+                    </p>
+                  </div>
+                  <div>
+                    <Badge variant="outline" className="mb-1">
+                      HORMOZI (Value Equation)
+                    </Badge>
+                    <p className="text-muted-foreground">
+                      Minimizar esforço e tempo em cada passo do plano.
+                    </p>
+                  </div>
+                  <div>
+                    <Badge variant="outline" className="mb-1">
+                      SCHWARTZ
+                    </Badge>
+                    <p className="text-muted-foreground">
+                      Admissão danosa aumenta credibilidade; Objeções tratadas ANTES do preço.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* --- 3. CAPTURA (LEAD MAGNET) --- */}
-        <TabsContent value="capture" className="space-y-8 animate-fade-in">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2">
-                    <CodeBlock title="Página de Captura (Squeeze Page)" language="bash">
-{`# HEADLINE
+        <TabsContent value="capture" className="animate-fade-in space-y-8">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <div className="lg:col-span-2">
+              <CodeBlock title="Página de Captura (Squeeze Page)" language="bash">
+                {`# HEADLINE
 [RESULTADO ESPECÍFICO] em [TEMPO]
 
 ## SUB-HEADLINE
@@ -322,40 +379,52 @@ O guia [gratuito/completo] de [X] páginas para [avatar específico]
 [Logos de empresas ou fotos de avatares]
 
 **100% Gratuito | Acesso Imediato | Sem Spam**`}
-                    </CodeBlock>
-                </div>
-                <div className="space-y-6">
-                    <Card className="bg-primary/5 border-primary/20">
-                        <CardHeader>
-                            <CardTitle className="text-lg flex items-center gap-2">
-                                <Icon name="lightbulb-on" /> Princípios Ativos
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4 text-sm">
-                            <div>
-                                <Badge variant="outline" className="mb-1">SCHWARTZ</Badge>
-                                <p className="text-muted-foreground">Topo de funil - consciência Problem Aware → Solution Aware.</p>
-                            </div>
-                            <div>
-                                <Badge variant="outline" className="mb-1">HOPKINS</Badge>
-                                <p className="text-muted-foreground">Reason-why gratuito (justificativa lógica) aumenta credibilidade.</p>
-                            </div>
-                            <div>
-                                <Badge variant="outline" className="mb-1">SCHWARTZ Nível 5</Badge>
-                                <p className="text-muted-foreground">Anti-avatar aumenta identificação tribal ("isso é para mim, não para eles").</p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
+              </CodeBlock>
             </div>
+            <div className="space-y-6">
+              <Card className="border-primary/20 bg-primary/5">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <Icon name="lightbulb-on" /> Princípios Ativos
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 text-sm">
+                  <div>
+                    <Badge variant="outline" className="mb-1">
+                      SCHWARTZ
+                    </Badge>
+                    <p className="text-muted-foreground">
+                      Topo de funil - consciência Problem Aware → Solution Aware.
+                    </p>
+                  </div>
+                  <div>
+                    <Badge variant="outline" className="mb-1">
+                      HOPKINS
+                    </Badge>
+                    <p className="text-muted-foreground">
+                      Reason-why gratuito (justificativa lógica) aumenta credibilidade.
+                    </p>
+                  </div>
+                  <div>
+                    <Badge variant="outline" className="mb-1">
+                      SCHWARTZ Nível 5
+                    </Badge>
+                    <p className="text-muted-foreground">
+                      Anti-avatar aumenta identificação tribal ("isso é para mim, não para eles").
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* --- 4. VSL (VIDEO SALES LETTER) --- */}
-        <TabsContent value="vsl" className="space-y-8 animate-fade-in">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2">
-                    <CodeBlock title="VSL Page (Vídeo de Vendas)" language="bash">
-{`# HEADLINE CURIOSIDADE/CHOQUE
+        <TabsContent value="vsl" className="animate-fade-in space-y-8">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <div className="lg:col-span-2">
+              <CodeBlock title="VSL Page (Vídeo de Vendas)" language="bash">
+                {`# HEADLINE CURIOSIDADE/CHOQUE
 [Afirmação contraintuitiva ou revelação chocante]
 
 ## SUB-HEADLINE
@@ -391,36 +460,44 @@ O guia [gratuito/completo] de [X] páginas para [avatar específico]
 
 **[BOTÃO CTA FINAL]**
 [Elemento de urgência com justificativa]`}
-                    </CodeBlock>
-                </div>
-                <div className="space-y-6">
-                    <Card className="bg-primary/5 border-primary/20">
-                        <CardHeader>
-                            <CardTitle className="text-lg flex items-center gap-2">
-                                <Icon name="lightbulb-on" /> Princípios Ativos
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4 text-sm">
-                            <div>
-                                <Badge variant="outline" className="mb-1">SCHWARTZ</Badge>
-                                <p className="text-muted-foreground">Mistério é o motor da VSL. Loop aberto na headline.</p>
-                            </div>
-                            <div>
-                                <Badge variant="outline" className="mb-1">GEORGI</Badge>
-                                <p className="text-muted-foreground">Pattern interrupt visual obrigatório na thumbnail.</p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
+              </CodeBlock>
             </div>
+            <div className="space-y-6">
+              <Card className="border-primary/20 bg-primary/5">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <Icon name="lightbulb-on" /> Princípios Ativos
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 text-sm">
+                  <div>
+                    <Badge variant="outline" className="mb-1">
+                      SCHWARTZ
+                    </Badge>
+                    <p className="text-muted-foreground">
+                      Mistério é o motor da VSL. Loop aberto na headline.
+                    </p>
+                  </div>
+                  <div>
+                    <Badge variant="outline" className="mb-1">
+                      GEORGI
+                    </Badge>
+                    <p className="text-muted-foreground">
+                      Pattern interrupt visual obrigatório na thumbnail.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* --- 5. WEBINAR --- */}
-        <TabsContent value="webinar" className="space-y-8 animate-fade-in">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2">
-                    <CodeBlock title="Registro de Webinário (Event)" language="bash">
-{`## FRAME DE MERCADO (Dunford)
+        <TabsContent value="webinar" className="animate-fade-in space-y-8">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <div className="lg:col-span-2">
+              <CodeBlock title="Registro de Webinário (Event)" language="bash">
+                {`## FRAME DE MERCADO (Dunford)
 "Este NÃO é mais um webinário sobre [categoria saturada].
 É o primeiro [NOME DE NOVA CATEGORIA] para [avatar específico]."
 
@@ -461,40 +538,50 @@ Limitado a [X] participantes porque:
 ## FAQ RÁPIDO:
 "Vai ficar gravado?" -> [Incentivo ao ao vivo]
 "Precisa pagar?" -> 100% gratuito. Zero pegadinhas.`}
-                    </CodeBlock>
-                </div>
-                <div className="space-y-6">
-                    <Card className="bg-primary/5 border-primary/20">
-                        <CardHeader>
-                            <CardTitle className="text-lg flex items-center gap-2">
-                                <Icon name="lightbulb-on" /> Princípios Ativos
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4 text-sm">
-                            <div>
-                                <Badge variant="outline" className="mb-1">DUNFORD</Badge>
-                                <p className="text-muted-foreground">Criar categoria nova antes de apresentar conteúdo (New Category Framing).</p>
-                            </div>
-                            <div>
-                                <Badge variant="outline" className="mb-1">SCHWARTZ Nível 5</Badge>
-                                <p className="text-muted-foreground">Identificação tribal para mercado sofisticado.</p>
-                            </div>
-                            <div>
-                                <Badge variant="outline" className="mb-1">HORMOZI</Badge>
-                                <p className="text-muted-foreground">Escassez genuína com razão técnica.</p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
+              </CodeBlock>
             </div>
+            <div className="space-y-6">
+              <Card className="border-primary/20 bg-primary/5">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <Icon name="lightbulb-on" /> Princípios Ativos
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 text-sm">
+                  <div>
+                    <Badge variant="outline" className="mb-1">
+                      DUNFORD
+                    </Badge>
+                    <p className="text-muted-foreground">
+                      Criar categoria nova antes de apresentar conteúdo (New Category Framing).
+                    </p>
+                  </div>
+                  <div>
+                    <Badge variant="outline" className="mb-1">
+                      SCHWARTZ Nível 5
+                    </Badge>
+                    <p className="text-muted-foreground">
+                      Identificação tribal para mercado sofisticado.
+                    </p>
+                  </div>
+                  <div>
+                    <Badge variant="outline" className="mb-1">
+                      HORMOZI
+                    </Badge>
+                    <p className="text-muted-foreground">Escassez genuína com razão técnica.</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* --- 6. THANK YOU --- */}
-        <TabsContent value="thankyou" className="space-y-8 animate-fade-in">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2">
-                    <CodeBlock title="Página de Obrigado / Confirmação" language="bash">
-{`## ✅ Seu [cadastro/compra] foi confirmado!
+        <TabsContent value="thankyou" className="animate-fade-in space-y-8">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <div className="lg:col-span-2">
+              <CodeBlock title="Página de Obrigado / Confirmação" language="bash">
+                {`## ✅ Seu [cadastro/compra] foi confirmado!
 
 ---
 ## PRÓXIMOS PASSOS:
@@ -526,123 +613,192 @@ Ex: "Garanta [bônus exclusivo] com 50% OFF apenas para quem acabou de se cadast
 ---
 ## DÚVIDAS?
 [Email/WhatsApp de suporte]`}
-                    </CodeBlock>
-                </div>
-                <div className="space-y-6">
-                    <Card className="bg-primary/5 border-primary/20">
-                        <CardHeader>
-                            <CardTitle className="text-lg flex items-center gap-2">
-                                <Icon name="lightbulb-on" /> Princípios Ativos
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4 text-sm">
-                            <div>
-                                <Badge variant="outline" className="mb-1">HORMOZI</Badge>
-                                <p className="text-muted-foreground">Real estate desperdiçado = oportunidade perdida.</p>
-                            </div>
-                            <div>
-                                <Badge variant="outline" className="mb-1">HORMOZI</Badge>
-                                <p className="text-muted-foreground">Micro-compromisso público aumenta show-up/consumo.</p>
-                            </div>
-                            <div>
-                                <Badge variant="outline" className="mb-1">UPSALE</Badge>
-                                <p className="text-muted-foreground">Melhor momento para upsell é imediatamente após o "Sim".</p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
+              </CodeBlock>
             </div>
+            <div className="space-y-6">
+              <Card className="border-primary/20 bg-primary/5">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <Icon name="lightbulb-on" /> Princípios Ativos
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 text-sm">
+                  <div>
+                    <Badge variant="outline" className="mb-1">
+                      HORMOZI
+                    </Badge>
+                    <p className="text-muted-foreground">
+                      Real estate desperdiçado = oportunidade perdida.
+                    </p>
+                  </div>
+                  <div>
+                    <Badge variant="outline" className="mb-1">
+                      HORMOZI
+                    </Badge>
+                    <p className="text-muted-foreground">
+                      Micro-compromisso público aumenta show-up/consumo.
+                    </p>
+                  </div>
+                  <div>
+                    <Badge variant="outline" className="mb-1">
+                      UPSALE
+                    </Badge>
+                    <p className="text-muted-foreground">
+                      Melhor momento para upsell é imediatamente após o "Sim".
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* --- CHECKLIST --- */}
-        <TabsContent value="checklist" className="space-y-8 animate-fade-in">
-            <Card>
-                <CardHeader>
-                    <CardTitle className="text-2xl">Checklist de Validação Científica</CardTitle>
-                    <CardDescription>Passe cada página por este crivo antes de publicar.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-[150px]">Metodologia</TableHead>
-                                <TableHead>Critério de Validação</TableHead>
-                                <TableHead className="text-right">Status</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            <TableRow>
-                                <TableCell className="font-bold">HOPKINS</TableCell>
-                                <TableCell>Headline tem número/dado específico e mensurável?</TableCell>
-                                <TableCell className="text-right"><Icon name="check-circle" className="inline text-muted-foreground" /></TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell className="font-bold">REEVES</TableCell>
-                                <TableCell>USP aparece pelo menos 3x (início, meio, fim)?</TableCell>
-                                <TableCell className="text-right"><Icon name="check-circle" className="inline text-muted-foreground" /></TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell className="font-bold">SCHWARTZ</TableCell>
-                                <TableCell>Nível de sofisticação identificado e objeções inoculadas antes do preço?</TableCell>
-                                <TableCell className="text-right"><Icon name="check-circle" className="inline text-muted-foreground" /></TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell className="font-bold">HORMOZI</TableCell>
-                                <TableCell>Time Delay e Effort & Sacrifice minimizados explicitamente?</TableCell>
-                                <TableCell className="text-right"><Icon name="check-circle" className="inline text-muted-foreground" /></TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell className="font-bold">GEORGI</TableCell>
-                                <TableCell>Inimigo (UMP) e Mecanismo (UMS) nomeados?</TableCell>
-                                <TableCell className="text-right"><Icon name="check-circle" className="inline text-muted-foreground" /></TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell className="font-bold">DUNFORD</TableCell>
-                                <TableCell>Alternativas competitivas desqualificadas logicamente?</TableCell>
-                                <TableCell className="text-right"><Icon name="check-circle" className="inline text-muted-foreground" /></TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </CardContent>
+        <TabsContent value="checklist" className="animate-fade-in space-y-8">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">Checklist de Validação Científica</CardTitle>
+              <CardDescription>Passe cada página por este crivo antes de publicar.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[150px]">Metodologia</TableHead>
+                    <TableHead>Critério de Validação</TableHead>
+                    <TableHead className="text-right">Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="font-bold">HOPKINS</TableCell>
+                    <TableCell>Headline tem número/dado específico e mensurável?</TableCell>
+                    <TableCell className="text-right">
+                      <Icon name="check-circle" className="inline text-muted-foreground" />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-bold">REEVES</TableCell>
+                    <TableCell>USP aparece pelo menos 3x (início, meio, fim)?</TableCell>
+                    <TableCell className="text-right">
+                      <Icon name="check-circle" className="inline text-muted-foreground" />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-bold">SCHWARTZ</TableCell>
+                    <TableCell>
+                      Nível de sofisticação identificado e objeções inoculadas antes do preço?
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Icon name="check-circle" className="inline text-muted-foreground" />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-bold">HORMOZI</TableCell>
+                    <TableCell>
+                      Time Delay e Effort & Sacrifice minimizados explicitamente?
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Icon name="check-circle" className="inline text-muted-foreground" />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-bold">GEORGI</TableCell>
+                    <TableCell>Inimigo (UMP) e Mecanismo (UMS) nomeados?</TableCell>
+                    <TableCell className="text-right">
+                      <Icon name="check-circle" className="inline text-muted-foreground" />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-bold">DUNFORD</TableCell>
+                    <TableCell>Alternativas competitivas desqualificadas logicamente?</TableCell>
+                    <TableCell className="text-right">
+                      <Icon name="check-circle" className="inline text-muted-foreground" />
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+            <Card className="border-dashed bg-muted/10">
+              <CardHeader>
+                <CardTitle className="text-base">Fórmulas Rápidas</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4 font-mono text-sm">
+                <div className="space-y-1">
+                  <span className="font-sans text-xs font-bold uppercase text-muted-foreground">
+                    Headline Hopkins
+                  </span>
+                  <div className="rounded border bg-card p-2">
+                    [Avatar] [verbo de descoberta] [mecanismo] que [resultado + número] em [tempo]
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <span className="font-sans text-xs font-bold uppercase text-muted-foreground">
+                    Bullet Hormozi
+                  </span>
+                  <div className="rounded border bg-card p-2">
+                    Como [resultado específico] para que [pessoas importantes] [reação desejada]
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <span className="font-sans text-xs font-bold uppercase text-muted-foreground">
+                    Depoimento
+                  </span>
+                  <div className="rounded border bg-card p-2">
+                    "[Resultado] + [timeline exata] + [emoção]" - [Nome]
+                  </div>
+                </div>
+              </CardContent>
             </Card>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <Card className="bg-muted/10 border-dashed">
-                    <CardHeader>
-                        <CardTitle className="text-base">Fórmulas Rápidas</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4 text-sm font-mono">
-                        <div className="space-y-1">
-                            <span className="text-xs text-muted-foreground font-sans font-bold uppercase">Headline Hopkins</span>
-                            <div className="p-2 bg-card border rounded">[Avatar] [verbo de descoberta] [mecanismo] que [resultado + número] em [tempo]</div>
-                        </div>
-                        <div className="space-y-1">
-                            <span className="text-xs text-muted-foreground font-sans font-bold uppercase">Bullet Hormozi</span>
-                            <div className="p-2 bg-card border rounded">Como [resultado específico] para que [pessoas importantes] [reação desejada]</div>
-                        </div>
-                        <div className="space-y-1">
-                            <span className="text-xs text-muted-foreground font-sans font-bold uppercase">Depoimento</span>
-                            <div className="p-2 bg-card border rounded">"[Resultado] + [timeline exata] + [emoção]" - [Nome]</div>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                <Card className="bg-muted/10 border-dashed">
-                    <CardHeader>
-                        <CardTitle className="text-base">Ordem de Implementação</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-2 text-sm">
-                        <div className="flex items-center gap-3"><span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs">1</span> <strong>Página de Vendas Long Form</strong> — Fundação</div>
-                        <div className="flex items-center gap-3"><span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs">2</span> <strong>Página de Captura</strong> — Topo de funil</div>
-                        <div className="flex items-center gap-3"><span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs">3</span> <strong>Advertorial</strong> — Tráfego frio</div>
-                        <div className="flex items-center gap-3"><span className="w-6 h-6 rounded-full bg-muted flex items-center justify-center font-bold text-xs">4</span> VSL — Versão em vídeo da PV</div>
-                        <div className="flex items-center gap-3"><span className="w-6 h-6 rounded-full bg-muted flex items-center justify-center font-bold text-xs">5</span> Webinário — Leads aquecidos</div>
-                        <div className="flex items-center gap-3"><span className="w-6 h-6 rounded-full bg-muted flex items-center justify-center font-bold text-xs">6</span> Obrigado — Otimização final</div>
-                    </CardContent>
-                </Card>
-            </div>
+            <Card className="border-dashed bg-muted/10">
+              <CardHeader>
+                <CardTitle className="text-base">Ordem de Implementação</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
+                    1
+                  </span>{' '}
+                  <strong>Página de Vendas Long Form</strong> — Fundação
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
+                    2
+                  </span>{' '}
+                  <strong>Página de Captura</strong> — Topo de funil
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
+                    3
+                  </span>{' '}
+                  <strong>Advertorial</strong> — Tráfego frio
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-xs font-bold">
+                    4
+                  </span>{' '}
+                  VSL — Versão em vídeo da PV
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-xs font-bold">
+                    5
+                  </span>{' '}
+                  Webinário — Leads aquecidos
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-xs font-bold">
+                    6
+                  </span>{' '}
+                  Obrigado — Otimização final
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
-
       </Tabs>
     </div>
   );

@@ -22,9 +22,9 @@ export const DebateHeader: React.FC<DebateHeaderProps> = ({
   return (
     <>
       {/* Header */}
-      <div className="p-4 border-b border-border flex justify-between items-center bg-card">
+      <div className="flex items-center justify-between border-b border-border bg-card p-4">
         <div>
-          <div className="flex items-center gap-2 mb-1">
+          <div className="mb-1 flex items-center gap-2">
             {debateFinished ? (
               <Badge variant="secondary" className="bg-muted text-muted-foreground">
                 FINALIZADO
@@ -34,30 +34,37 @@ export const DebateHeader: React.FC<DebateHeaderProps> = ({
                 AO VIVO
               </Badge>
             )}
-            <span className="text-xs font-mono text-muted-foreground">
+            <span className="font-mono text-xs text-muted-foreground">
               Round {currentRound}/{maxRounds} • {frameworkName}
             </span>
           </div>
-          <h2 className="text-lg font-bold text-foreground leading-tight">{topic}</h2>
+          <h2 className="text-lg font-bold leading-tight text-foreground">{topic}</h2>
         </div>
         <div className="flex items-center gap-4">
           <div className="text-right">
             <div className="text-2xl font-black text-foreground">
-              {pollVotes.c1} <span className="text-muted-foreground text-sm font-normal">vs</span> {pollVotes.c2}
+              {pollVotes.c1} <span className="text-sm font-normal text-muted-foreground">vs</span>{' '}
+              {pollVotes.c2}
             </div>
-            <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Votos da Comunidade</div>
+            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+              Votos da Comunidade
+            </div>
           </div>
         </div>
       </div>
 
       {/* Timeline */}
-      <div className="h-1 w-full bg-muted flex">
+      <div className="flex h-1 w-full bg-muted">
         {Array.from({ length: maxRounds }).map((_, i) => (
           <div
             key={i}
             className={cn(
-              "flex-1 border-r border-background",
-              i + 1 < currentRound ? "bg-muted-foreground" : i + 1 === currentRound ? "bg-primary animate-pulse" : "bg-transparent"
+              'flex-1 border-r border-background',
+              i + 1 < currentRound
+                ? 'bg-muted-foreground'
+                : i + 1 === currentRound
+                  ? 'animate-pulse bg-primary'
+                  : 'bg-transparent'
             )}
           ></div>
         ))}

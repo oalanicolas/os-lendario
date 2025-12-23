@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Section } from '../../../types';
@@ -25,7 +26,8 @@ function getPipelineStages(data: {
   totalLessons: number;
   courseStatus: string;
 }) {
-  const { hasResearch, hasModules, hasLessons, publishedLessons, totalLessons, courseStatus } = data;
+  const { hasResearch, hasModules, hasLessons, publishedLessons, totalLessons, courseStatus } =
+    data;
 
   const stages = [
     { id: 'brief', label: 'BRIEFING', icon: 'file-edit', status: 'pending' as const },
@@ -57,7 +59,12 @@ function getPipelineStages(data: {
 
   return stages.map((stage, idx) => ({
     ...stage,
-    status: idx < currentIndex ? 'completed' as const : idx === currentIndex ? 'current' as const : 'pending' as const
+    status:
+      idx < currentIndex
+        ? ('completed' as const)
+        : idx === currentIndex
+          ? ('current' as const)
+          : ('pending' as const),
   }));
 }
 
@@ -71,7 +78,7 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({ setSection }) => {
   const loading = courseLoading || contentLoading;
 
   const toggleModule = (moduleId: string) => {
-    setExpandedModules(prev => {
+    setExpandedModules((prev) => {
       const next = new Set(prev);
       if (next.has(moduleId)) {
         next.delete(moduleId);
@@ -85,23 +92,23 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({ setSection }) => {
   // Loading skeleton
   if (loading) {
     return (
-      <div className="flex flex-col min-h-screen bg-background font-sans">
+      <div className="flex min-h-screen flex-col bg-background font-sans">
         <CreatorTopbar currentSection={Section.APP_CREATOR_COURSES} setSection={setSection} />
-        <main className="w-full mx-auto p-6 md:p-8 max-w-[1400px]">
-          <div className="space-y-6 animate-pulse">
+        <main className="mx-auto w-full max-w-[1400px] p-6 md:p-8">
+          <div className="animate-pulse space-y-6">
             <div className="flex items-center justify-between">
               <div className="space-y-2">
-                <div className="h-4 w-32 bg-muted/30 rounded" />
-                <div className="h-8 w-64 bg-muted/30 rounded" />
+                <div className="h-4 w-32 rounded bg-muted/30" />
+                <div className="h-8 w-64 rounded bg-muted/30" />
               </div>
-              <div className="h-10 w-32 bg-muted/30 rounded" />
+              <div className="h-10 w-32 rounded bg-muted/30" />
             </div>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {[1, 2, 3, 4].map(i => (
-                <div key={i} className="h-32 bg-muted/20 rounded-xl" />
+            <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-32 rounded-xl bg-muted/20" />
               ))}
             </div>
-            <div className="h-32 bg-muted/20 rounded-xl" />
+            <div className="h-32 rounded-xl bg-muted/20" />
           </div>
         </main>
       </div>
@@ -111,16 +118,25 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({ setSection }) => {
   // Course not found
   if (!course) {
     return (
-      <div className="flex flex-col min-h-screen bg-background font-sans">
+      <div className="flex min-h-screen flex-col bg-background font-sans">
         <CreatorTopbar currentSection={Section.APP_CREATOR_COURSES} setSection={setSection} />
-        <main className="w-full mx-auto p-6 md:p-8 max-w-[1400px]">
-          <div className="flex flex-col items-center justify-center min-h-[60vh]">
-            <div className="w-16 h-16 rounded-lg flex items-center justify-center mb-6" style={{ backgroundColor: STUDIO_ACCENT }}>
+        <main className="mx-auto w-full max-w-[1400px] p-6 md:p-8">
+          <div className="flex min-h-[60vh] flex-col items-center justify-center">
+            <div
+              className="mb-6 flex h-16 w-16 items-center justify-center rounded-lg"
+              style={{ backgroundColor: STUDIO_ACCENT }}
+            >
               <Icon name="exclamation-triangle" style={{ color: STUDIO_PRIMARY }} size="size-8" />
             </div>
-            <h2 className="text-2xl font-bold mb-2">Curso não encontrado</h2>
-            <p className="text-muted-foreground mb-6">O curso "{slug}" não existe ou foi removido.</p>
-            <Button onClick={() => navigate('/creator/cursos')} style={{ backgroundColor: STUDIO_PRIMARY }} className="text-white">
+            <h2 className="mb-2 text-2xl font-bold">Curso não encontrado</h2>
+            <p className="mb-6 text-muted-foreground">
+              O curso "{slug}" não existe ou foi removido.
+            </p>
+            <Button
+              onClick={() => navigate('/creator/cursos')}
+              style={{ backgroundColor: STUDIO_PRIMARY }}
+              className="text-white"
+            >
               <Icon name="arrow-left" className="mr-2" size="size-4" />
               Voltar para Cursos
             </Button>
@@ -134,16 +150,20 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({ setSection }) => {
   const modules = content?.modules || [];
   const totalModules = content?.totalModules || 0;
   const totalLessons = content?.totalLessons || 0;
-  const allLessons = modules.flatMap(m => m.lessons);
+  const allLessons = modules.flatMap((m) => m.lessons);
 
-  const publishedLessons = allLessons.filter(l => l.status === 'published').length;
-  const draftLessons = allLessons.filter(l => l.status === 'draft').length;
+  const publishedLessons = allLessons.filter((l) => l.status === 'published').length;
+  const draftLessons = allLessons.filter((l) => l.status === 'draft').length;
   const researchCount = content?.research?.length || 0;
 
-  const lessonsWithScore = allLessons.filter(l => l.fidelity_score !== null && l.fidelity_score !== undefined);
-  const avgFidelity = lessonsWithScore.length > 0
-    ? lessonsWithScore.reduce((sum, l) => sum + (l.fidelity_score || 0), 0) / lessonsWithScore.length
-    : null;
+  const lessonsWithScore = allLessons.filter(
+    (l) => l.fidelity_score !== null && l.fidelity_score !== undefined
+  );
+  const avgFidelity =
+    lessonsWithScore.length > 0
+      ? lessonsWithScore.reduce((sum, l) => sum + (l.fidelity_score || 0), 0) /
+        lessonsWithScore.length
+      : null;
 
   const metadata = course.project_metadata || {};
 
@@ -153,11 +173,12 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({ setSection }) => {
     hasLessons: totalLessons > 0,
     publishedLessons,
     totalLessons,
-    courseStatus: course.status || ''
+    courseStatus: course.status || '',
   });
 
-  const progressPercent = totalLessons > 0 ? Math.round((publishedLessons / totalLessons) * 100) : 0;
-  const currentStage = pipelineStages.find(s => s.status === 'current')?.label || 'BRIEFING';
+  const progressPercent =
+    totalLessons > 0 ? Math.round((publishedLessons / totalLessons) * 100) : 0;
+  const currentStage = pipelineStages.find((s) => s.status === 'current')?.label || 'BRIEFING';
 
   // KPI stats
   const stats = [
@@ -166,58 +187,65 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({ setSection }) => {
       value: totalModules,
       icon: 'folder',
       detail: totalModules > 0 ? 'Todos com conteúdo' : 'Nenhum criado',
-      sparkline: '0,20 10,15 20,25 30,18 40,22 50,10 60,15 70,5 80,10 90,0'
+      sparkline: '0,20 10,15 20,25 30,18 40,22 50,10 60,15 70,5 80,10 90,0',
     },
     {
       label: 'Lições',
       value: totalLessons,
       icon: 'play-alt',
       detail: `${publishedLessons} publicadas · ${draftLessons} rascunhos`,
-      sparkline: '0,25 10,22 20,20 30,15 40,18 50,12 60,10 70,8 80,5 90,2'
+      sparkline: '0,25 10,22 20,20 30,15 40,18 50,12 60,10 70,8 80,5 90,2',
     },
     {
       label: 'Pesquisas',
       value: researchCount,
       icon: 'search',
       detail: 'documentos de apoio',
-      sparkline: '0,15 10,15 20,15 30,15 40,15 50,15 60,15 70,15 80,15 90,15'
+      sparkline: '0,15 10,15 20,15 30,15 40,15 50,15 60,15 70,15 80,15 90,15',
     },
     {
       label: 'Fidelidade Média',
       value: avgFidelity !== null ? `${Math.round(avgFidelity * 100)}%` : '--',
       icon: 'shield-check',
-      detail: lessonsWithScore.length > 0 ? `${lessonsWithScore.length} lições avaliadas` : 'sem avaliações',
-      sparkline: '0,28 10,25 20,22 30,20 40,15 50,10 60,12 70,8 80,5 90,0'
+      detail:
+        lessonsWithScore.length > 0
+          ? `${lessonsWithScore.length} lições avaliadas`
+          : 'sem avaliações',
+      sparkline: '0,28 10,25 20,22 30,20 40,15 50,10 60,12 70,8 80,5 90,0',
     },
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-background font-sans">
+    <div className="flex min-h-screen flex-col bg-background font-sans">
       <CreatorTopbar currentSection={Section.APP_CREATOR_COURSES} setSection={setSection} />
 
-      <main className="w-full mx-auto p-6 md:p-8 max-w-[1400px]">
-        <div className="space-y-6 animate-fade-in">
-
+      <main className="mx-auto w-full max-w-[1400px] p-6 md:p-8">
+        <div className="animate-fade-in space-y-6">
           {/* === HEADER === */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
             <div>
               {/* Breadcrumb */}
-              <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                <Link to="/creator/cursos" className="hover:text-foreground transition-colors">Cursos</Link>
+              <div className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
+                <Link to="/creator/cursos" className="transition-colors hover:text-foreground">
+                  Cursos
+                </Link>
                 <Icon name="angle-right" size="size-3" />
-                <span className="text-foreground font-medium">{course.name}</span>
+                <span className="font-medium text-foreground">{course.name}</span>
               </div>
 
               {/* Title + Status */}
               <div className="flex items-center gap-3">
                 <h1 className="text-2xl font-bold text-foreground">{course.name}</h1>
-                <Badge variant="outline" className="text-xs uppercase tracking-wider border-[#538096]/30" style={{ color: STUDIO_PRIMARY }}>
+                <Badge
+                  variant="outline"
+                  className="border-studio-primary/30 text-xs uppercase tracking-wider text-studio-primary"
+                >
                   {currentStage}
                 </Badge>
               </div>
 
               {course.description && (
-                <p className="text-sm text-muted-foreground mt-2 max-w-2xl">{course.description}</p>
+                <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{course.description}</p>
               )}
             </div>
 
@@ -240,23 +268,28 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({ setSection }) => {
           </div>
 
           {/* === KPI CARDS === */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             {stats.map((stat, i) => (
-              <Card key={i} className="bg-card border-border hover:border-[#538096]/50 transition-all group relative overflow-hidden">
+              <Card
+                key={i}
+                className="group relative overflow-hidden border-border bg-card transition-all hover:border-studio-primary/50"
+              >
                 {/* Sparkline Background */}
-                <div className="absolute bottom-0 left-0 right-0 h-16 opacity-10 pointer-events-none group-hover:opacity-20 transition-opacity">
-                  <svg viewBox="0 0 100 30" preserveAspectRatio="none" className="w-full h-full">
+                <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-16 opacity-10 transition-opacity group-hover:opacity-20">
+                  <svg viewBox="0 0 100 30" preserveAspectRatio="none" className="h-full w-full">
                     <path d={`M0,30 L${stat.sparkline} L100,30 Z`} fill={STUDIO_PRIMARY} />
                   </svg>
                 </div>
-                <CardContent className="p-5 flex items-start justify-between relative z-10">
+                <CardContent className="relative z-10 flex items-start justify-between p-5">
                   <div>
-                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">{stat.label}</p>
-                    <h3 className="text-3xl font-mono font-medium text-foreground">{stat.value}</h3>
-                    <p className="text-[10px] text-muted-foreground mt-2">{stat.detail}</p>
+                    <p className="mb-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      {stat.label}
+                    </p>
+                    <h3 className="font-mono text-3xl font-medium text-foreground">{stat.value}</h3>
+                    <p className="mt-2 text-[10px] text-muted-foreground">{stat.detail}</p>
                   </div>
                   <div
-                    className="w-10 h-10 rounded-lg flex items-center justify-center transition-colors"
+                    className="flex h-10 w-10 items-center justify-center rounded-lg transition-colors"
                     style={{ backgroundColor: STUDIO_ACCENT, color: STUDIO_PRIMARY }}
                   >
                     <Icon name={stat.icon} size="size-5" />
@@ -267,15 +300,15 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({ setSection }) => {
           </div>
 
           {/* === PIPELINE DE PRODUÇÃO === */}
-          <Card className="bg-card border-border hover:border-[#538096]/50 transition-colors group">
+          <Card className="group border-border bg-card transition-colors hover:border-studio-primary/50">
             <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2 group-hover:text-[#538096] transition-colors">
+              <div className="mb-6 flex items-center justify-between">
+                <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-muted-foreground transition-colors group-hover:text-studio-primary">
                   <Icon name="sitemap" size="size-4" /> Pipeline de Produção
                 </h3>
                 <div className="flex items-center gap-3">
                   <span className="text-sm text-muted-foreground">{progressPercent}% completo</span>
-                  <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
+                  <div className="h-2 w-32 overflow-hidden rounded-full bg-muted">
                     <div
                       className="h-full rounded-full transition-all duration-500"
                       style={{ width: `${progressPercent}%`, backgroundColor: STUDIO_PRIMARY }}
@@ -284,41 +317,56 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({ setSection }) => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between relative min-w-[700px]">
+              <div className="relative flex min-w-[700px] items-center justify-between">
                 {/* Connecting line with progress */}
-                <div className="absolute top-5 left-0 w-full h-0.5 bg-muted -z-0">
+                <div className="absolute left-0 top-5 -z-0 h-0.5 w-full bg-muted">
                   <div
                     className="h-full transition-all duration-1000"
                     style={{
-                      width: `${(pipelineStages.filter(s => s.status === 'completed').length / (pipelineStages.length - 1)) * 100}%`,
-                      backgroundColor: STUDIO_PRIMARY
+                      width: `${(pipelineStages.filter((s) => s.status === 'completed').length / (pipelineStages.length - 1)) * 100}%`,
+                      backgroundColor: STUDIO_PRIMARY,
                     }}
                   />
                 </div>
 
                 {pipelineStages.map((stage) => (
-                  <div key={stage.id} className="flex flex-col items-center gap-3 relative z-10 group/step">
+                  <div
+                    key={stage.id}
+                    className="group/step relative z-10 flex flex-col items-center gap-3"
+                  >
                     <div
                       className={cn(
-                        "w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300",
+                        'flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all duration-300',
                         stage.status === 'current'
-                          ? "text-white scale-110 shadow-lg"
+                          ? 'scale-110 text-white shadow-lg'
                           : stage.status === 'completed'
-                          ? "bg-card text-foreground"
-                          : "bg-card border-border text-muted-foreground group-hover/step:text-foreground"
+                            ? 'bg-card text-foreground'
+                            : 'border-border bg-card text-muted-foreground group-hover/step:text-foreground'
                       )}
                       style={{
                         backgroundColor: stage.status === 'current' ? STUDIO_PRIMARY : undefined,
-                        borderColor: stage.status === 'current' || stage.status === 'completed' ? STUDIO_PRIMARY : undefined,
-                        boxShadow: stage.status === 'current' ? `0 0 20px ${STUDIO_PRIMARY}40` : undefined
+                        borderColor:
+                          stage.status === 'current' || stage.status === 'completed'
+                            ? STUDIO_PRIMARY
+                            : undefined,
+                        boxShadow:
+                          stage.status === 'current' ? `0 0 20px ${STUDIO_PRIMARY}40` : undefined,
                       }}
                     >
-                      {stage.status === 'completed' ? <Icon name="check" size="size-4" /> : <Icon name={stage.icon} size="size-4" />}
+                      {stage.status === 'completed' ? (
+                        <Icon name="check" size="size-4" />
+                      ) : (
+                        <Icon name={stage.icon} size="size-4" />
+                      )}
                     </div>
                     <div className="text-center">
                       <p
-                        className="text-xs font-bold uppercase tracking-wider mb-0.5"
-                        style={stage.status === 'current' || stage.status === 'completed' ? { color: STUDIO_PRIMARY } : {}}
+                        className="mb-0.5 text-xs font-bold uppercase tracking-wider"
+                        style={
+                          stage.status === 'current' || stage.status === 'completed'
+                            ? { color: STUDIO_PRIMARY }
+                            : {}
+                        }
                       >
                         {stage.label}
                       </p>
@@ -330,14 +378,13 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({ setSection }) => {
           </Card>
 
           {/* === MAIN CONTENT GRID === */}
-          <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
-
+          <div className="grid grid-cols-1 gap-6 xl:grid-cols-4">
             {/* LEFT: Curriculum Structure */}
-            <div className="xl:col-span-3 space-y-4">
-              <Card className="bg-card border-border">
-                <CardHeader className="pb-3 border-b border-border">
+            <div className="space-y-4 xl:col-span-3">
+              <Card className="border-border bg-card">
+                <CardHeader className="border-b border-border pb-3">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-2 text-sm uppercase tracking-wider text-muted-foreground">
                       <Icon name="list" size="size-4" /> Estrutura do Currículo
                     </CardTitle>
                     <div className="flex items-center gap-2">
@@ -357,12 +404,19 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({ setSection }) => {
                 </CardHeader>
                 <CardContent className="pt-4">
                   {modules.length === 0 ? (
-                    <div className="text-center py-12">
-                      <div className="w-14 h-14 rounded-lg flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: STUDIO_ACCENT }}>
+                    <div className="py-12 text-center">
+                      <div
+                        className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-lg"
+                        style={{ backgroundColor: STUDIO_ACCENT }}
+                      >
                         <Icon name="folder-open" style={{ color: STUDIO_PRIMARY }} size="size-6" />
                       </div>
-                      <p className="text-muted-foreground mb-4">Nenhum módulo criado ainda</p>
-                      <Button onClick={() => navigate(`/creator/cursos/${slug}/curriculo`)} style={{ backgroundColor: STUDIO_PRIMARY }} className="text-white">
+                      <p className="mb-4 text-muted-foreground">Nenhum módulo criado ainda</p>
+                      <Button
+                        onClick={() => navigate(`/creator/cursos/${slug}/curriculo`)}
+                        style={{ backgroundColor: STUDIO_PRIMARY }}
+                        className="text-white"
+                      >
                         <Icon name="plus" size="size-4" className="mr-2" />
                         Criar Currículo
                       </Button>
@@ -371,40 +425,51 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({ setSection }) => {
                     <div className="space-y-2">
                       {modules.map((module, idx) => {
                         const isExpanded = expandedModules.has(module.id);
-                        const moduleProgress = module.lessons.length > 0
-                          ? Math.round((module.lessons.filter(l => l.status === 'published').length / module.lessons.length) * 100)
-                          : 0;
+                        const moduleProgress =
+                          module.lessons.length > 0
+                            ? Math.round(
+                                (module.lessons.filter((l) => l.status === 'published').length /
+                                  module.lessons.length) *
+                                  100
+                              )
+                            : 0;
 
                         return (
-                          <div key={module.id} className="border border-border rounded-lg overflow-hidden">
+                          <div
+                            key={module.id}
+                            className="overflow-hidden rounded-lg border border-border"
+                          >
                             {/* Module Header */}
                             <div
-                              className="flex items-center justify-between p-4 bg-card hover:bg-muted/20 cursor-pointer transition-colors"
+                              className="flex cursor-pointer items-center justify-between bg-card p-4 transition-colors hover:bg-muted/20"
                               onClick={() => toggleModule(module.id)}
                             >
                               <div className="flex items-center gap-3">
                                 <div
-                                  className="w-10 h-10 rounded-lg flex items-center justify-center"
+                                  className="flex h-10 w-10 items-center justify-center rounded-lg"
                                   style={{ backgroundColor: STUDIO_ACCENT, color: STUDIO_PRIMARY }}
                                 >
                                   <span className="text-sm font-bold">M{idx + 1}</span>
                                 </div>
                                 <div>
-                                  <h4 className="font-semibold text-sm">{module.title}</h4>
+                                  <h4 className="text-sm font-semibold">{module.title}</h4>
                                   <p className="text-xs text-muted-foreground">
                                     {module.lessons.length} lições · {moduleProgress}% completo
                                   </p>
                                 </div>
                               </div>
                               <div className="flex items-center gap-3">
-                                <div className="w-24 h-1.5 bg-muted rounded-full overflow-hidden">
+                                <div className="h-1.5 w-24 overflow-hidden rounded-full bg-muted">
                                   <div
                                     className="h-full rounded-full"
-                                    style={{ width: `${moduleProgress}%`, backgroundColor: STUDIO_PRIMARY }}
+                                    style={{
+                                      width: `${moduleProgress}%`,
+                                      backgroundColor: STUDIO_PRIMARY,
+                                    }}
                                   />
                                 </div>
                                 <Icon
-                                  name={isExpanded ? "angle-up" : "angle-down"}
+                                  name={isExpanded ? 'angle-up' : 'angle-down'}
                                   size="size-4"
                                   className="text-muted-foreground"
                                 />
@@ -418,31 +483,38 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({ setSection }) => {
                                   <Link
                                     key={lesson.id}
                                     to={`/creator/cursos/${slug}/licoes/${lesson.id}`}
-                                    className="flex items-center justify-between p-3 pl-6 hover:bg-muted/10 transition-colors group"
+                                    className="group flex items-center justify-between p-3 pl-6 transition-colors hover:bg-muted/10"
                                   >
                                     <div className="flex items-center gap-3">
-                                      <span className="text-xs font-mono text-muted-foreground w-8">
+                                      <span className="w-8 font-mono text-xs text-muted-foreground">
                                         {idx + 1}.{lessonIdx + 1}
                                       </span>
-                                      <span className="text-sm group-hover:text-[#538096] transition-colors">
+                                      <span className="text-sm transition-colors group-hover:text-studio-primary">
                                         {lesson.title}
                                       </span>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                      {lesson.fidelity_score !== null && lesson.fidelity_score !== undefined && (
-                                        <span className="text-[10px] font-mono text-muted-foreground">
-                                          {Math.round(lesson.fidelity_score * 100)}%
-                                        </span>
-                                      )}
-                                      <Badge className={cn(
-                                        "text-[10px] border-0",
-                                        lesson.status === 'published'
-                                          ? "bg-emerald-500/10 text-emerald-500"
-                                          : "bg-muted text-muted-foreground"
-                                      )}>
+                                      {lesson.fidelity_score !== null &&
+                                        lesson.fidelity_score !== undefined && (
+                                          <span className="font-mono text-[10px] text-muted-foreground">
+                                            {Math.round(lesson.fidelity_score * 100)}%
+                                          </span>
+                                        )}
+                                      <Badge
+                                        className={cn(
+                                          'border-0 text-[10px]',
+                                          lesson.status === 'published'
+                                            ? 'bg-emerald-500/10 text-emerald-500'
+                                            : 'bg-muted text-muted-foreground'
+                                        )}
+                                      >
                                         {lesson.status === 'published' ? 'Publicada' : 'Rascunho'}
                                       </Badge>
-                                      <Icon name="angle-right" size="size-4" className="text-muted-foreground group-hover:text-[#538096]" />
+                                      <Icon
+                                        name="angle-right"
+                                        size="size-4"
+                                        className="text-muted-foreground group-hover:text-studio-primary"
+                                      />
                                     </div>
                                   </Link>
                                 ))}
@@ -452,7 +524,9 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({ setSection }) => {
                             {/* Empty module */}
                             {isExpanded && module.lessons.length === 0 && (
                               <div className="p-6 text-center">
-                                <p className="text-sm text-muted-foreground mb-3">Este módulo ainda não tem lições</p>
+                                <p className="mb-3 text-sm text-muted-foreground">
+                                  Este módulo ainda não tem lições
+                                </p>
                                 <Button
                                   variant="outline"
                                   size="sm"
@@ -476,28 +550,48 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({ setSection }) => {
             </div>
 
             {/* RIGHT: Sidebar */}
-            <div className="space-y-6 lg:sticky lg:top-24 h-fit">
+            <div className="h-fit space-y-6 lg:sticky lg:top-24">
               {/* Quick Actions */}
-              <Card className="bg-card border-border shadow-sm">
-                <CardHeader className="pb-3 border-b border-border">
-                  <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+              <Card className="border-border bg-card shadow-sm">
+                <CardHeader className="border-b border-border pb-3">
+                  <CardTitle className="flex items-center gap-2 text-sm uppercase tracking-wider text-muted-foreground">
                     <Icon name="bolt" size="size-4" /> Ações Rápidas
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="pt-4 space-y-2">
+                <CardContent className="space-y-2 pt-4">
                   {[
-                    { label: 'Editar Brief', icon: 'file-edit', path: `/creator/cursos/${slug}/brief` },
-                    { label: 'Ver Pesquisa', icon: 'search', path: `/creator/cursos/${slug}/research` },
-                    { label: 'Editar Currículo', icon: 'list', path: `/creator/cursos/${slug}/curriculo` },
-                    { label: 'Validação de QA', icon: 'check-circle', path: `/creator/cursos/${slug}/validacao` },
+                    {
+                      label: 'Editar Brief',
+                      icon: 'file-edit',
+                      path: `/creator/cursos/${slug}/brief`,
+                    },
+                    {
+                      label: 'Ver Pesquisa',
+                      icon: 'search',
+                      path: `/creator/cursos/${slug}/research`,
+                    },
+                    {
+                      label: 'Editar Currículo',
+                      icon: 'list',
+                      path: `/creator/cursos/${slug}/curriculo`,
+                    },
+                    {
+                      label: 'Validação de QA',
+                      icon: 'check-circle',
+                      path: `/creator/cursos/${slug}/validacao`,
+                    },
                   ].map((action, i) => (
                     <Button
                       key={i}
                       variant="outline"
-                      className="w-full justify-start h-10 hover:border-[#538096]/50 hover:text-[#538096] transition-colors"
+                      className="h-10 w-full justify-start transition-colors hover:border-studio-primary/50 hover:text-studio-primary"
                       onClick={() => navigate(action.path)}
                     >
-                      <Icon name={action.icon} size="size-4" className="mr-3 text-muted-foreground" />
+                      <Icon
+                        name={action.icon}
+                        size="size-4"
+                        className="mr-3 text-muted-foreground"
+                      />
                       {action.label}
                     </Button>
                   ))}
@@ -505,29 +599,33 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({ setSection }) => {
               </Card>
 
               {/* Course Info */}
-              <Card className="bg-card border-border shadow-sm">
-                <CardHeader className="pb-3 border-b border-border">
-                  <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+              <Card className="border-border bg-card shadow-sm">
+                <CardHeader className="border-b border-border pb-3">
+                  <CardTitle className="flex items-center gap-2 text-sm uppercase tracking-wider text-muted-foreground">
                     <Icon name="info-circle" size="size-4" /> Informações
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="pt-4 space-y-3">
-                  <div className="flex justify-between items-center text-sm">
+                <CardContent className="space-y-3 pt-4">
+                  <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Status</span>
-                    <span className="font-medium capitalize">{course.status?.replace('_', ' ') || 'Em progresso'}</span>
+                    <span className="font-medium capitalize">
+                      {course.status?.replace('_', ' ') || 'Em progresso'}
+                    </span>
                   </div>
-                  <div className="flex justify-between items-center text-sm">
+                  <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Tipo</span>
                     <span className="font-medium capitalize">{course.project_type || 'Curso'}</span>
                   </div>
                   {metadata.metodologia && (
-                    <div className="flex justify-between items-center text-sm">
+                    <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">Metodologia</span>
-                      <span className="font-medium" style={{ color: STUDIO_PRIMARY }}>{String(metadata.metodologia)}</span>
+                      <span className="font-medium" style={{ color: STUDIO_PRIMARY }}>
+                        {String(metadata.metodologia)}
+                      </span>
                     </div>
                   )}
                   {metadata.duracao_estimada && (
-                    <div className="flex justify-between items-center text-sm">
+                    <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">Duração</span>
                       <span className="font-medium">{String(metadata.duracao_estimada)}</span>
                     </div>

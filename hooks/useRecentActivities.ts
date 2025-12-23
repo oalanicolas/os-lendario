@@ -96,9 +96,9 @@ export function getActionFromContentType(contentType: string): 'created' | 'edit
 // Helper to get icon for content type - matching pipeline icons
 export function getIconForContentType(contentType: string): string {
   const icons: Record<string, string> = {
-    'course_lesson': 'play-alt',
-    'course_module': 'folder',
-    'default': 'document',
+    course_lesson: 'play-alt',
+    course_module: 'folder',
+    default: 'document',
   };
 
   return icons[contentType] || icons.default;
@@ -108,23 +108,23 @@ export function getIconForContentType(contentType: string): string {
 export function getIconForTipoLabel(tipoLabel: string): string {
   const icons: Record<string, string> = {
     // Pipeline stages - Portuguese labels
-    'Briefing': 'file-edit',
-    'Brief': 'file-edit',
-    'Pesquisa': 'search',
-    'Currículo': 'list',
-    'Planejamento': 'list',
-    'Geração': 'magic-wand',
-    'Validação': 'check-circle',
-    'Produção': 'video-camera',
-    'Publicado': 'rocket',
-    'Entrega': 'rocket',
+    Briefing: 'file-edit',
+    Brief: 'file-edit',
+    Pesquisa: 'search',
+    Currículo: 'list',
+    Planejamento: 'list',
+    Geração: 'magic-wand',
+    Validação: 'check-circle',
+    Produção: 'video-camera',
+    Publicado: 'rocket',
+    Entrega: 'rocket',
     // Content types
-    'Aula': 'play-alt',
-    'Módulo': 'folder',
-    'Quiz': 'list-check',
-    'Recurso': 'copy',
-    'Relatório': 'chart-pie',
-    'Report': 'chart-pie',
+    Aula: 'play-alt',
+    Módulo: 'folder',
+    Quiz: 'list-check',
+    Recurso: 'copy',
+    Relatório: 'chart-pie',
+    Report: 'chart-pie',
   };
 
   // Try exact match first
@@ -142,10 +142,10 @@ export function getIconForTipoLabel(tipoLabel: string): string {
 // Helper to get color for action type
 export function getColorForAction(action: string): { bg: string; text: string } {
   const colors: Record<string, { bg: string; text: string }> = {
-    'edited': { bg: 'bg-blue-500/20', text: 'text-blue-400' },
-    'created': { bg: 'bg-emerald-500/20', text: 'text-emerald-400' },
-    'published': { bg: 'bg-purple-500/20', text: 'text-purple-400' },
-    'reviewed': { bg: 'bg-amber-500/20', text: 'text-amber-400' },
+    edited: { bg: 'bg-blue-500/20', text: 'text-blue-400' },
+    created: { bg: 'bg-emerald-500/20', text: 'text-emerald-400' },
+    published: { bg: 'bg-purple-500/20', text: 'text-purple-400' },
+    reviewed: { bg: 'bg-amber-500/20', text: 'text-amber-400' },
   };
   return colors[action] || colors.edited;
 }

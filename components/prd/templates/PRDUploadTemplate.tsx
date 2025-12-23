@@ -14,7 +14,7 @@ import {
   StudioHeader,
   StudioContent,
   StudioSidebar,
-  type PipelineStep
+  type PipelineStep,
 } from '../../studio';
 
 import { Card } from '../../ui/card';
@@ -66,9 +66,9 @@ const LoadingState: React.FC<{ setSection: (s: Section) => void }> = ({ setSecti
   <StudioLayout
     topbar={<PRDTopbar currentSection={Section.STUDIO_PRD_EDITOR} setSection={setSection} />}
   >
-    <div className="flex-1 flex items-center justify-center">
-      <div className="text-center space-y-4">
-        <Icon name="spinner" className="animate-spin mx-auto size-8 text-muted-foreground" />
+    <div className="flex flex-1 items-center justify-center">
+      <div className="space-y-4 text-center">
+        <Icon name="spinner" className="mx-auto size-8 animate-spin text-muted-foreground" />
         <p className="text-muted-foreground">Carregando projeto...</p>
       </div>
     </div>
@@ -79,8 +79,8 @@ const NotFoundState: React.FC<{ setSection: (s: Section) => void }> = ({ setSect
   <StudioLayout
     topbar={<PRDTopbar currentSection={Section.STUDIO_PRD_EDITOR} setSection={setSection} />}
   >
-    <div className="flex-1 flex items-center justify-center">
-      <div className="text-center space-y-4">
+    <div className="flex flex-1 items-center justify-center">
+      <div className="space-y-4 text-center">
         <Icon name="folder-open" size="size-16" className="mx-auto text-muted-foreground/30" />
         <h2 className="text-xl font-bold">Projeto não encontrado</h2>
         <p className="text-muted-foreground">O projeto que você está procurando não existe.</p>
@@ -100,12 +100,7 @@ const NotFoundState: React.FC<{ setSection: (s: Section) => void }> = ({ setSect
 export const PRDUploadTemplate: React.FC<PRDUploadTemplateProps> = ({ setSection }) => {
   const navigate = useNavigate();
   const { slug } = useParams<{ slug: string }>();
-  const {
-    project,
-    loading,
-    updateUpload,
-    advancePhase
-  } = usePRDProject(slug || '');
+  const { project, loading, updateUpload, advancePhase } = usePRDProject(slug || '');
 
   // Local state
   const [content, setContent] = useState('');
@@ -143,12 +138,12 @@ export const PRDUploadTemplate: React.FC<PRDUploadTemplateProps> = ({ setSection
       const status: PRDStatus = rawStatus === 'completed' ? 'exported' : (rawStatus as PRDStatus);
 
       const phaseRoutes: Record<PRDStatus, string> = {
-        'upload': `/prd/${slug}`,
-        'brief': `/prd/${slug}/brief`,
-        'prd': `/prd/${slug}/prd`,
-        'epics': `/prd/${slug}/epicos`,
-        'stories': `/prd/${slug}/stories`,
-        'exported': `/prd/${slug}/exportar`
+        upload: `/prd/${slug}`,
+        brief: `/prd/${slug}/brief`,
+        prd: `/prd/${slug}/prd`,
+        epics: `/prd/${slug}/epicos`,
+        stories: `/prd/${slug}/stories`,
+        exported: `/prd/${slug}/exportar`,
       };
 
       const targetRoute = phaseRoutes[status] || `/prd/${slug}/brief`;
@@ -182,19 +177,22 @@ export const PRDUploadTemplate: React.FC<PRDUploadTemplateProps> = ({ setSection
     }
   }, [isValid, project, content, updateUpload, advancePhase, navigate, slug]);
 
-  const handlePipelineClick = useCallback((stepKey: string) => {
-    const routes: Record<string, string> = {
-      'upload': `/prd/${slug}`,
-      'brief': `/prd/${slug}/brief`,
-      'prd': `/prd/${slug}/prd`,
-      'epics': `/prd/${slug}/epicos`,
-      'stories': `/prd/${slug}/stories`,
-      'export': `/prd/${slug}/exportar`,
-    };
-    if (routes[stepKey]) {
-      navigate(routes[stepKey]);
-    }
-  }, [navigate, slug]);
+  const handlePipelineClick = useCallback(
+    (stepKey: string) => {
+      const routes: Record<string, string> = {
+        upload: `/prd/${slug}`,
+        brief: `/prd/${slug}/brief`,
+        prd: `/prd/${slug}/prd`,
+        epics: `/prd/${slug}/epicos`,
+        stories: `/prd/${slug}/stories`,
+        export: `/prd/${slug}/exportar`,
+      };
+      if (routes[stepKey]) {
+        navigate(routes[stepKey]);
+      }
+    },
+    [navigate, slug]
+  );
 
   // Loading state
   if (loading) {
@@ -212,9 +210,9 @@ export const PRDUploadTemplate: React.FC<PRDUploadTemplateProps> = ({ setSection
       <StudioLayout
         topbar={<PRDTopbar currentSection={Section.STUDIO_PRD_EDITOR} setSection={setSection} />}
       >
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center space-y-4">
-            <Icon name="spinner" className="animate-spin mx-auto size-8 text-muted-foreground" />
+        <div className="flex flex-1 items-center justify-center">
+          <div className="space-y-4 text-center">
+            <Icon name="spinner" className="mx-auto size-8 animate-spin text-muted-foreground" />
             <p className="text-muted-foreground">Redirecionando para a fase atual...</p>
           </div>
         </div>
@@ -265,31 +263,36 @@ export const PRDUploadTemplate: React.FC<PRDUploadTemplateProps> = ({ setSection
       <StudioContent maxWidth="max-w-4xl" padding="p-8">
         <div className="space-y-6">
           {/* Main Editor */}
-          <Card className="p-6 space-y-4">
+          <Card className="space-y-4 p-6">
             <Textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder={UPLOAD_PLACEHOLDER}
               className={cn(
-                "min-h-[300px] resize-none text-base leading-relaxed",
-                !isValid && content.length > 0 && "border-amber-500/50 focus:border-amber-500"
+                'min-h-[300px] resize-none text-base leading-relaxed',
+                !isValid && content.length > 0 && 'border-amber-500/50 focus:border-amber-500'
               )}
             />
 
             {/* Character Counter */}
             <div className="flex items-center justify-between text-sm">
-              <div className={cn(
-                "flex items-center gap-2",
-                isValid ? "text-emerald-500" : "text-muted-foreground"
-              )}>
+              <div
+                className={cn(
+                  'flex items-center gap-2',
+                  isValid ? 'text-emerald-500' : 'text-muted-foreground'
+                )}
+              >
                 {isValid && <Icon name="check-circle" className="size-4" />}
-                <span className="font-mono">{content.length}/{MIN_CHARS}</span>
+                <span className="font-mono">
+                  {content.length}/{MIN_CHARS}
+                </span>
                 <span>caracteres mínimos</span>
               </div>
 
               {lastSaved && !isSaving && (
                 <span className="text-xs text-muted-foreground">
-                  Salvo às {lastSaved.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                  Salvo às{' '}
+                  {lastSaved.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                 </span>
               )}
             </div>
@@ -303,21 +306,19 @@ export const PRDUploadTemplate: React.FC<PRDUploadTemplateProps> = ({ setSection
             onAudioChange={async (data) => {
               await updateUpload({
                 audioUrl: data?.url,
-                audioDurationSeconds: data?.duration
+                audioDurationSeconds: data?.duration,
               });
             }}
           />
 
           {/* Actions */}
-          <div className="flex justify-between items-center pt-6 border-t border-border">
+          <div className="flex items-center justify-between border-t border-border pt-6">
             <Button variant="outline" onClick={() => navigate('/prd')}>
               <Icon name="arrow-left" className="mr-2 size-4" />
               Voltar
             </Button>
 
-            <span className="text-sm text-muted-foreground">
-              Fase 1 de 6
-            </span>
+            <span className="text-sm text-muted-foreground">Fase 1 de 6</span>
 
             <Button
               onClick={handleAdvance}

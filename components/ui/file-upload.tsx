@@ -18,9 +18,9 @@ const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
     const handleDrag = (e: React.DragEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      if (e.type === "dragenter" || e.type === "dragover") {
+      if (e.type === 'dragenter' || e.type === 'dragover') {
         setDragActive(true);
-      } else if (e.type === "dragleave") {
+      } else if (e.type === 'dragleave') {
         setDragActive(false);
       }
     };
@@ -43,7 +43,7 @@ const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
 
     const handleFile = (file: File) => {
       if (maxSize && file.size > maxSize) {
-        alert("Arquivo muito grande!");
+        alert('Arquivo muito grande!');
         return;
       }
       setFile(file);
@@ -54,16 +54,18 @@ const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
       e.stopPropagation();
       setFile(null);
       onFileSelect?.(null);
-      if (inputRef.current) inputRef.current.value = "";
+      if (inputRef.current) inputRef.current.value = '';
     };
 
     return (
       <div
         ref={ref}
         className={cn(
-          "relative flex flex-col items-center justify-center w-full min-h-[160px] rounded-lg border-2 border-dashed transition-colors",
-          dragActive ? "border-primary bg-primary/5" : "border-muted-foreground/25 hover:bg-muted/30",
-          file ? "border-solid border-border bg-card" : "",
+          'relative flex min-h-[160px] w-full flex-col items-center justify-center rounded-lg border-2 border-dashed transition-colors',
+          dragActive
+            ? 'border-primary bg-primary/5'
+            : 'border-muted-foreground/25 hover:bg-muted/30',
+          file ? 'border-solid border-border bg-card' : '',
           className
         )}
         onDragEnter={handleDrag}
@@ -82,27 +84,35 @@ const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
         />
 
         {file ? (
-          <div className="flex items-center gap-4 p-4 w-full">
-            <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 text-primary">
-               <Icon name="document" size="size-6" />
+          <div className="flex w-full items-center gap-4 p-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <Icon name="document" size="size-6" />
             </div>
-            <div className="flex-1 min-w-0 text-left">
-                <p className="text-sm font-semibold truncate font-sans">{file.name}</p>
-                <p className="text-xs text-muted-foreground font-mono">{(file.size / 1024).toFixed(1)} KB</p>
+            <div className="min-w-0 flex-1 text-left">
+              <p className="truncate font-sans text-sm font-semibold">{file.name}</p>
+              <p className="font-mono text-xs text-muted-foreground">
+                {(file.size / 1024).toFixed(1)} KB
+              </p>
             </div>
-            <Button variant="ghost" size="icon" onClick={removeFile} className="text-destructive hover:text-destructive hover:bg-destructive/10">
-                <Icon name="trash" size="size-4" />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={removeFile}
+              className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+            >
+              <Icon name="trash" size="size-4" />
             </Button>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center text-center p-6 cursor-pointer">
+          <div className="flex cursor-pointer flex-col items-center justify-center p-6 text-center">
             <div className="mb-4 rounded-full bg-muted p-3">
-               <Icon name="cloud-upload" className="text-muted-foreground" size="size-6" />
+              <Icon name="cloud-upload" className="text-muted-foreground" size="size-6" />
             </div>
-            <p className="text-sm font-semibold font-sans mb-1">
-              <span className="text-primary hover:underline">Clique para upload</span> ou arraste e solte
+            <p className="mb-1 font-sans text-sm font-semibold">
+              <span className="text-primary hover:underline">Clique para upload</span> ou arraste e
+              solte
             </p>
-            <p className="text-xs text-muted-foreground font-sans">
+            <p className="font-sans text-xs text-muted-foreground">
               SVG, PNG, JPG ou GIF (max. 800x400px)
             </p>
           </div>
@@ -111,6 +121,6 @@ const FileUpload = React.forwardRef<HTMLDivElement, FileUploadProps>(
     );
   }
 );
-FileUpload.displayName = "FileUpload";
+FileUpload.displayName = 'FileUpload';
 
 export { FileUpload };

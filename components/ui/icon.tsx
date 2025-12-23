@@ -3,14 +3,14 @@ import { cn } from '../../lib/utils';
 
 // Mapeamento de tamanho size-* para text-*
 const sizeMap: Record<string, string> = {
-  'size-3': 'text-xs',      // 12px
-  'size-4': 'text-sm',      // 14px
-  'size-5': 'text-base',    // 16px
-  'size-6': 'text-lg',      // 18px
-  'size-7': 'text-xl',      // 20px
-  'size-8': 'text-2xl',     // 24px
-  'size-9': 'text-3xl',     // 30px
-  'size-10': 'text-4xl',    // 36px
+  'size-3': 'text-xs', // 12px
+  'size-4': 'text-sm', // 14px
+  'size-5': 'text-base', // 16px
+  'size-6': 'text-lg', // 18px
+  'size-7': 'text-xl', // 20px
+  'size-8': 'text-2xl', // 24px
+  'size-9': 'text-3xl', // 30px
+  'size-10': 'text-4xl', // 36px
 };
 
 export interface IconProps extends React.HTMLAttributes<HTMLElement> {

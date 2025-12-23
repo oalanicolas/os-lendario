@@ -1,16 +1,26 @@
-import React, { useState, useRef, useEffect } from "react";
-import { cn } from "../../lib/utils";
-import { Icon } from "./icon";
+import React, { useState, useRef, useEffect } from 'react';
+import { cn } from '../../lib/utils';
+import { Icon } from './icon';
 
 interface ResizablePanelGroupProps {
-  direction?: "horizontal" | "vertical";
+  direction?: 'horizontal' | 'vertical';
   children?: React.ReactNode;
   className?: string;
 }
 
-const ResizablePanelGroup = ({ direction = "horizontal", children, className }: ResizablePanelGroupProps) => {
+const ResizablePanelGroup = ({
+  direction = 'horizontal',
+  children,
+  className,
+}: ResizablePanelGroupProps) => {
   return (
-    <div className={cn("flex w-full h-full overflow-hidden", direction === "vertical" ? "flex-col" : "flex-row", className)}>
+    <div
+      className={cn(
+        'flex h-full w-full overflow-hidden',
+        direction === 'vertical' ? 'flex-col' : 'flex-row',
+        className
+      )}
+    >
       {children}
     </div>
   );
@@ -26,9 +36,9 @@ interface ResizablePanelProps {
 
 const ResizablePanel = ({ defaultSize = 50, children, className }: ResizablePanelProps) => {
   return (
-    <div 
-        className={cn("flex-grow overflow-auto transition-all duration-75 ease-out", className)}
-        style={{ flexBasis: `${defaultSize}%` }}
+    <div
+      className={cn('flex-grow overflow-auto transition-all duration-75 ease-out', className)}
+      style={{ flexBasis: `${defaultSize}%` }}
     >
       {children}
     </div>
@@ -37,25 +47,30 @@ const ResizablePanel = ({ defaultSize = 50, children, className }: ResizablePane
 
 interface ResizableHandleProps {
   withHandle?: boolean;
-  direction?: "horizontal" | "vertical";
+  direction?: 'horizontal' | 'vertical';
 }
 
-const ResizableHandle = ({ withHandle, direction = "horizontal" }: ResizableHandleProps) => {
+const ResizableHandle = ({ withHandle, direction = 'horizontal' }: ResizableHandleProps) => {
   return (
-    <div 
-        className={cn(
-            "relative flex items-center justify-center bg-border hover:bg-primary/50 transition-colors z-10 group",
-            direction === "horizontal" ? "w-1 h-full cursor-col-resize" : "h-1 w-full cursor-row-resize"
-        )}
+    <div
+      className={cn(
+        'group relative z-10 flex items-center justify-center bg-border transition-colors hover:bg-primary/50',
+        direction === 'horizontal' ? 'h-full w-1 cursor-col-resize' : 'h-1 w-full cursor-row-resize'
+      )}
     >
-        {withHandle && (
-            <div className={cn(
-                "z-20 rounded-sm bg-border border border-input flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-colors",
-                direction === "horizontal" ? "w-4 h-8" : "w-8 h-4"
-            )}>
-                <Icon name={direction === "horizontal" ? "menu-dots-vertical" : "menu-dots"} size="size-3" />
-            </div>
-        )}
+      {withHandle && (
+        <div
+          className={cn(
+            'z-20 flex items-center justify-center rounded-sm border border-input bg-border transition-colors group-hover:border-primary group-hover:bg-primary',
+            direction === 'horizontal' ? 'h-8 w-4' : 'h-4 w-8'
+          )}
+        >
+          <Icon
+            name={direction === 'horizontal' ? 'menu-dots-vertical' : 'menu-dots'}
+            size="size-3"
+          />
+        </div>
+      )}
     </div>
   );
 };

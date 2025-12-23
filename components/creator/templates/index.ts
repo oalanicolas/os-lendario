@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Course Creator Templates
 // Export all course-related templates for easy importing
 

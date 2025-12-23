@@ -1,6 +1,7 @@
 // PRD Studio AI Functions
 // Dedicated AI generation functions for structured outputs
 
+// @ts-ignore - zod import may be missing
 import { z } from 'zod';
 
 // =============================================================================
@@ -34,17 +35,26 @@ export interface BriefStructureGenerated {
 }
 
 // Type for the generate function from usePRDAI
-type GenerateFn = (prompt: string, options?: {
-  systemPrompt?: string;
-  temperature?: number;
-  maxTokens?: number;
-}) => Promise<{ content: string }>;
+type GenerateFn = (
+  prompt: string,
+  options?: {
+    systemPrompt?: string;
+    temperature?: number;
+    maxTokens?: number;
+  }
+) => Promise<{ content: string }>;
 
 // =============================================================================
 // VALIDATION HELPERS
 // =============================================================================
 
-const VALID_BLIND_SPOT_CATEGORIES: BlindSpotCategory[] = ['technical', 'business', 'user', 'legal', 'other'];
+const VALID_BLIND_SPOT_CATEGORIES: BlindSpotCategory[] = [
+  'technical',
+  'business',
+  'user',
+  'legal',
+  'other',
+];
 
 function isValidBlindSpotCategory(category: string): category is BlindSpotCategory {
   return VALID_BLIND_SPOT_CATEGORIES.includes(category as BlindSpotCategory);
@@ -117,20 +127,20 @@ Responda com JSON contendo array de objetos com "text" e "category".`;
 
 const FALLBACK_BLIND_SPOTS: BlindSpotGenerated[] = [
   {
-    text: "Você considerou como o sistema vai se comportar offline ou com conexão instável?",
-    category: "technical"
+    text: 'Você considerou como o sistema vai se comportar offline ou com conexão instável?',
+    category: 'technical',
   },
   {
-    text: "Qual é o modelo de monetização ou sustentabilidade do projeto?",
-    category: "business"
+    text: 'Qual é o modelo de monetização ou sustentabilidade do projeto?',
+    category: 'business',
   },
   {
-    text: "Como usuários com diferentes níveis de familiaridade tecnológica vão usar isso?",
-    category: "user"
+    text: 'Como usuários com diferentes níveis de familiaridade tecnológica vão usar isso?',
+    category: 'user',
   },
   {
-    text: "Existem regulamentações específicas do setor que precisam ser consideradas?",
-    category: "legal"
+    text: 'Existem regulamentações específicas do setor que precisam ser consideradas?',
+    category: 'legal',
   },
 ];
 
@@ -175,7 +185,6 @@ export async function generateBlindSpots(
 
     // Limit to 5 results
     return validated.slice(0, 5);
-
   } catch (error) {
     console.error('[PRD-AI] Failed to generate blind spots:', error);
     return FALLBACK_BLIND_SPOTS;
@@ -214,25 +223,28 @@ Tipos de tópicos a cobrir:
 
 const FALLBACK_RESEARCH: ResearchTopicGenerated[] = [
   {
-    title: "Análise de Mercado",
-    summary: "Visão geral do mercado-alvo e tendências atuais",
-    content: "O mercado está em constante evolução, com novas tecnologias e preferências dos consumidores surgindo regularmente. É importante entender o panorama atual antes de lançar um novo produto.",
-    sources: ["Relatórios de mercado", "Pesquisas de tendências"],
-    readingTimeMinutes: 5
+    title: 'Análise de Mercado',
+    summary: 'Visão geral do mercado-alvo e tendências atuais',
+    content:
+      'O mercado está em constante evolução, com novas tecnologias e preferências dos consumidores surgindo regularmente. É importante entender o panorama atual antes de lançar um novo produto.',
+    sources: ['Relatórios de mercado', 'Pesquisas de tendências'],
+    readingTimeMinutes: 5,
   },
   {
-    title: "Competidores e Alternativas",
-    summary: "Principais players no mercado e suas estratégias",
-    content: "Conhecer a competição é fundamental para posicionar seu produto de forma diferenciada. Analise os pontos fortes e fracos dos concorrentes.",
-    sources: ["Análise competitiva"],
-    readingTimeMinutes: 5
+    title: 'Competidores e Alternativas',
+    summary: 'Principais players no mercado e suas estratégias',
+    content:
+      'Conhecer a competição é fundamental para posicionar seu produto de forma diferenciada. Analise os pontos fortes e fracos dos concorrentes.',
+    sources: ['Análise competitiva'],
+    readingTimeMinutes: 5,
   },
   {
-    title: "Melhores Práticas de UX",
-    summary: "Padrões de experiência do usuário no setor",
-    content: "A experiência do usuário é crucial para o sucesso do produto. Siga as melhores práticas estabelecidas enquanto inova onde faz sentido.",
-    sources: ["Guidelines de UX", "Estudos de usabilidade"],
-    readingTimeMinutes: 4
+    title: 'Melhores Práticas de UX',
+    summary: 'Padrões de experiência do usuário no setor',
+    content:
+      'A experiência do usuário é crucial para o sucesso do produto. Siga as melhores práticas estabelecidas enquanto inova onde faz sentido.',
+    sources: ['Guidelines de UX', 'Estudos de usabilidade'],
+    readingTimeMinutes: 4,
   },
 ];
 
@@ -270,7 +282,6 @@ export async function generateResearch(
     }
 
     return parsed.slice(0, 5);
-
   } catch (error) {
     console.error('[PRD-AI] Failed to generate research:', error);
     return FALLBACK_RESEARCH;
@@ -320,14 +331,14 @@ Complexidade:
 - "high": Sistema complexo, múltiplos componentes`;
 
 const FALLBACK_BRIEF: BriefStructureGenerated = {
-  problem: "Problema a ser definido com base na análise da ideia.",
-  solution: "Solução proposta a ser detalhada.",
-  targetAudience: "Público-alvo a ser identificado.",
-  differentials: ["Diferencial único", "Inovação tecnológica", "Experiência superior"],
-  risks: ["Risco de mercado", "Risco técnico", "Risco de adoção"],
-  successMetrics: ["Número de usuários", "Taxa de retenção", "NPS"],
-  classification: "project",
-  estimatedComplexity: "medium",
+  problem: 'Problema a ser definido com base na análise da ideia.',
+  solution: 'Solução proposta a ser detalhada.',
+  targetAudience: 'Público-alvo a ser identificado.',
+  differentials: ['Diferencial único', 'Inovação tecnológica', 'Experiência superior'],
+  risks: ['Risco de mercado', 'Risco técnico', 'Risco de adoção'],
+  successMetrics: ['Número de usuários', 'Taxa de retenção', 'NPS'],
+  classification: 'project',
+  estimatedComplexity: 'medium',
 };
 
 // =============================================================================
@@ -336,7 +347,14 @@ const FALLBACK_BRIEF: BriefStructureGenerated = {
 
 export interface BriefGenerationContext {
   uploadContent: string;
-  blindSpots: Array<{ text?: string; title?: string; description?: string; category: string; status?: string; selected?: boolean }>;
+  blindSpots: Array<{
+    text?: string;
+    title?: string;
+    description?: string;
+    category: string;
+    status?: string;
+    selected?: boolean;
+  }>;
   research: Array<{ title: string; summary: string; isRead?: boolean }>;
   wows: Array<{ text: string; category: string }>;
   projectType?: 'task' | 'project';
@@ -349,8 +367,8 @@ export interface BriefGenerationContext {
 function formatBlindSpots(blindSpots: BriefGenerationContext['blindSpots']): string {
   if (!blindSpots || blindSpots.length === 0) return 'Nenhum ponto cego identificado.';
   return blindSpots
-    .filter(bs => bs.selected !== false)
-    .map(bs => {
+    .filter((bs) => bs.selected !== false)
+    .map((bs) => {
       const text = bs.text || bs.title || '';
       const desc = bs.description || '';
       return `- [${bs.category}] ${text}${desc ? ': ' + desc : ''}`;
@@ -361,16 +379,14 @@ function formatBlindSpots(blindSpots: BriefGenerationContext['blindSpots']): str
 function formatResearch(research: BriefGenerationContext['research']): string {
   if (!research || research.length === 0) return 'Pesquisa não realizada.';
   return research
-    .filter(r => r.isRead !== false)
-    .map(r => `### ${r.title}\n${r.summary}`)
+    .filter((r) => r.isRead !== false)
+    .map((r) => `### ${r.title}\n${r.summary}`)
     .join('\n\n');
 }
 
 function formatWows(wows: BriefGenerationContext['wows']): string {
   if (!wows || wows.length === 0) return 'Nenhum insight registrado.';
-  return wows
-    .map(w => `- [${w.category}] ${w.text}`)
-    .join('\n');
+  return wows.map((w) => `- [${w.category}] ${w.text}`).join('\n');
 }
 
 // =============================================================================
@@ -388,8 +404,7 @@ export async function generateBrief(
   generate: GenerateFn
 ): Promise<BriefStructureGenerated> {
   try {
-    const userPrompt = BRIEF_USER
-      .replace('{uploadContent}', context.uploadContent)
+    const userPrompt = BRIEF_USER.replace('{uploadContent}', context.uploadContent)
       .replace('{blindSpots}', formatBlindSpots(context.blindSpots))
       .replace('{research}', formatResearch(context.research))
       .replace('{wows}', formatWows(context.wows));
@@ -415,7 +430,6 @@ export async function generateBrief(
     }
 
     return parsed;
-
   } catch (error) {
     console.error('[PRD-AI] Failed to generate brief:', error);
     return FALLBACK_BRIEF;
@@ -436,8 +450,7 @@ export async function generateBriefStructure(
   generate: GenerateFn
 ): Promise<BriefStructureGenerated> {
   try {
-    const userPrompt = BRIEF_USER
-      .replace('{uploadContent}', context.uploadContent)
+    const userPrompt = BRIEF_USER.replace('{uploadContent}', context.uploadContent)
       .replace('{blindSpots}', context.blindSpots)
       .replace('{research}', context.research)
       .replace('{wows}', context.wows);
@@ -463,7 +476,6 @@ export async function generateBriefStructure(
     }
 
     return parsed;
-
   } catch (error) {
     console.error('[PRD-AI] Failed to generate brief structure:', error);
     return FALLBACK_BRIEF;
@@ -532,28 +544,31 @@ Regras:
 
 const FALLBACK_EPICS: EpicGenerated[] = [
   {
-    title: "Infraestrutura Base",
-    description: "Setup inicial do projeto, configuração de ambiente, estrutura de pastas e dependências principais.",
+    title: 'Infraestrutura Base',
+    description:
+      'Setup inicial do projeto, configuração de ambiente, estrutura de pastas e dependências principais.',
     suggestedStoryCount: 4,
     dependencies: [],
   },
   {
-    title: "Funcionalidades Core",
-    description: "Implementação das funcionalidades principais que definem o valor central do produto.",
+    title: 'Funcionalidades Core',
+    description:
+      'Implementação das funcionalidades principais que definem o valor central do produto.',
     suggestedStoryCount: 6,
-    dependencies: ["Infraestrutura Base"],
+    dependencies: ['Infraestrutura Base'],
   },
   {
-    title: "Interface e UX",
-    description: "Desenvolvimento da interface de usuário, fluxos de navegação e experiência do usuário.",
+    title: 'Interface e UX',
+    description:
+      'Desenvolvimento da interface de usuário, fluxos de navegação e experiência do usuário.',
     suggestedStoryCount: 5,
-    dependencies: ["Funcionalidades Core"],
+    dependencies: ['Funcionalidades Core'],
   },
   {
-    title: "Integrações e APIs",
-    description: "Conexão com serviços externos, APIs de terceiros e integrações necessárias.",
+    title: 'Integrações e APIs',
+    description: 'Conexão com serviços externos, APIs de terceiros e integrações necessárias.',
     suggestedStoryCount: 4,
-    dependencies: ["Funcionalidades Core"],
+    dependencies: ['Funcionalidades Core'],
   },
 ];
 
@@ -573,8 +588,7 @@ export async function generateEpics(
   generate: GenerateFn
 ): Promise<EpicGenerated[]> {
   try {
-    const userPrompt = EPICS_USER
-      .replace('{objectives}', prdDocument.objectives || 'Não definido')
+    const userPrompt = EPICS_USER.replace('{objectives}', prdDocument.objectives || 'Não definido')
       .replace('{scope}', prdDocument.scope || 'Não definido')
       .replace('{userStories}', prdDocument.userStories || 'Não definido')
       .replace('{requirements}', prdDocument.requirements || 'Não definido');
@@ -606,16 +620,19 @@ export async function generateEpics(
           .filter((epic: unknown) => {
             if (!epic || typeof epic !== 'object') return false;
             const e = epic as Record<string, unknown>;
-            return typeof e.title === 'string' &&
-                   typeof e.description === 'string' &&
-                   e.title.length >= 5;
+            return (
+              typeof e.title === 'string' &&
+              typeof e.description === 'string' &&
+              e.title.length >= 5
+            );
           })
           .map((epic: Record<string, unknown>) => ({
             title: String(epic.title).slice(0, 100),
             description: String(epic.description).slice(0, 500),
-            suggestedStoryCount: typeof epic.suggestedStoryCount === 'number'
-              ? Math.min(10, Math.max(2, epic.suggestedStoryCount))
-              : 5,
+            suggestedStoryCount:
+              typeof epic.suggestedStoryCount === 'number'
+                ? Math.min(10, Math.max(2, epic.suggestedStoryCount))
+                : 5,
             dependencies: Array.isArray(epic.dependencies)
               ? epic.dependencies.filter((d): d is string => typeof d === 'string')
               : [],
@@ -630,7 +647,6 @@ export async function generateEpics(
     }
 
     return validationResult.data;
-
   } catch (error) {
     console.error('[PRD-AI] Failed to generate epics:', error);
     return FALLBACK_EPICS;
@@ -712,22 +728,24 @@ Importante:
 
 const FALLBACK_STORIES: StoryGenerated[] = [
   {
-    title: "Configuração Inicial",
-    userStory: "Como desenvolvedor, quero configurar o ambiente de desenvolvimento, para poder iniciar a implementação.",
+    title: 'Configuração Inicial',
+    userStory:
+      'Como desenvolvedor, quero configurar o ambiente de desenvolvimento, para poder iniciar a implementação.',
     acceptanceCriteria: [
-      "Deve ter todas as dependências instaladas",
-      "Deve ter o ambiente de desenvolvimento funcionando",
-      "Deve ter acesso ao repositório configurado"
+      'Deve ter todas as dependências instaladas',
+      'Deve ter o ambiente de desenvolvimento funcionando',
+      'Deve ter acesso ao repositório configurado',
     ],
     complexity: 'P',
   },
   {
-    title: "Funcionalidade Principal",
-    userStory: "Como usuário, quero acessar a funcionalidade principal, para resolver meu problema.",
+    title: 'Funcionalidade Principal',
+    userStory:
+      'Como usuário, quero acessar a funcionalidade principal, para resolver meu problema.',
     acceptanceCriteria: [
-      "Deve exibir a interface principal",
-      "Deve permitir interação básica",
-      "Deve salvar o estado corretamente"
+      'Deve exibir a interface principal',
+      'Deve permitir interação básica',
+      'Deve salvar o estado corretamente',
     ],
     complexity: 'M',
   },
@@ -748,8 +766,7 @@ export async function generateStories(
   generate: GenerateFn
 ): Promise<StoryGenerated[]> {
   try {
-    const userPrompt = STORIES_USER
-      .replace('{epicTitle}', epic.title)
+    const userPrompt = STORIES_USER.replace('{epicTitle}', epic.title)
       .replace('{epicDescription}', epic.description)
       .replace('{problem}', context.problem || 'Não definido')
       .replace('{solution}', context.solution || 'Não definido')
@@ -783,9 +800,11 @@ export async function generateStories(
           .filter((story: unknown) => {
             if (!story || typeof story !== 'object') return false;
             const s = story as Record<string, unknown>;
-            return typeof s.title === 'string' &&
-                   typeof s.userStory === 'string' &&
-                   Array.isArray(s.acceptanceCriteria);
+            return (
+              typeof s.title === 'string' &&
+              typeof s.userStory === 'string' &&
+              Array.isArray(s.acceptanceCriteria)
+            );
           })
           .map((story: Record<string, unknown>) => ({
             title: String(story.title).slice(0, 100),
@@ -797,7 +816,7 @@ export async function generateStories(
               ? story.complexity
               : 'M') as StoryComplexity,
           }))
-          .filter(s => s.acceptanceCriteria.length >= 2);
+          .filter((s) => s.acceptanceCriteria.length >= 2);
 
         if (salvaged.length >= 2) {
           return salvaged.slice(0, 10);
@@ -808,7 +827,6 @@ export async function generateStories(
     }
 
     return validationResult.data;
-
   } catch (error) {
     console.error('[PRD-AI] Failed to generate stories:', error);
     return FALLBACK_STORIES;
@@ -819,12 +837,20 @@ export async function generateStories(
 // REGENERATE SECTION
 // =============================================================================
 
-type BriefSectionKey = 'problem' | 'solution' | 'targetAudience' | 'differentials' | 'risks' | 'successMetrics';
+type BriefSectionKey =
+  | 'problem'
+  | 'solution'
+  | 'targetAudience'
+  | 'differentials'
+  | 'risks'
+  | 'successMetrics';
 
 const SECTION_PROMPTS: Record<BriefSectionKey, string> = {
-  problem: 'Reescreva a seção PROBLEMA do brief, focando em ser mais específico sobre a dor do usuário.',
+  problem:
+    'Reescreva a seção PROBLEMA do brief, focando em ser mais específico sobre a dor do usuário.',
   solution: 'Reescreva a seção SOLUÇÃO do brief, deixando mais claro o valor entregue.',
-  targetAudience: 'Reescreva a seção PÚBLICO-ALVO, sendo mais específico sobre quem é o usuário ideal.',
+  targetAudience:
+    'Reescreva a seção PÚBLICO-ALVO, sendo mais específico sobre quem é o usuário ideal.',
   differentials: 'Liste novos DIFERENCIAIS (3-5 itens) que tornam esta solução única no mercado.',
   risks: 'Identifique novos RISCOS (3-5 itens) que precisam ser considerados.',
   successMetrics: 'Defina novas MÉTRICAS DE SUCESSO (3-5 itens) mensuráveis e relevantes.',
@@ -872,13 +898,12 @@ Responda APENAS com ${isArraySection ? 'um array JSON de strings' : 'o texto da 
       // Fallback: split by newlines
       return result.content
         .split('\n')
-        .map(line => line.replace(/^[-•*]\s*/, '').trim())
-        .filter(line => line.length > 0);
+        .map((line) => line.replace(/^[-•*]\s*/, '').trim())
+        .filter((line) => line.length > 0);
     }
 
     // String section - clean up quotes
     return result.content.replace(/^["']|["']$/g, '').trim();
-
   } catch (error) {
     console.error(`[PRD-AI] Failed to regenerate section ${sectionKey}:`, error);
 

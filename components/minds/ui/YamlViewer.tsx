@@ -30,7 +30,7 @@ export const isYamlContent = (content: string, sourceFile?: string | null): bool
     /^[\w-]+:\s+[|><]/m, // Block scalars
   ];
 
-  return yamlPatterns.some(pattern => pattern.test(trimmed));
+  return yamlPatterns.some((pattern) => pattern.test(trimmed));
 };
 
 const formatKey = (key: string): string => {
@@ -38,42 +38,55 @@ const formatKey = (key: string): string => {
     .replace(/_/g, ' ')
     .replace(/-/g, ' ')
     .replace(/([A-Z])/g, ' $1') // Space before caps
-    .replace(/^./, str => str.toUpperCase())
+    .replace(/^./, (str) => str.toUpperCase())
     .trim();
 };
-
 
 // --- NEURAL TREE COMPONENTS ---
 
 const TreeLine: React.FC<{ isLast?: boolean }> = ({ isLast }) => (
-  <div className={cn(
-    "absolute left-0 top-0 bottom-0 border-l border-white/5 w-px", // Subtle line
-    isLast && "h-[18px]" // Stop line exactly at connector
-  )} />
+  <div
+    className={cn(
+      'absolute bottom-0 left-0 top-0 w-px border-l border-white/5', // Subtle line
+      isLast && 'h-[18px]' // Stop line exactly at connector
+    )}
+  />
 );
 
 const Connector: React.FC = () => (
-  <div className="absolute left-0 top-[18px] w-4 border-t border-white/5 h-px" />
+  <div className="absolute left-0 top-[18px] h-px w-4 border-t border-white/5" />
 );
 
-const ExpandButton: React.FC<{ expanded: boolean; onClick: () => void }> = ({ expanded, onClick }) => (
+const ExpandButton: React.FC<{ expanded: boolean; onClick: () => void }> = ({
+  expanded,
+  onClick,
+}) => (
   <button
-    onClick={(e) => { e.stopPropagation(); onClick(); }}
-    className="absolute -left-[5px] top-[13px] z-10 w-[11px] h-[11px] flex items-center justify-center rounded-[2px] bg-[#0F0F11] border border-white/10 hover:border-brand-gold/50 transition-all opacity-0 group-hover/node:opacity-100"
+    onClick={(e) => {
+      e.stopPropagation();
+      onClick();
+    }}
+    className="bg-studio-card absolute -left-[5px] top-[13px] z-10 flex h-[11px] w-[11px] items-center justify-center rounded-[2px] border border-white/10 opacity-0 transition-all hover:border-studio-primary/50 group-hover/node:opacity-100"
   >
-    <Icon name={expanded ? "minus" : "plus"} size="size-[6px]" className="text-zinc-500" />
+    <Icon name={expanded ? 'minus' : 'plus'} size="size-[6px]" className="text-zinc-500" />
   </button>
 );
 
 const KeyLabel: React.FC<{ label: string; icon?: string }> = ({ label, icon }) => (
-  <span className="flex items-center gap-2 text-sm text-zinc-400 font-medium select-none group-hover/node:text-zinc-200 transition-colors">
-    {icon && <Icon name={icon} size="size-3" className="opacity-40 group-hover/node:opacity-80 transition-opacity" />}
+  <span className="flex select-none items-center gap-2 text-sm font-medium text-zinc-400 transition-colors group-hover/node:text-zinc-200">
+    {icon && (
+      <Icon
+        name={icon}
+        size="size-3"
+        className="opacity-40 transition-opacity group-hover/node:opacity-80"
+      />
+    )}
     <span className="opacity-90">{formatKey(label)}</span>
   </span>
 );
 
 const ValueBadge: React.FC<{ value: string | number }> = ({ value }) => (
-  <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-mono bg-white/5 text-zinc-400 border border-white/5">
+  <span className="inline-flex items-center rounded-md border border-white/5 bg-white/5 px-1.5 py-0.5 font-mono text-[10px] text-zinc-400">
     {value}
   </span>
 );
@@ -93,22 +106,24 @@ const TreeNode: React.FC<{
   const isObject = value !== null && typeof value === 'object' && !Array.isArray(value);
   const isArray = Array.isArray(value);
   // Only expandable if it has actual content
-  const hasContent = isObject ? Object.keys(value).length > 0 : (isArray ? value.length > 0 : false);
-  const isExpandable = hasContent && (isObject || (isArray && !value.every((i: any) => typeof i !== 'object')));
+  const hasContent = isObject ? Object.keys(value).length > 0 : isArray ? value.length > 0 : false;
+  const isExpandable =
+    hasContent && (isObject || (isArray && !value.every((i: any) => typeof i !== 'object')));
 
   // Identify if array is a simple list of strings/numbers (render as badges)
-  const isSimpleArray = isArray && value.every((i: any) => typeof i === 'string' || typeof i === 'number');
+  const isSimpleArray =
+    isArray && value.every((i: any) => typeof i === 'string' || typeof i === 'number');
 
   if (!parentExpanded) return null;
 
   return (
-    <div className="relative pl-6 select-none">
+    <div className="relative select-none pl-6">
       {/* Indentation Lines */}
       {depth > 0 && <TreeLine isLast={isLast} />}
       {depth > 0 && <Connector />}
 
       {/* Node Header/Content */}
-      <div className="py-1 relative group/node">
+      <div className="group/node relative py-1">
         {/* Toggle Button for Complex Objects */}
         {isExpandable && (
           <ExpandButton expanded={expanded} onClick={() => setExpanded(!expanded)} />
@@ -116,8 +131,8 @@ const TreeNode: React.FC<{
 
         <div
           className={cn(
-            "flex flex-col gap-1 py-0.5 px-1 rounded-sm -ml-1 transition-colors",
-            isExpandable && "cursor-pointer hover:bg-white/5"
+            '-ml-1 flex flex-col gap-1 rounded-sm px-1 py-0.5 transition-colors',
+            isExpandable && 'cursor-pointer hover:bg-white/5'
           )}
           onClick={(e) => {
             if (isExpandable) {
@@ -127,27 +142,31 @@ const TreeNode: React.FC<{
           }}
         >
           {/* Key + Value Row */}
-          <div className="flex items-start gap-2 min-h-[24px]">
+          <div className="flex min-h-[24px] items-start gap-2">
             <KeyLabel label={nodeKey} />
 
             {/* If simple primitive value, show inline */}
             {!isObject && !isArray && (
-              <span className="text-sm text-zinc-500 font-mono pt-[1px]">
+              <span className="pt-[1px] font-mono text-sm text-zinc-500">
                 {String(value).length > 60 ? (
-                  <span className="block mt-1 p-2 bg-black/40 rounded border border-white/5 text-xs text-zinc-400 whitespace-pre-wrap leading-relaxed">
+                  <span className="mt-1 block whitespace-pre-wrap rounded border border-white/5 bg-black/40 p-2 text-xs leading-relaxed text-zinc-400">
                     {String(value)}
                   </span>
                 ) : (
-                  <span className="text-brand-gold/80">{String(value)}</span>
+                  <span className="text-studio-primary/80">{String(value)}</span>
                 )}
               </span>
             )}
 
             {/* If Simple Array, show Badges */}
             {isSimpleArray && (
-              <div className="flex flex-wrap gap-1.5 mt-0.5">
+              <div className="mt-0.5 flex flex-wrap gap-1.5">
                 {(value as any[]).map((item, i) => (
-                  <Badge key={i} variant="secondary" className="bg-zinc-900 border-zinc-800 text-zinc-400 font-mono text-[10px] px-1.5 h-5 rounded-md">
+                  <Badge
+                    key={i}
+                    variant="secondary"
+                    className="h-5 rounded-md border-zinc-800 bg-zinc-900 px-1.5 font-mono text-[10px] text-zinc-400"
+                  >
                     {item}
                   </Badge>
                 ))}
@@ -190,7 +209,6 @@ const TreeNode: React.FC<{
   );
 };
 
-
 // Helper to render markdown fallback
 // Check if content looks like JSON
 export const isJsonContent = (content: string, sourceFile?: string | null): boolean => {
@@ -201,19 +219,22 @@ export const isJsonContent = (content: string, sourceFile?: string | null): bool
 
   if (!content || content.length > 50000) return false;
   const trimmed = content.trim();
-  return (trimmed.startsWith('{') && trimmed.endsWith('}')) || (trimmed.startsWith('[') && trimmed.endsWith(']'));
+  return (
+    (trimmed.startsWith('{') && trimmed.endsWith('}')) ||
+    (trimmed.startsWith('[') && trimmed.endsWith(']'))
+  );
 };
 
 const MarkdownFallback: React.FC<{ content: string; error?: string }> = ({ content, error }) => {
   return (
     <div className="space-y-4">
       {error && (
-        <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 rounded-md text-red-400 text-xs font-mono">
+        <div className="flex items-center gap-2 rounded-md border border-red-500/20 bg-red-500/10 p-3 font-mono text-xs text-red-400">
           <Icon name="warning" size="size-3" />
           <span>Falha ao processar estrutura de dados. Exibindo texto bruto.</span>
         </div>
       )}
-      <pre className="p-4 bg-zinc-950 rounded-lg border border-zinc-800 text-sm text-zinc-400 overflow-x-auto whitespace-pre-wrap font-mono leading-relaxed">
+      <pre className="overflow-x-auto whitespace-pre-wrap rounded-lg border border-zinc-800 bg-zinc-950 p-4 font-mono text-sm leading-relaxed text-zinc-400">
         {content}
       </pre>
     </div>
@@ -224,21 +245,16 @@ const MarkdownFallback: React.FC<{ content: string; error?: string }> = ({ conte
 const NeuralTreeViewer: React.FC<{ data: any }> = ({ data }) => {
   if (data === null || typeof data !== 'object') {
     return (
-      <div className="p-4 bg-zinc-900/30 rounded-lg border border-zinc-800 text-zinc-300 font-mono text-sm break-all">
+      <div className="break-all rounded-lg border border-zinc-800 bg-zinc-900/30 p-4 font-mono text-sm text-zinc-300">
         {String(data)}
       </div>
     );
   }
 
   return (
-    <div className="font-mono text-sm leading-relaxed -ml-4">
+    <div className="-ml-4 font-mono text-sm leading-relaxed">
       {Object.entries(data).map(([key, value], i, arr) => (
-        <TreeNode
-          key={key}
-          nodeKey={key}
-          value={value}
-          isLast={i === arr.length - 1}
-        />
+        <TreeNode key={key} nodeKey={key} value={value} isLast={i === arr.length - 1} />
       ))}
     </div>
   );
@@ -256,11 +272,11 @@ export const YamlViewer: React.FC<YamlViewerProps> = ({ content, className }) =>
         return;
       }
       // Basic YAML safety check
-      if (content.length > 200000) throw new Error("File too large to parse");
+      if (content.length > 200000) throw new Error('File too large to parse');
 
       // Handle multi-document YAML (e.g. from Jekyll/Frontmatter)
       // Split by --- and find the first valid YAML object
-      const documents = content.split(/^---$/m).filter(doc => doc.trim().length > 0);
+      const documents = content.split(/^---$/m).filter((doc) => doc.trim().length > 0);
 
       let data = null;
       if (documents.length > 0) {
@@ -292,11 +308,11 @@ export const YamlViewer: React.FC<YamlViewerProps> = ({ content, className }) =>
   }
 
   if (!parsedData) {
-    return <div className="text-muted-foreground italic text-xs">Vazio ou carregando...</div>;
+    return <div className="text-xs italic text-muted-foreground">Vazio ou carregando...</div>;
   }
 
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn('relative', className)}>
       <NeuralTreeViewer data={parsedData} />
     </div>
   );
@@ -328,11 +344,11 @@ export const JsonViewer: React.FC<YamlViewerProps> = ({ content, className }) =>
   }
 
   if (!parsedData) {
-    return <div className="text-muted-foreground italic text-xs">Vazio ou carregando...</div>;
+    return <div className="text-xs italic text-muted-foreground">Vazio ou carregando...</div>;
   }
 
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn('relative', className)}>
       <NeuralTreeViewer data={parsedData} />
     </div>
   );

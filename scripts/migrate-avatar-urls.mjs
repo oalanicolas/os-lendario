@@ -1,13 +1,20 @@
 /**
- * Apply avatar_url migration to minds table
+ * Migrate avatar_url column for minds table
+ *
+ * This script:
+ * 1. Checks if the avatar_url column exists in the minds table
+ * 2. If missing, provides instructions for adding it via Supabase migration
+ * 3. Updates all minds with avatar URLs from profile images
+ * 4. Validates migration completion
+ *
+ * Consolidated from:
+ * - add-avatar-column.mjs (add column logic)
+ * - apply-avatar-migration.mjs (update avatars logic)
  */
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.VITE_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+const supabase = createClient(process.env.VITE_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 const SLUGS_WITH_PHOTOS = [
   'aaron_beck',
@@ -132,33 +139,35 @@ const SLUGS_WITH_PHOTOS = [
   'winston_churchill',
   'wolfgang_mozart',
   'yuval_harari',
-  'zig_ziglar'
+  'zig_ziglar',
 ];
 
 async function main() {
   console.log('='.repeat(60));
-  console.log('MIGRATION: Add avatar_url to minds');
+  console.log('MIGRATION: Avatar URLs for minds table');
   console.log('='.repeat(60));
   console.log();
 
-  // Check if column exists by trying to select it
+  // Check if column exists
   const { data: testData, error: testError } = await supabase
     .from('minds')
     .select('avatar_url')
     .limit(1);
 
   if (testError && testError.message.includes('avatar_url')) {
-    console.log('Column avatar_url does not exist yet.');
+    console.log('❌ Column avatar_url does not exist yet.');
+    console.log();
     console.log('Please run the SQL migration first:');
     console.log('  supabase db push');
-    console.log('  OR run manually:');
+    console.log();
+    console.log('Or run manually in Supabase Dashboard:');
     console.log('  ALTER TABLE minds ADD COLUMN IF NOT EXISTS avatar_url TEXT;');
     console.log();
     console.log('Then run this script again.');
     return;
   }
 
-  console.log('Column avatar_url exists. Updating minds...');
+  console.log('✅ Column avatar_url exists. Updating minds...');
   console.log();
 
   let updated = 0;
@@ -175,9 +184,10 @@ async function main() {
       .select('slug');
 
     if (error) {
-      console.log(`ERROR updating ${slug}:`, error.message);
+      console.log(`❌ ERROR updating ${slug}:`, error.message);
     } else if (data && data.length > 0) {
       updated++;
+      process.stdout.write('.');
     } else {
       notFound++;
       notFoundSlugs.push(slug);
@@ -185,31 +195,31 @@ async function main() {
   }
 
   console.log();
+  console.log();
   console.log('='.repeat(60));
   console.log('SUMMARY');
   console.log('='.repeat(60));
-  console.log(`Updated: ${updated}`);
-  console.log(`Not found in DB: ${notFound}`);
+  console.log(`✅ Updated: ${updated}`);
+  console.log(`⚠️  Not found in DB: ${notFound}`);
 
-  if (notFoundSlugs.length > 0) {
+  if (notFoundSlugs.length > 0 && notFoundSlugs.length <= 20) {
     console.log('\nSlugs not found:');
-    notFoundSlugs.forEach(s => console.log(`  - ${s}`));
+    notFoundSlugs.forEach((s) => console.log(`  - ${s}`));
   }
 
   // Validation
-  console.log('\n=== Validation ===');
+  console.log();
+  console.log('=== Validation ===');
   const { count: withAvatar } = await supabase
     .from('minds')
     .select('id', { count: 'exact' })
     .not('avatar_url', 'is', null);
 
-  const { count: total } = await supabase
-    .from('minds')
-    .select('id', { count: 'exact' });
+  const { count: total } = await supabase.from('minds').select('id', { count: 'exact' });
 
-  console.log(`Minds with avatar_url: ${withAvatar}`);
-  console.log(`Total minds: ${total}`);
-  console.log(`Minds without avatar: ${total - withAvatar}`);
+  console.log(`Minds with avatar_url: ${withAvatar}/${total}`);
+  const percentage = total > 0 ? ((withAvatar / total) * 100).toFixed(1) : 0;
+  console.log(`Coverage: ${percentage}%`);
 }
 
 main().catch(console.error);

@@ -16,11 +16,11 @@ const SpacingSection: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-16 animate-fade-in">
+    <div className="animate-fade-in space-y-16">
       <div>
-        <h2 className="text-4xl font-serif font-light mb-4">Espaçamentos</h2>
-        <p className="font-serif text-lg text-muted-foreground max-w-2xl leading-relaxed">
-            A consistência visual nasce da precisão matemática. Utilizamos um grid de 8px.
+        <h2 className="mb-4 font-serif text-4xl font-light">Espaçamentos</h2>
+        <p className="max-w-2xl font-serif text-lg leading-relaxed text-muted-foreground">
+          A consistência visual nasce da precisão matemática. Utilizamos um grid de 8px.
         </p>
       </div>
 
@@ -30,32 +30,32 @@ const SpacingSection: React.FC = () => {
             <div className="w-32 text-right font-mono text-sm text-muted-foreground">
               {space.px}px
             </div>
-            <div 
-              className="bg-primary/50 dark:bg-primary/30 rounded-md transition-all duration-500"
+            <div
+              className="rounded-md bg-primary/50 transition-all duration-500 dark:bg-primary/30"
               style={{ width: `${space.px}px`, height: '32px' }}
             ></div>
-             <div className="text-xs text-muted-foreground font-sans hidden sm:block font-semibold">
-                {space.tw}
-             </div>
+            <div className="hidden font-sans text-xs font-semibold text-muted-foreground sm:block">
+              {space.tw}
+            </div>
           </div>
         ))}
       </div>
 
-      <div className="p-8 bg-muted/30 rounded-lg border border-dashed border-border">
-        <h3 className="font-sans font-semibold mb-6">Exemplo de Aplicação</h3>
+      <div className="rounded-lg border border-dashed border-border bg-muted/30 p-8">
+        <h3 className="mb-6 font-sans font-semibold">Exemplo de Aplicação</h3>
         <div className="flex flex-wrap gap-8">
-            <div className="bg-card p-8 shadow-sm border border-border rounded-lg">
-                <div className="w-16 h-16 bg-primary mb-4 rounded-lg"></div>
-                <div className="h-4 w-32 bg-muted rounded-md mb-2"></div>
-                <div className="h-4 w-24 bg-muted rounded-md"></div>
-                <p className="mt-4 text-xs font-mono text-primary">p-8 (32px)</p>
-            </div>
-            <div className="bg-card p-6 shadow-sm border border-border rounded-lg">
-                <div className="w-16 h-16 bg-primary mb-4 rounded-lg"></div>
-                <div className="h-4 w-32 bg-muted rounded-md mb-2"></div>
-                <div className="h-4 w-24 bg-muted rounded-md"></div>
-                <p className="mt-4 text-xs font-mono text-primary">p-6 (24px)</p>
-            </div>
+          <div className="rounded-lg border border-border bg-card p-8 shadow-sm">
+            <div className="mb-4 h-16 w-16 rounded-lg bg-primary"></div>
+            <div className="mb-2 h-4 w-32 rounded-md bg-muted"></div>
+            <div className="h-4 w-24 rounded-md bg-muted"></div>
+            <p className="mt-4 font-mono text-xs text-primary">p-8 (32px)</p>
+          </div>
+          <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
+            <div className="mb-4 h-16 w-16 rounded-lg bg-primary"></div>
+            <div className="mb-2 h-4 w-32 rounded-md bg-muted"></div>
+            <div className="h-4 w-24 rounded-md bg-muted"></div>
+            <p className="mt-4 font-mono text-xs text-primary">p-6 (24px)</p>
+          </div>
         </div>
       </div>
     </div>

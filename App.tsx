@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, Suspense } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from './components/shared/layout/Sidebar';
@@ -105,7 +104,11 @@ const App: React.FC = () => {
 
   // Helper to check if it's an external iframe section
   const isExternal = (section: Section) => {
-    return section === Section.EXTERNAL_CHALLENGES || section === Section.EXTERNAL_PROMPT_OPS || section === Section.EXTERNAL_VAULT;
+    return (
+      section === Section.EXTERNAL_CHALLENGES ||
+      section === Section.EXTERNAL_PROMPT_OPS ||
+      section === Section.EXTERNAL_VAULT
+    );
   };
 
   // Apply Theme & Dark Mode
@@ -140,23 +143,40 @@ const App: React.FC = () => {
     if (themeConfig) {
       root.style.setProperty('--primary', themeConfig.primary);
       root.style.setProperty('--primary-light', themeConfig.light);
-      // Optional: adjust foreground if needed based on theme brightness, 
+      // Optional: adjust foreground if needed based on theme brightness,
       // but usually Design System keeps foreground consistent.
     }
-
   }, [isDark, currentTheme, currentSection]);
 
   // Helper to check if current section is part of Design System
   const isDesignSystemApp = (section: Section) => {
     const dsRoutes = [
-      Section.CONCEPT, Section.IDENTITY, Section.LEGENDARY_VS_MEDIOCRE,
-      Section.COLORS, Section.TYPOGRAPHY, Section.SPACING, Section.ICONS,
-      Section.LISTS, Section.MOTION, Section.GRAPHS, Section.CHARTS,
-      Section.COMPONENTS, Section.BUTTONS, Section.ADVANCED, Section.FEEDBACK,
-      Section.STATES, Section.CARDS, Section.FORMS, Section.TABLES,
-      Section.TEMPLATE_APP_CMS, Section.TEMPLATE_APP_KANBAN,
-      Section.TEMPLATE_APP_SETTINGS, Section.TEMPLATE_SIDEBAR_LEGACY,
-      Section.TOKENS, Section.DOCS, Section.AI_MANUAL
+      Section.CONCEPT,
+      Section.IDENTITY,
+      Section.LEGENDARY_VS_MEDIOCRE,
+      Section.COLORS,
+      Section.TYPOGRAPHY,
+      Section.SPACING,
+      Section.ICONS,
+      Section.LISTS,
+      Section.MOTION,
+      Section.GRAPHS,
+      Section.CHARTS,
+      Section.COMPONENTS,
+      Section.BUTTONS,
+      Section.ADVANCED,
+      Section.FEEDBACK,
+      Section.STATES,
+      Section.CARDS,
+      Section.FORMS,
+      Section.TABLES,
+      Section.TEMPLATE_APP_CMS,
+      Section.TEMPLATE_APP_KANBAN,
+      Section.TEMPLATE_APP_SETTINGS,
+      Section.TEMPLATE_SIDEBAR_LEGACY,
+      Section.TOKENS,
+      Section.DOCS,
+      Section.AI_MANUAL,
     ];
     return dsRoutes.includes(section);
   };
@@ -165,11 +185,29 @@ const App: React.FC = () => {
     switch (currentSection) {
       // External Iframes
       case Section.EXTERNAL_CHALLENGES:
-        return <iframe src="https://halloween.lendario.ai/" className="w-full h-full border-0" title="Desafios" />;
+        return (
+          <iframe
+            src="https://halloween.lendario.ai/"
+            className="h-full w-full border-0"
+            title="Desafios"
+          />
+        );
       case Section.EXTERNAL_PROMPT_OPS:
-        return <iframe src="https://prompts.academialendaria.ai/" className="w-full h-full border-0" title="Prompt Ops" />;
+        return (
+          <iframe
+            src="https://prompts.academialendaria.ai/"
+            className="h-full w-full border-0"
+            title="Prompt Ops"
+          />
+        );
       case Section.EXTERNAL_VAULT:
-        return <iframe src="https://vault.academialendaria.com.br/" className="w-full h-full border-0" title="Vault" />;
+        return (
+          <iframe
+            src="https://vault.academialendaria.com.br/"
+            className="h-full w-full border-0"
+            title="Vault"
+          />
+        );
 
       // Design System (all sections handled by router)
       case Section.CONCEPT:
@@ -197,14 +235,17 @@ const App: React.FC = () => {
       case Section.TEMPLATE_SIDEBAR_LEGACY:
         return (
           <Routes>
-            <Route path="/design/*" element={
-              <DesignSystemRouter
-                setSection={handleSetSection}
-                isDark={isDark}
-                currentTheme={currentTheme}
-                language={language}
-              />
-            } />
+            <Route
+              path="/design/*"
+              element={
+                <DesignSystemRouter
+                  setSection={handleSetSection}
+                  isDark={isDark}
+                  currentTheme={currentTheme}
+                  language={language}
+                />
+              }
+            />
           </Routes>
         );
 
@@ -242,14 +283,55 @@ const App: React.FC = () => {
       case Section.APP_MINDS_ARENA:
         return (
           <Routes>
-            <Route path="/minds/gallery" element={<MindsGalleryTemplate setSection={handleSetSection} onSelectMind={(slug) => { setSelectedMindSlug(slug); navigate(`/minds/${slug}`); }} />} />
-            <Route path="/minds/matrix" element={<MindComparisonTemplate setSection={handleSetSection} />} />
+            <Route
+              path="/minds/gallery"
+              element={
+                <MindsGalleryTemplate
+                  setSection={handleSetSection}
+                  onSelectMind={(slug) => {
+                    setSelectedMindSlug(slug);
+                    navigate(`/minds/${slug}`);
+                  }}
+                />
+              }
+            />
+            <Route
+              path="/minds/matrix"
+              element={<MindComparisonTemplate setSection={handleSetSection} />}
+            />
             <Route path="/minds/arena" element={<ArenaTemplate setSection={handleSetSection} />} />
-            <Route path="/minds/wizard" element={<div className="p-12 text-center text-muted-foreground">Wizard de Criacao (Em Desenvolvimento)</div>} />
-            <Route path="/minds/:mindSlug/artifacts/new" element={<ArtifactEditorTemplate setSection={handleSetSection} />} />
-            <Route path="/minds/:mindSlug/artifacts/:artifactId" element={<ArtifactEditorTemplate setSection={handleSetSection} />} />
-            <Route path="/minds/:mindSlug" element={<MindProfileTemplate setSection={handleSetSection} />} />
-            <Route path="/minds" element={<MindsGalleryTemplate setSection={handleSetSection} onSelectMind={(slug) => { setSelectedMindSlug(slug); navigate(`/minds/${slug}`); }} />} />
+            <Route
+              path="/minds/wizard"
+              element={
+                <div className="p-12 text-center text-muted-foreground">
+                  Wizard de Criacao (Em Desenvolvimento)
+                </div>
+              }
+            />
+            <Route
+              path="/minds/:mindSlug/artifacts/new"
+              element={<ArtifactEditorTemplate setSection={handleSetSection} />}
+            />
+            <Route
+              path="/minds/:mindSlug/artifacts/:artifactId"
+              element={<ArtifactEditorTemplate setSection={handleSetSection} />}
+            />
+            <Route
+              path="/minds/:mindSlug"
+              element={<MindProfileTemplate setSection={handleSetSection} />}
+            />
+            <Route
+              path="/minds"
+              element={
+                <MindsGalleryTemplate
+                  setSection={handleSetSection}
+                  onSelectMind={(slug) => {
+                    setSelectedMindSlug(slug);
+                    navigate(`/minds/${slug}`);
+                  }}
+                />
+              }
+            />
           </Routes>
         );
 
@@ -257,16 +339,29 @@ const App: React.FC = () => {
       case Section.APP_CREATOR_COURSES:
         return (
           <Routes>
-            <Route path="/creator/courses/*" element={<CoursesRouter setSection={handleSetSection} />} />
-            <Route path="/creator/cursos/*" element={<CoursesRouter setSection={handleSetSection} />} />
+            <Route
+              path="/creator/courses/*"
+              element={<CoursesRouter setSection={handleSetSection} />}
+            />
+            <Route
+              path="/creator/cursos/*"
+              element={<CoursesRouter setSection={handleSetSection} />}
+            />
           </Routes>
         );
       case Section.APP_CREATOR_CONTENT:
         return (
-          <div className="flex flex-col min-h-screen bg-background font-sans">
-            <CreatorTopbar currentSection={Section.APP_CREATOR_CONTENT} setSection={handleSetSection} />
+          <div className="flex min-h-screen flex-col bg-background font-sans">
+            <CreatorTopbar
+              currentSection={Section.APP_CREATOR_CONTENT}
+              setSection={handleSetSection}
+            />
             <div className="p-6">
-              <Suspense fallback={<div className="p-12 text-center text-muted-foreground">Carregando...</div>}>
+              <Suspense
+                fallback={
+                  <div className="p-12 text-center text-muted-foreground">Carregando...</div>
+                }
+              >
                 <CmsTemplate />
               </Suspense>
             </div>
@@ -278,16 +373,24 @@ const App: React.FC = () => {
         return <FrameworksTemplate setSection={handleSetSection} />;
       case Section.APP_CREATOR_PERFORMANCE:
         return (
-          <div className="flex flex-col min-h-screen bg-background font-sans">
-            <CreatorTopbar currentSection={Section.APP_CREATOR_PERFORMANCE} setSection={handleSetSection} />
-            <div className="p-12 text-center text-muted-foreground">Analytics & Performance (Em Desenvolvimento)</div>
+          <div className="flex min-h-screen flex-col bg-background font-sans">
+            <CreatorTopbar
+              currentSection={Section.APP_CREATOR_PERFORMANCE}
+              setSection={handleSetSection}
+            />
+            <div className="p-12 text-center text-muted-foreground">
+              Analytics & Performance (Em Desenvolvimento)
+            </div>
           </div>
         );
       case Section.APP_CREATOR_SETTINGS:
         return (
-          <div className="flex flex-col min-h-screen bg-background font-sans">
-            <CreatorTopbar currentSection={Section.APP_CREATOR_SETTINGS} setSection={handleSetSection} />
-            <div className="p-6 max-w-4xl mx-auto w-full">
+          <div className="flex min-h-screen flex-col bg-background font-sans">
+            <CreatorTopbar
+              currentSection={Section.APP_CREATOR_SETTINGS}
+              setSection={handleSetSection}
+            />
+            <div className="mx-auto w-full max-w-4xl p-6">
               <SaasSettingsTemplate />
             </div>
           </div>
@@ -335,20 +438,29 @@ const App: React.FC = () => {
         return <CommunityTemplatesPage />;
 
       default:
-        return <div className="p-12 text-center text-muted-foreground">Em desenvolvimento: {currentSection}</div>;
+        return (
+          <div className="p-12 text-center text-muted-foreground">
+            Em desenvolvimento: {currentSection}
+          </div>
+        );
     }
   };
 
-  const isFullWidthPage = isSalesApp(currentSection) || isMindsApp(currentSection) || isCreatorApp(currentSection) || isPRDApp(currentSection) || isExternal(currentSection) || isDesignSystemApp(currentSection);
+  const isFullWidthPage =
+    isSalesApp(currentSection) ||
+    isMindsApp(currentSection) ||
+    isCreatorApp(currentSection) ||
+    isPRDApp(currentSection) ||
+    isExternal(currentSection) ||
+    isDesignSystemApp(currentSection);
 
   return (
     <TooltipProvider>
-      <div className="flex flex-col md:flex-row min-h-screen bg-background text-foreground font-sans selection:bg-primary/20">
-
+      <div className="flex min-h-screen flex-col bg-background font-sans text-foreground selection:bg-primary/20 md:flex-row">
         {/* Mobile Header */}
-        <div className="md:hidden flex items-center justify-between p-4 border-b border-border bg-card sticky top-0 z-50">
+        <div className="sticky top-0 z-50 flex items-center justify-between border-b border-border bg-card p-4 md:hidden">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-lg">Lendár[IA]</span>
+            <span className="text-lg font-bold">Lendár[IA]</span>
           </div>
           <button onClick={() => setIsMobileMenuOpen(true)} className="p-2 text-muted-foreground">
             <Icon name="menu-burger" size="size-5" />
@@ -372,14 +484,16 @@ const App: React.FC = () => {
 
         <main
           className={cn(
-            "flex-1 transition-all duration-300 ease-in-out h-screen overflow-y-auto custom-scrollbar",
-            isSidebarCollapsed ? "md:ml-20" : "md:ml-64"
+            'custom-scrollbar h-screen flex-1 overflow-y-auto transition-all duration-300 ease-in-out',
+            isSidebarCollapsed ? 'md:ml-20' : 'md:ml-64'
           )}
         >
           {/* Apply padding only if NOT a sales/minds/creator template or external iframe */}
-          <div className={cn(
-            isFullWidthPage ? "h-full p-0 w-full" : "max-w-[1920px] mx-auto p-6 md:p-12"
-          )}>
+          <div
+            className={cn(
+              isFullWidthPage ? 'h-full w-full p-0' : 'mx-auto max-w-[1920px] p-6 md:p-12'
+            )}
+          >
             {renderContent()}
           </div>
         </main>

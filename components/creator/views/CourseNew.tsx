@@ -33,14 +33,11 @@ const CourseNew: React.FC<CourseNewProps> = ({ setSection }) => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background font-sans pb-20">
+    <div className="flex min-h-screen flex-col bg-background pb-20 font-sans">
       <CreatorTopbar currentSection={Section.APP_CREATOR_COURSES} setSection={setSection} />
-      <main className="w-full mx-auto p-6 md:p-12 max-w-[1400px]">
+      <main className="mx-auto w-full max-w-[1400px] p-6 md:p-12">
         <CourseBreadcrumb
-          items={[
-            { label: 'Cursos', href: '/creator/cursos' },
-            { label: 'Novo Curso' },
-          ]}
+          items={[{ label: 'Cursos', href: '/creator/cursos' }, { label: 'Novo Curso' }]}
           title="Novo Curso"
           actions={
             <Button variant="outline" onClick={() => navigate('/creator/cursos')}>
@@ -49,41 +46,50 @@ const CourseNew: React.FC<CourseNewProps> = ({ setSection }) => {
           }
         />
 
-        <div className="max-w-4xl mx-auto space-y-12 animate-fade-in pb-20">
+        <div className="mx-auto max-w-4xl animate-fade-in space-y-12 pb-20">
           <div className="space-y-6">
-            <h3 className="text-xl font-bold font-sans">Como você quer criar seu curso?</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <h3 className="font-sans text-xl font-bold">Como você quer criar seu curso?</h3>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               {/* Greenfield Card */}
               <Card
                 className={cn(
-                  "cursor-pointer transition-all duration-300 hover:shadow-lg border-2",
+                  'cursor-pointer border-2 transition-all duration-300 hover:shadow-lg',
                   mode === 'greenfield'
-                    ? "bg-[#538096]/10"
-                    : "border-border hover:border-[#538096]/50"
+                    ? 'bg-studio-primary/10'
+                    : 'border-border hover:border-studio-primary/50'
                 )}
                 style={mode === 'greenfield' ? { borderColor: STUDIO_PRIMARY } : {}}
                 onClick={() => setMode('greenfield')}
               >
-                <CardContent className="p-8 space-y-6">
+                <CardContent className="space-y-6 p-8">
                   <div className="flex items-center justify-between">
                     <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center transition-colors"
+                      className="flex h-12 w-12 items-center justify-center rounded-xl transition-colors"
                       style={{ backgroundColor: STUDIO_ACCENT, color: STUDIO_PRIMARY }}
                     >
                       <Icon name="seedling" size="size-6" />
                     </div>
                     {mode === 'greenfield' && (
-                      <Icon name="check-circle" size="size-6" type="solid" style={{ color: STUDIO_PRIMARY }} />
+                      <Icon
+                        name="check-circle"
+                        size="size-6"
+                        type="solid"
+                        style={{ color: STUDIO_PRIMARY }}
+                      />
                     )}
                   </div>
                   <div>
                     <h4 className="text-lg font-bold">Greenfield (Do Zero)</h4>
-                    <p className="text-xs font-mono uppercase tracking-wider" style={{ color: STUDIO_PRIMARY }}>
+                    <p
+                      className="font-mono text-xs uppercase tracking-wider"
+                      style={{ color: STUDIO_PRIMARY }}
+                    >
                       Recomendado
                     </p>
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Crie uma estrutura pedagógica perfeita (GPS + Didática Lendária) sem vícios antigos.
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    Crie uma estrutura pedagógica perfeita (GPS + Didática Lendária) sem vícios
+                    antigos.
                   </p>
                 </CardContent>
               </Card>
@@ -91,33 +97,38 @@ const CourseNew: React.FC<CourseNewProps> = ({ setSection }) => {
               {/* Brownfield Card */}
               <Card
                 className={cn(
-                  "cursor-pointer transition-all duration-300 hover:shadow-lg border-2",
+                  'cursor-pointer border-2 transition-all duration-300 hover:shadow-lg',
                   mode === 'brownfield'
-                    ? "bg-[#538096]/10"
-                    : "border-border hover:border-[#538096]/50"
+                    ? 'bg-studio-primary/10'
+                    : 'border-border hover:border-studio-primary/50'
                 )}
                 style={mode === 'brownfield' ? { borderColor: STUDIO_PRIMARY } : {}}
                 onClick={() => setMode('brownfield')}
               >
-                <CardContent className="p-8 space-y-6">
+                <CardContent className="space-y-6 p-8">
                   <div className="flex items-center justify-between">
                     <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center transition-colors"
+                      className="flex h-12 w-12 items-center justify-center rounded-xl transition-colors"
                       style={{ backgroundColor: STUDIO_ACCENT, color: STUDIO_GOLD }}
                     >
                       <Icon name="file-import" size="size-6" />
                     </div>
                     {mode === 'brownfield' && (
-                      <Icon name="check-circle" size="size-6" type="solid" style={{ color: STUDIO_PRIMARY }} />
+                      <Icon
+                        name="check-circle"
+                        size="size-6"
+                        type="solid"
+                        style={{ color: STUDIO_PRIMARY }}
+                      />
                     )}
                   </div>
                   <div>
                     <h4 className="text-lg font-bold">Brownfield (Existente)</h4>
-                    <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider">
+                    <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
                       Migração
                     </p>
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                  <p className="text-sm leading-relaxed text-muted-foreground">
                     Importe um curso existente e aprimore com IA e frameworks pedagógicos.
                   </p>
                 </CardContent>
@@ -125,10 +136,13 @@ const CourseNew: React.FC<CourseNewProps> = ({ setSection }) => {
             </div>
           </div>
 
-          <div className="space-y-6 transition-opacity duration-500" style={{ opacity: mode ? 1 : 0.3, pointerEvents: mode ? 'auto' : 'none' }}>
-            <h3 className="text-xl font-bold font-sans">Configuração Inicial</h3>
+          <div
+            className="space-y-6 transition-opacity duration-500"
+            style={{ opacity: mode ? 1 : 0.3, pointerEvents: mode ? 'auto' : 'none' }}
+          >
+            <h3 className="font-sans text-xl font-bold">Configuração Inicial</h3>
             <Card>
-              <CardContent className="p-6 space-y-6">
+              <CardContent className="space-y-6 p-6">
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Slug do Curso</label>
@@ -144,7 +158,7 @@ const CourseNew: React.FC<CourseNewProps> = ({ setSection }) => {
                       placeholder="Selecione um instrutor..."
                       value={persona}
                       onValueChange={setPersona}
-                      options={[{ label: "MMOS: Alan Nicolas", value: "an" }]}
+                      options={[{ label: 'MMOS: Alan Nicolas', value: 'an' }]}
                     />
                   </div>
                 </div>
@@ -152,8 +166,10 @@ const CourseNew: React.FC<CourseNewProps> = ({ setSection }) => {
             </Card>
           </div>
 
-          <div className="flex justify-end gap-4 pt-8 border-t border-border">
-            <Button variant="ghost" onClick={() => navigate('/creator/cursos')}>Cancelar</Button>
+          <div className="flex justify-end gap-4 border-t border-border pt-8">
+            <Button variant="ghost" onClick={() => navigate('/creator/cursos')}>
+              Cancelar
+            </Button>
             <Button
               onClick={handleCreateCourse}
               disabled={!mode || !slug}
@@ -163,7 +179,9 @@ const CourseNew: React.FC<CourseNewProps> = ({ setSection }) => {
               {isCreating ? (
                 <Icon name="spinner" className="mr-2 animate-spin" />
               ) : (
-                <>Criar Curso <Icon name="arrow-right" className="ml-2" /></>
+                <>
+                  Criar Curso <Icon name="arrow-right" className="ml-2" />
+                </>
               )}
             </Button>
           </div>

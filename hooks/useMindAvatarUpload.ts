@@ -75,17 +75,17 @@ export function useMindAvatarUpload({
         }
 
         // Get public URL
-        const { data: urlData } = supabase.storage
-          .from(BUCKET_NAME)
-          .getPublicUrl(filename);
+        const { data: urlData } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filename);
 
         const publicUrl = urlData.publicUrl;
 
         // Update mind record in database
         // Note: avatar_url type will be added by Data Agent migration
         // Using type assertion to bypass strict typing until migration is applied
-        const { error: updateError } = await (supabase
-          .from('minds') as ReturnType<typeof supabase.from>)
+        // @ts-ignore - Supabase query type inference issue
+        const { error: updateError } = await (
+          supabase.from('minds') as ReturnType<typeof supabase.from>
+        )
           .update({ avatar_url: publicUrl })
           .eq('id', mindId);
 

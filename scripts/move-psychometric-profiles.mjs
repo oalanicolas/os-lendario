@@ -7,10 +7,7 @@ import { readdir, readFile, writeFile, mkdir, copyFile } from 'fs/promises';
 import { join } from 'path';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.VITE_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+const supabase = createClient(process.env.VITE_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 const NORMALIZED_DIR = '../outputs/minds/mapeamento-cognitivo/normalized';
 const OUTPUTS_DIR = '../outputs/minds';
@@ -57,16 +54,16 @@ async function main() {
 
   // Special mappings
   const SLUG_MAP = {
-    'gary_vee': 'gary_vaynerchuk',
-    'naval': 'naval_ravikant',
+    gary_vee: 'gary_vaynerchuk',
+    naval: 'naval_ravikant',
     'jose-carlos-amorim': 'jose_amorim',
-    'jose_carlos_amorim': 'jose_amorim'
+    jose_carlos_amorim: 'jose_amorim',
   };
 
   const coverage = {
     with_profile: [],
     without_profile: [],
-    moved: []
+    moved: [],
   };
 
   // Process each DB mind
@@ -82,7 +79,7 @@ async function main() {
         slug: mind.slug,
         name: mind.display_name,
         profile_id: profile.id,
-        profile_file: profile.file
+        profile_file: profile.file,
       });
 
       // Move file to correct location
@@ -95,7 +92,7 @@ async function main() {
         await copyFile(sourceFile, targetFile);
         coverage.moved.push({
           from: profile.file,
-          to: `${mind.slug}/artifacts/psychometric_profile.json`
+          to: `${mind.slug}/artifacts/psychometric_profile.json`,
         });
       } catch (e) {
         console.log(`ERROR moving ${profile.file}: ${e.message}`);
@@ -103,7 +100,7 @@ async function main() {
     } else {
       coverage.without_profile.push({
         slug: mind.slug,
-        name: mind.display_name
+        name: mind.display_name,
       });
     }
   }
@@ -146,10 +143,10 @@ async function main() {
       total_minds: dbMinds.length,
       with_psychometric_profile: coverage.with_profile.length,
       without_psychometric_profile: coverage.without_profile.length,
-      coverage_percentage: Math.round((coverage.with_profile.length / dbMinds.length) * 100)
+      coverage_percentage: Math.round((coverage.with_profile.length / dbMinds.length) * 100),
     },
     with_profile: coverage.with_profile,
-    without_profile: coverage.without_profile
+    without_profile: coverage.without_profile,
   };
 
   const reportPath = join(OUTPUTS_DIR, 'mapeamento-cognitivo', '_coverage_report.json');

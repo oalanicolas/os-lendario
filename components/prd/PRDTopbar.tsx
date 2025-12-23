@@ -18,7 +18,7 @@ const PRDTopbar: React.FC<PRDTopbarProps> = ({ currentSection, setSection }) => 
     { label: 'Projetos', icon: 'folder', section: Section.STUDIO_PRD_DASHBOARD, path: '/prd' },
   ];
 
-  const handleNavClick = (item: typeof navItems[0]) => {
+  const handleNavClick = (item: (typeof navItems)[0]) => {
     if (item.section) {
       setSection(item.section);
     }
@@ -31,41 +31,43 @@ const PRDTopbar: React.FC<PRDTopbarProps> = ({ currentSection, setSection }) => 
   const isNewProjectPage = location.pathname === '/prd/novo';
 
   return (
-    <header className="h-16 border-b border-border/50 bg-[#0A0A0F]/95 backdrop-blur-sm sticky top-0 z-50">
-      <div className="flex items-center justify-between h-full max-w-[1400px] mx-auto w-full px-6 md:px-12">
+    <header className="sticky top-0 z-50 h-16 border-b border-border/50 bg-[#0A0A0F]/95 backdrop-blur-sm">
+      <div className="mx-auto flex h-full w-full max-w-[1400px] items-center justify-between px-6 md:px-12">
         {/* Left: Brand */}
         <div className="flex items-center gap-3">
           <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center border"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border"
             style={{
               backgroundColor: PRD_ACCENT,
               borderColor: `${PRD_PRIMARY}30`,
-              color: PRD_PRIMARY
+              color: PRD_PRIMARY,
             }}
           >
             <Icon name="clipboard-list" size="size-5" />
           </div>
           <div>
-            <h1 className="text-sm font-bold leading-none tracking-tight" style={{ color: PRD_ACCENT }}>
+            <h1
+              className="text-sm font-bold leading-none tracking-tight"
+              style={{ color: PRD_ACCENT }}
+            >
               PRD <span style={{ color: PRD_PRIMARY }}>Studio</span>
             </h1>
-            <p className="text-[10px] text-muted-foreground mt-0.5">
-              Documentos de Requisitos
-            </p>
+            <p className="mt-0.5 text-[10px] text-muted-foreground">Documentos de Requisitos</p>
           </div>
         </div>
 
         {/* Center: Navigation */}
-        <nav className="hidden md:flex items-center">
+        <nav className="hidden items-center md:flex">
           <div
-            className="flex items-center rounded-xl p-1.5 border"
+            className="flex items-center rounded-xl border p-1.5"
             style={{
               backgroundColor: `${PRD_PRIMARY}10`,
-              borderColor: `${PRD_PRIMARY}30`
+              borderColor: `${PRD_PRIMARY}30`,
             }}
           >
             {navItems.map((item, index) => {
-              const isActive = currentSection === item.section ||
+              const isActive =
+                currentSection === item.section ||
                 (item.path === '/prd' && location.pathname === '/prd');
               return (
                 <button
@@ -73,11 +75,9 @@ const PRDTopbar: React.FC<PRDTopbarProps> = ({ currentSection, setSection }) => 
                   onClick={() => handleNavClick(item)}
                   disabled={!item.section}
                   className={cn(
-                    "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
-                    isActive
-                      ? "bg-background shadow-sm"
-                      : "hover:bg-[#538096]/20",
-                    !item.section && "opacity-50 cursor-not-allowed"
+                    'rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200',
+                    isActive ? 'bg-background shadow-sm' : 'hover:bg-[#538096]/20',
+                    !item.section && 'cursor-not-allowed opacity-50'
                   )}
                   style={{ color: PRD_PRIMARY }}
                 >
@@ -96,10 +96,10 @@ const PRDTopbar: React.FC<PRDTopbarProps> = ({ currentSection, setSection }) => 
           {!isNewProjectPage && (
             <button
               onClick={() => navigate('/prd/novo')}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-all duration-200 hover:opacity-90"
+              className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:opacity-90"
               style={{
                 backgroundColor: PRD_PRIMARY,
-                boxShadow: `0 10px 15px -3px ${PRD_PRIMARY}30`
+                boxShadow: `0 10px 15px -3px ${PRD_PRIMARY}30`,
               }}
             >
               <Icon name="plus" size="size-4" />
@@ -109,7 +109,7 @@ const PRDTopbar: React.FC<PRDTopbarProps> = ({ currentSection, setSection }) => 
         </div>
 
         {/* Mobile Menu Button */}
-        <button className="md:hidden p-2 text-muted-foreground hover:text-foreground">
+        <button className="p-2 text-muted-foreground hover:text-foreground md:hidden">
           <Icon name="menu-burger" size="size-5" />
         </button>
       </div>

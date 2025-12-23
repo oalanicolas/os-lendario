@@ -32,7 +32,7 @@ export const PRDTimer: React.FC<PRDTimerProps> = ({
   showControls = false,
   size = 'md',
   className,
-  autoStart = true
+  autoStart = true,
 }) => {
   const [seconds, setSeconds] = useState(initialSeconds);
   const [isRunning, setIsRunning] = useState(autoStart);
@@ -56,7 +56,7 @@ export const PRDTimer: React.FC<PRDTimerProps> = ({
   useEffect(() => {
     if (isRunning) {
       intervalRef.current = setInterval(() => {
-        setSeconds(prev => {
+        setSeconds((prev) => {
           const newValue = prev + 1;
           onTick?.(newValue);
           return newValue;
@@ -80,7 +80,7 @@ export const PRDTimer: React.FC<PRDTimerProps> = ({
     setSeconds(initialSeconds);
   }, [initialSeconds]);
 
-  const toggleRunning = () => setIsRunning(prev => !prev);
+  const toggleRunning = () => setIsRunning((prev) => !prev);
 
   const reset = () => {
     setSeconds(0);
@@ -103,24 +103,16 @@ export const PRDTimer: React.FC<PRDTimerProps> = ({
   return (
     <div
       className={cn(
-        "inline-flex items-center bg-muted/50 rounded-lg text-muted-foreground",
+        'inline-flex items-center rounded-lg bg-muted/50 text-muted-foreground',
         sizeClasses[size],
         className
       )}
     >
-      <Icon
-        name="clock"
-        className={cn(
-          isRunning && "text-foreground"
-        )}
-        size={iconSizes[size]}
-      />
-      <span className="font-mono font-medium tabular-nums">
-        {formatTime(seconds)}
-      </span>
+      <Icon name="clock" className={cn(isRunning && 'text-foreground')} size={iconSizes[size]} />
+      <span className="font-mono font-medium tabular-nums">{formatTime(seconds)}</span>
 
       {showControls && (
-        <div className="flex items-center gap-1 ml-2 border-l border-border pl-2">
+        <div className="ml-2 flex items-center gap-1 border-l border-border pl-2">
           <Button
             variant="ghost"
             size="icon"

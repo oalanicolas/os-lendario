@@ -102,24 +102,21 @@ const StackSection: React.FC<{
 
   return (
     <Card className="p-4">
-      <div className="flex items-center gap-2 mb-3">
+      <div className="mb-3 flex items-center gap-2">
         <div
-          className="w-8 h-8 rounded-lg flex items-center justify-center"
+          className="flex h-8 w-8 items-center justify-center rounded-lg"
           style={{ backgroundColor: `${config.color}20` }}
         >
           <Icon name={config.icon} size="size-4" style={{ color: config.color }} />
         </div>
-        <h4 className="font-bold text-sm">{config.label}</h4>
+        <h4 className="text-sm font-bold">{config.label}</h4>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-3">
+      <div className="mb-3 flex flex-wrap gap-2">
         {items.map((item, index) => (
           <Badge key={index} variant="secondary" className="flex items-center gap-1 pr-1">
             {item}
-            <button
-              onClick={() => handleRemove(index)}
-              className="hover:text-destructive ml-1"
-            >
+            <button onClick={() => handleRemove(index)} className="ml-1 hover:text-destructive">
               <Icon name="cross" size="size-3" />
             </button>
           </Badge>
@@ -131,7 +128,7 @@ const StackSection: React.FC<{
           value={newItem}
           onChange={(e) => setNewItem(e.target.value)}
           placeholder={`Adicionar ${config.label.toLowerCase()}...`}
-          className="flex-1 h-8 text-sm"
+          className="h-8 flex-1 text-sm"
           onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
         />
         <Button size="sm" variant="ghost" onClick={handleAdd} disabled={!newItem.trim()}>
@@ -149,7 +146,7 @@ const StackSection: React.FC<{
 export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({
   content,
   briefSolution,
-  onUpdate
+  onUpdate,
 }) => {
   const { generate, isGenerating } = usePRDAI();
   const [architecture, setArchitecture] = useState<ArchitectureContent>(content || EMPTY_CONTENT);
@@ -179,38 +176,53 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({
     }
   }, [briefSolution, generate, onUpdate]);
 
-  const handleUpdateStack = useCallback(async (category: keyof StackCategory, items: string[]) => {
-    const updated = {
-      ...architecture,
-      stack: { ...architecture.stack, [category]: items }
-    };
-    setArchitecture(updated);
-    await onUpdate(updated);
-  }, [architecture, onUpdate]);
+  const handleUpdateStack = useCallback(
+    async (category: keyof StackCategory, items: string[]) => {
+      const updated = {
+        ...architecture,
+        stack: { ...architecture.stack, [category]: items },
+      };
+      setArchitecture(updated);
+      await onUpdate(updated);
+    },
+    [architecture, onUpdate]
+  );
 
-  const handleUpdateComponents = useCallback(async (components: string) => {
-    const updated = { ...architecture, components };
-    setArchitecture(updated);
-    await onUpdate(updated);
-  }, [architecture, onUpdate]);
+  const handleUpdateComponents = useCallback(
+    async (components: string) => {
+      const updated = { ...architecture, components };
+      setArchitecture(updated);
+      await onUpdate(updated);
+    },
+    [architecture, onUpdate]
+  );
 
-  const handleUpdateIntegrations = useCallback(async (integrations: string[]) => {
-    const updated = { ...architecture, integrations };
-    setArchitecture(updated);
-    await onUpdate(updated);
-  }, [architecture, onUpdate]);
+  const handleUpdateIntegrations = useCallback(
+    async (integrations: string[]) => {
+      const updated = { ...architecture, integrations };
+      setArchitecture(updated);
+      await onUpdate(updated);
+    },
+    [architecture, onUpdate]
+  );
 
-  const handleUpdateScalability = useCallback(async (scalabilityNotes: string) => {
-    const updated = { ...architecture, scalabilityNotes };
-    setArchitecture(updated);
-    await onUpdate(updated);
-  }, [architecture, onUpdate]);
+  const handleUpdateScalability = useCallback(
+    async (scalabilityNotes: string) => {
+      const updated = { ...architecture, scalabilityNotes };
+      setArchitecture(updated);
+      await onUpdate(updated);
+    },
+    [architecture, onUpdate]
+  );
 
-  const handleStatusChange = useCallback(async (status: 'pending' | 'approved' | 'rejected') => {
-    const updated = { ...architecture, status };
-    setArchitecture(updated);
-    await onUpdate(updated);
-  }, [architecture, onUpdate]);
+  const handleStatusChange = useCallback(
+    async (status: 'pending' | 'approved' | 'rejected') => {
+      const updated = { ...architecture, status };
+      setArchitecture(updated);
+      await onUpdate(updated);
+    },
+    [architecture, onUpdate]
+  );
 
   const hasContent = architecture.stack.frontend.length > 0 || architecture.components;
 
@@ -218,11 +230,11 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="font-bold text-lg flex items-center gap-2">
+          <h3 className="flex items-center gap-2 text-lg font-bold">
             <Icon name="sitemap" style={{ color: PRD_PRIMARY }} />
             Arquitetura Técnica
           </h3>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="mt-1 text-sm text-muted-foreground">
             Stack tecnológico, componentes e integrações
           </p>
         </div>
@@ -236,11 +248,16 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({
 
       {!hasContent && !isGenerating && (
         <Card className="p-8 text-center">
-          <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: `${PRD_PRIMARY}20` }}>
+          <div
+            className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl"
+            style={{ backgroundColor: `${PRD_PRIMARY}20` }}
+          >
             <Icon name="sitemap" size="size-6" style={{ color: PRD_PRIMARY }} />
           </div>
-          <h4 className="font-bold mb-2">Gerar Arquitetura</h4>
-          <p className="text-sm text-muted-foreground mb-4">A IA vai sugerir uma arquitetura técnica</p>
+          <h4 className="mb-2 font-bold">Gerar Arquitetura</h4>
+          <p className="mb-4 text-sm text-muted-foreground">
+            A IA vai sugerir uma arquitetura técnica
+          </p>
           <Button onClick={handleGenerate} style={{ backgroundColor: PRD_PRIMARY }}>
             <Icon name="sparkles" className="mr-2 size-4" />
             Gerar Arquitetura
@@ -250,7 +267,11 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({
 
       {isGenerating && !hasContent && (
         <Card className="p-8 text-center">
-          <Icon name="spinner" className="animate-spin mx-auto size-8 mb-3" style={{ color: PRD_PRIMARY }} />
+          <Icon
+            name="spinner"
+            className="mx-auto mb-3 size-8 animate-spin"
+            style={{ color: PRD_PRIMARY }}
+          />
           <p className="text-sm text-muted-foreground">Gerando arquitetura...</p>
         </Card>
       )}
@@ -259,7 +280,9 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({
         <div className="space-y-6">
           {/* Stack Grid */}
           <div>
-            <h4 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">Stack Tecnológico</h4>
+            <h4 className="mb-3 text-sm font-medium uppercase tracking-wider text-muted-foreground">
+              Stack Tecnológico
+            </h4>
             <div className="grid grid-cols-2 gap-4">
               {(Object.keys(STACK_CONFIG) as (keyof StackCategory)[]).map((category) => (
                 <StackSection
@@ -274,7 +297,9 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({
 
           {/* Components */}
           <div>
-            <h4 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">Diagrama de Componentes</h4>
+            <h4 className="mb-3 text-sm font-medium uppercase tracking-wider text-muted-foreground">
+              Diagrama de Componentes
+            </h4>
             <Textarea
               value={architecture.components}
               onChange={(e) => handleUpdateComponents(e.target.value)}
@@ -285,15 +310,21 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({
 
           {/* Integrations */}
           <div>
-            <h4 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">Integrações</h4>
-            <div className="flex flex-wrap gap-2 mb-2">
+            <h4 className="mb-3 text-sm font-medium uppercase tracking-wider text-muted-foreground">
+              Integrações
+            </h4>
+            <div className="mb-2 flex flex-wrap gap-2">
               {architecture.integrations.map((integration, index) => (
                 <Badge key={index} variant="outline" className="flex items-center gap-1 pr-1">
                   <Icon name="link" size="size-3" className="mr-1" />
                   {integration}
                   <button
-                    onClick={() => handleUpdateIntegrations(architecture.integrations.filter((_, i) => i !== index))}
-                    className="hover:text-destructive ml-1"
+                    onClick={() =>
+                      handleUpdateIntegrations(
+                        architecture.integrations.filter((_, i) => i !== index)
+                      )
+                    }
+                    className="ml-1 hover:text-destructive"
                   >
                     <Icon name="cross" size="size-3" />
                   </button>
@@ -304,7 +335,10 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({
               placeholder="Adicionar integração e pressionar Enter..."
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && (e.target as HTMLInputElement).value.trim()) {
-                  handleUpdateIntegrations([...architecture.integrations, (e.target as HTMLInputElement).value.trim()]);
+                  handleUpdateIntegrations([
+                    ...architecture.integrations,
+                    (e.target as HTMLInputElement).value.trim(),
+                  ]);
                   (e.target as HTMLInputElement).value = '';
                 }
               }}
@@ -313,7 +347,9 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({
 
           {/* Scalability Notes */}
           <div>
-            <h4 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">Considerações de Escalabilidade</h4>
+            <h4 className="mb-3 text-sm font-medium uppercase tracking-wider text-muted-foreground">
+              Considerações de Escalabilidade
+            </h4>
             <Textarea
               value={architecture.scalabilityNotes}
               onChange={(e) => handleUpdateScalability(e.target.value)}
@@ -323,12 +359,12 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({
           </div>
 
           {/* Approval */}
-          <div className="flex items-center gap-2 pt-4 border-t">
-            <span className="text-sm text-muted-foreground mr-2">Status:</span>
+          <div className="flex items-center gap-2 border-t pt-4">
+            <span className="mr-2 text-sm text-muted-foreground">Status:</span>
             <Button
               size="sm"
-              variant={architecture.status === 'approved' ? "default" : "outline"}
-              className={cn(architecture.status === 'approved' && "bg-emerald-600")}
+              variant={architecture.status === 'approved' ? 'default' : 'outline'}
+              className={cn(architecture.status === 'approved' && 'bg-emerald-600')}
               onClick={() => handleStatusChange('approved')}
             >
               <Icon name="check" className="mr-1 size-3" />
@@ -336,8 +372,8 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({
             </Button>
             <Button
               size="sm"
-              variant={architecture.status === 'rejected' ? "default" : "outline"}
-              className={cn(architecture.status === 'rejected' && "bg-red-600")}
+              variant={architecture.status === 'rejected' ? 'default' : 'outline'}
+              className={cn(architecture.status === 'rejected' && 'bg-red-600')}
               onClick={() => handleStatusChange('rejected')}
             >
               <Icon name="cross" className="mr-1 size-3" />

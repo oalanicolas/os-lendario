@@ -15,24 +15,16 @@ interface CourseBreadcrumbProps {
   actions?: React.ReactNode;
 }
 
-const CourseBreadcrumb: React.FC<CourseBreadcrumbProps> = ({
-  items,
-  title,
-  subtitle,
-  actions,
-}) => {
+const CourseBreadcrumb: React.FC<CourseBreadcrumbProps> = ({ items, title, subtitle, actions }) => {
   return (
-    <div className="flex items-center justify-between mb-8 animate-fade-in">
+    <div className="mb-8 flex animate-fade-in items-center justify-between">
       <div>
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+        <nav className="mb-1 flex items-center gap-2 text-sm text-muted-foreground">
           {items.map((item, index) => (
             <React.Fragment key={index}>
               {index > 0 && <Icon name="angle-small-right" size="size-3" />}
               {item.href ? (
-                <Link
-                  to={item.href}
-                  className="hover:text-foreground transition-colors"
-                >
+                <Link to={item.href} className="transition-colors hover:text-foreground">
                   {item.label}
                 </Link>
               ) : (
@@ -41,12 +33,8 @@ const CourseBreadcrumb: React.FC<CourseBreadcrumbProps> = ({
             </React.Fragment>
           ))}
         </nav>
-        <h1 className="text-3xl font-sans font-bold text-foreground tracking-tight">
-          {title}
-        </h1>
-        {subtitle && (
-          <p className="text-muted-foreground mt-1">{subtitle}</p>
-        )}
+        <h1 className="font-sans text-3xl font-bold tracking-tight text-foreground">{title}</h1>
+        {subtitle && <p className="mt-1 text-muted-foreground">{subtitle}</p>}
       </div>
       {actions && <div className="flex gap-3">{actions}</div>}
     </div>
