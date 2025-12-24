@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
@@ -12,14 +12,15 @@ import { ScrollArea } from '../../ui/scroll-area';
 import { Separator } from '../../ui/separator';
 import { Skeleton } from '../../ui/skeleton';
 import { cn } from '../../../lib/utils';
-import { useToast } from '../../../hooks/use-toast';
 import { Section } from '../../../types';
 import MindsTopbar from '../MindsTopbar';
 import { useDebates, type Debate, incrementDebateViews } from '../../../hooks/useDebates';
 import { debateService, DebateStatus } from '../../../services/debateService';
+import { useArena, type Mind } from '../../../hooks/useArena';
 import { MindCardSelect } from '../arena/MindCardSelect';
 import { ArenaCreate, type DebateConfig } from './ArenaCreate';
 import { FrameworksLibrary } from '../arena/FrameworksLibrary';
+import { DebatesList } from '../arena/DebatesList';
 
 // Helper: Extract initials from full name (e.g., "Steve Jobs" -> "SJ")
 const getInitials = (name: string): string => {
@@ -437,79 +438,50 @@ const LiveDebateCard: React.FC<{
 // --- MAIN COMPONENT ---
 
 export const ArenaTemplate: React.FC<ArenaTemplateProps> = ({ setSection }) => {
-  const [view, setView] = useState<ViewState>('lobby');
-  const { toast } = useToast();
-
-  // Create State
-  const [selectedMind1, setSelectedMind1] = useState<string | null>(null);
-  const [selectedMind2, setSelectedMind2] = useState<string | null>(null);
-  const [topic, setTopic] = useState('');
-  const [framework, setFramework] = useState('oxford');
-  const [visibility, setVisibility] = useState('public');
-
-  // Live State
-  const [currentRound, setCurrentRound] = useState(1);
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [streamedText, setStreamedText] = useState('');
-  const [history, setHistory] = useState<HistoryItem[]>([]);
-  const [pollVotes, setPollVotes] = useState({ c1: 45, c2: 55 });
-  const [userVoted, setUserVoted] = useState(false);
-  const [totalRounds] = useState(5);
-
-  // Real Data State
-  const [minds, setMinds] = useState<Mind[]>(INITIAL_MINDS);
-  const [activeDebateId, setActiveDebateId] = useState<string | null>(null);
-
-  // Fetch Minds
-  useEffect(() => {
-    async function loadMinds() {
-      try {
-        const realMinds = await debateService.getMinds();
-        if (realMinds.length > 0) {
-          // Merge with initial/mock to keep stats or replace
-          // For now replace, but safely
-          setMinds(realMinds);
-        }
-      } catch (e) {
-        console.error('Failed to load minds:', e);
-      }
-    }
-    loadMinds();
-  }, []);
-
-  // Replay State
-  const [selectedReplay, setSelectedReplay] = useState<Debate | SavedDebate | null>(null);
-  const [replayRoundIndex, setReplayRoundIndex] = useState(0);
-
-  // Fetch debates from database
-  const { debates: dbDebates, loading: debatesLoading } = useDebates();
-
-  // Combine DB debates with mock data (DB takes priority)
-  const allDebates = useMemo(() => {
-    if (dbDebates.length > 0) {
-      // Transform DB debates to match SavedDebate interface
-      return dbDebates.map((d) => ({
-        id: d.id,
-        topic: d.topic,
-        framework: d.framework,
-        date: d.date,
-        mind1: d.mind1,
-        mind2: d.mind2,
-        views: d.views,
-        rating: d.rating,
-        rounds: d.rounds.map((r) => ({
-          number: r.number,
-          type: r.type,
-          mind1Argument: r.mind1Argument,
-          mind2Argument: r.mind2Argument,
-        })),
-      }));
-    }
-    // Fall back to mock data if no DB data
-    return SAVED_DEBATES;
-  }, [dbDebates]);
-
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  // Centralized state management via useArena hook
+  const arena = useArena(INITIAL_MINDS);
+  const {
+    view,
+    setView,
+    selectedMind1,
+    setSelectedMind1,
+    selectedMind2,
+    setSelectedMind2,
+    topic,
+    setTopic,
+    framework,
+    setFramework,
+    visibility,
+    setVisibility,
+    currentRound,
+    setCurrentRound,
+    isStreaming,
+    setIsStreaming,
+    streamedText,
+    setStreamedText,
+    history,
+    setHistory,
+    pollVotes,
+    setPollVotes,
+    userVoted,
+    setUserVoted,
+    totalRounds,
+    minds,
+    setMinds,
+    activeDebateId,
+    setActiveDebateId,
+    selectedReplay,
+    setSelectedReplay,
+    replayRoundIndex,
+    setReplayRoundIndex,
+    allDebates,
+    debatesLoading,
+    messagesEndRef,
+    handleStartDebate,
+    handleVote,
+    resetAndGoToLobby,
+    handleWatchReplay,
+  } = arena;
 
   // Scroll to bottom of transcript
   useEffect(() => {
@@ -589,327 +561,10 @@ export const ArenaTemplate: React.FC<ArenaTemplateProps> = ({ setSection }) => {
     }
   }, [view, isStreaming, activeDebateId, selectedMind1, selectedMind2]);
 
-  const handleStartDebate = async () => {
-    if (!selectedMind1 || !selectedMind2 || !topic) {
-      toast({
-        title: 'Configuracao incompleta',
-        description: 'Selecione duas mentes e um topico.',
-        variant: 'destructive',
-      });
-      return;
-    }
-    if (selectedMind1 === selectedMind2) {
-      toast({
-        title: 'Erro',
-        description: 'Uma mente nao pode debater consigo mesma.',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    try {
-      toast({ title: 'Iniciando debate...', description: 'Conectando ao Debate Engine...' });
-
-      const result = await debateService.createDebate({
-        mind1_id: selectedMind1,
-        mind2_id: selectedMind2,
-        topic: topic,
-        framework: framework,
-        rounds: 3, // MVP fixo
-      });
-
-      setActiveDebateId(result.debate_id);
-
-      setView('live');
-      setHistory([]);
-      setCurrentRound(1);
-      setUserVoted(false);
-      setPollVotes({ c1: 45, c2: 55 });
-      setIsStreaming(true);
-    } catch (e) {
-      toast({
-        title: 'Erro ao iniciar',
-        description: String(e),
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const handleVote = (mind: 'c1' | 'c2') => {
-    if (userVoted) return;
-    setUserVoted(true);
-    setPollVotes((prev) => ({
-      ...prev,
-      [mind]: prev[mind] + 1,
-    }));
-    toast({ title: 'Voto registrado!' });
-  };
-
-  const resetAndGoToLobby = () => {
-    setView('lobby');
-    setSelectedMind1(null);
-    setSelectedMind2(null);
-    setTopic('');
-    setHistory([]);
-    setCurrentRound(1);
-    setIsStreaming(false);
-    setUserVoted(false);
-    setSelectedReplay(null);
-    setReplayRoundIndex(0);
-  };
-
-  const handleWatchReplay = (debate: SavedDebate | Debate) => {
-    setSelectedReplay(debate);
-    setReplayRoundIndex(0);
-    setView('replay');
-    // Increment views if it's a DB debate
-    if ('slug' in debate) {
-      incrementDebateViews(debate.id);
-    }
-  };
 
   // --- VIEWS ---
 
-  const renderLobby = () => (
-    <div className="animate-in fade-in space-y-8 duration-500">
-      {/* Hero */}
-      <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-8 text-center md:p-16">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
-        <div className="pointer-events-none absolute left-1/2 top-0 h-full w-full -translate-x-1/2 bg-gradient-to-b from-primary/5 via-transparent to-transparent"></div>
-
-        <div className="relative z-10 space-y-6">
-          <Badge
-            variant="outline"
-            className="border-primary/30 bg-primary/5 px-4 py-1 uppercase tracking-widest text-primary"
-          >
-            Beta v1.0
-          </Badge>
-          <h1 className="text-5xl font-black tracking-tighter text-foreground md:text-7xl">
-            <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              ARENA
-            </span>
-          </h1>
-          <p className="mx-auto max-w-2xl font-serif text-xl text-muted-foreground">
-            Onde mentes lendarias debatem ideias em tempo real. Assista, vote e aprenda com a
-            colisao de intelectos sinteticos.
-          </p>
-          <div className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row">
-            <Button
-              size="lg"
-              className="h-14 px-10 text-lg font-bold"
-              onClick={() => setView('create')}
-            >
-              <Icon name="bolt" className="mr-2" /> Criar Debate
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="h-14 border-primary/30 px-10 text-lg font-bold hover:border-primary hover:bg-primary/5"
-              onClick={() => setView('frameworks')}
-            >
-              <Icon name="library" className="mr-2" /> Explorar Frameworks
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        {/* Active Debates */}
-        <div className="space-y-6 lg:col-span-2">
-          <div className="flex items-center justify-between">
-            <h3 className="flex items-center gap-2 text-xl font-bold text-foreground">
-              <Icon name="flame" className="text-red-500" /> Ao Vivo Agora
-            </h3>
-            <Button variant="link" className="text-muted-foreground">
-              Ver Todos
-            </Button>
-          </div>
-
-          <div className="grid gap-4">
-            <LiveDebateCard
-              topic="A IA deve ser Open Source ou Proprietaria?"
-              mind1={minds[0]}
-              mind2={minds[2]}
-              round={3}
-              totalRounds={5}
-              viewers={1234}
-              score1={52}
-              score2={48}
-            />
-            <LiveDebateCard
-              topic="O futuro do trabalho e remote ou presencial?"
-              mind1={minds[1]}
-              mind2={minds[4]}
-              round={2}
-              totalRounds={5}
-              viewers={876}
-              score1={61}
-              score2={39}
-            />
-          </div>
-        </div>
-
-        {/* Leaderboard */}
-        <div className="space-y-6">
-          <h3 className="flex items-center gap-2 text-xl font-bold text-foreground">
-            <Icon name="trophy" className="text-studio-primary" /> Ranking Global
-          </h3>
-          <Card className="border-border bg-card">
-            <CardContent className="p-0">
-              {minds
-                .sort((a, b) => b.winRate - a.winRate)
-                .slice(0, 10)
-                .map((mind, i) => (
-                  <div
-                    key={mind.id}
-                    className="flex items-center gap-4 border-b border-border p-4 transition-colors last:border-0 hover:bg-muted/50"
-                  >
-                    <span
-                      className={cn(
-                        'w-6 text-center text-lg font-black',
-                        i === 0
-                          ? 'text-studio-primary'
-                          : i === 1
-                            ? 'text-zinc-300'
-                            : i === 2
-                              ? 'text-amber-700'
-                              : 'text-muted-foreground'
-                      )}
-                    >
-                      {i + 1}
-                    </span>
-                    <Avatar className="h-10 w-10 border border-border">
-                      <AvatarImage src={mind.avatar} alt={mind.name} />
-                      <AvatarFallback className="bg-muted text-xs font-bold text-muted-foreground">
-                        {getInitials(mind.name)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <p className="text-sm font-bold text-foreground">{mind.name}</p>
-                      <p className="text-[10px] text-muted-foreground">{mind.debates} debates</p>
-                    </div>
-                    <Badge
-                      variant="outline"
-                      className="border-border font-mono text-muted-foreground"
-                    >
-                      {mind.winRate}% WR
-                    </Badge>
-                  </div>
-                ))}
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
-      {/* Replays Section */}
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h3 className="flex items-center gap-2 text-xl font-bold text-foreground">
-            <Icon name="play-circle" className="text-primary" /> Debates Anteriores
-          </h3>
-          <Badge variant="outline" className="text-muted-foreground">
-            {debatesLoading ? '...' : allDebates.length} replays
-          </Badge>
-        </div>
-
-        {debatesLoading ? (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {[1, 2].map((i) => (
-              <Card key={i} className="border-border bg-card">
-                <CardContent className="space-y-4 p-6">
-                  <Skeleton className="h-4 w-20" />
-                  <Skeleton className="h-6 w-full" />
-                  <Skeleton className="h-4 w-32" />
-                  <div className="flex justify-between">
-                    <Skeleton className="h-8 w-24" />
-                    <Skeleton className="h-8 w-24" />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {allDebates.map((debate) => {
-              const m1 = minds.find((m) => m.id === debate.mind1.id);
-              const m2 = minds.find((m) => m.id === debate.mind2.id);
-
-              return (
-                <Card
-                  key={debate.id}
-                  className="group cursor-pointer border-border bg-card transition-all hover:border-primary/30"
-                  onClick={() => handleWatchReplay(debate)}
-                >
-                  <CardContent className="p-6">
-                    <div className="mb-4 flex items-start justify-between">
-                      <Badge variant="secondary" className="bg-muted">
-                        <Icon name="play" size="size-3" className="mr-1" /> Replay
-                      </Badge>
-                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1">
-                          <Icon name="eye" size="size-3" /> {debate.views.toLocaleString()}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Icon name="star" size="size-3" className="text-yellow-500" />{' '}
-                          {debate.rating}
-                        </span>
-                      </div>
-                    </div>
-
-                    <h4 className="mb-2 line-clamp-2 text-base font-bold text-foreground transition-colors group-hover:text-primary">
-                      "{debate.topic}"
-                    </h4>
-
-                    <div className="mb-4 flex items-center gap-2 text-xs text-muted-foreground">
-                      <Badge variant="outline" className="text-[10px]">
-                        {debate.framework}
-                      </Badge>
-                      <span>{debate.rounds.length} rounds</span>
-                      <span>{debate.date}</span>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-8 w-8 border border-border">
-                          <AvatarImage
-                            src={debate.mind1.avatar || m1?.avatar}
-                            alt={debate.mind1.name}
-                          />
-                          <AvatarFallback className={cn('bg-muted text-xs font-bold', m1?.color)}>
-                            {getInitials(debate.mind1.name)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="text-xs font-medium text-muted-foreground">
-                          {debate.mind1.name.split(' ')[1]}
-                        </span>
-                      </div>
-                      <span className="text-[10px] font-bold uppercase text-muted-foreground/50">
-                        vs
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-medium text-muted-foreground">
-                          {debate.mind2.name.split(' ')[1]}
-                        </span>
-                        <Avatar className="h-8 w-8 border border-border">
-                          <AvatarImage
-                            src={debate.mind2.avatar || m2?.avatar}
-                            alt={debate.mind2.name}
-                          />
-                          <AvatarFallback className={cn('bg-muted text-xs font-bold', m2?.color)}>
-                            {getInitials(debate.mind2.name)}
-                          </AvatarFallback>
-                        </Avatar>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        )}
-      </div>
-    </div>
-  );
+  const renderLobby = () => <DebatesList state={arena} />;
 
   const renderCreate = () => {
     const frameworks: any[] = [

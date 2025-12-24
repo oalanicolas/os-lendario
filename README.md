@@ -289,6 +289,74 @@ Para arquivos com problemas estruturais de tipo (deferred fixes), adicione `// @
 
 ---
 
+## 🔄 CI/CD & Automação
+
+### GitHub Actions Workflow
+
+Este projeto utiliza GitHub Actions para automação de qualidade de código. O workflow `CI` executa automaticamente em cada push e pull request.
+
+**Jobs executados:**
+
+1. **Lint** - Valida código com ESLint e formatação com Prettier
+   ```bash
+   npm run lint
+   npm run format:check
+   ```
+
+2. **TypeCheck** - Verifica tipos TypeScript sem emitir código
+   ```bash
+   npm run typecheck
+   ```
+
+3. **Build** - Compila aplicação com Vite
+   ```bash
+   npm run build
+   ```
+
+4. **Test** - Executa testes com Vitest
+   ```bash
+   npm run test
+   ```
+
+### Comandos Locais
+
+Execute os mesmos testes localmente antes de commitar:
+
+```bash
+# Linting + Formatting
+npm run lint
+npm run format:check
+npm run format  # Fix formatting issues
+
+# Type checking
+npm run typecheck
+
+# Build
+npm run build
+
+# Tests
+npm run test
+```
+
+### Pré-commit Hooks
+
+Configure Git hooks para validação automática (opcional):
+
+```bash
+npm run husky:install  # Se configurado
+```
+
+### Status Checks
+
+Status checks são **obrigatórios** antes de fazer merge em PRs. Todos os jobs devem passar:
+
+- ✅ lint
+- ✅ typecheck
+- ✅ build
+- ✅ test
+
+---
+
 ## 📄 Licença
 
 Proprietário © 2025 The Legends & Co.
