@@ -336,7 +336,7 @@ const SalesMarketingTemplate: React.FC<{ setSection: (s: Section) => void }> = (
           <Card className="flex h-[400px] flex-col">
             <CardHeader className="border-b border-border px-6 py-4">
               <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest">
-                <Icon name="network-cloud" className="text-brand-purple" /> Correlação Anúncio →
+                <Icon name="network-cloud" className="text-brand-blue" /> Correlação Anúncio →
                 Objeção
               </CardTitle>
             </CardHeader>

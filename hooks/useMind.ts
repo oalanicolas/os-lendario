@@ -1,3 +1,26 @@
+/**
+ * useMind Hook
+ *
+ * Fetch a single mind profile by ID or slug with full psychological and proficiency data.
+ * Includes avatar, expertise, obsessions, values, and psychometric profiling.
+ *
+ * @param mindIdOrSlug - The mind ID (slug format like "john-doe") to fetch
+ * @returns Object containing:
+ *   - mind: MindProfile | null - The fetched mind data
+ *   - isLoading: boolean - true while fetching
+ *   - error: Error | null - Error object if fetch failed
+ *   - refetch: () => Promise<void> - Function to manually re-fetch
+ *
+ * @example
+ * const { mind, isLoading, error } = useMind('albert-einstein');
+ *
+ * if (error) return <ErrorMessage error={error} />;
+ * if (isLoading) return <LoadingSpinner />;
+ * return <MindProfile mind={mind} />;
+ *
+ * @throws Throws error if Supabase is not configured
+ */
+
 // @ts-nocheck
 import { useState, useEffect, useCallback } from 'react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';

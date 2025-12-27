@@ -27,8 +27,8 @@ interface PRDEffortIndicatorProps {
 const COLORS = {
   human: 'bg-blue-500',
   humanText: 'text-blue-500',
-  ai: 'bg-purple-500',
-  aiText: 'text-purple-500',
+  ai: 'bg-blue-600',
+  aiText: 'text-blue-600',
 };
 
 // =============================================================================

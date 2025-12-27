@@ -21,6 +21,7 @@ import { Label } from '../../ui/label';
 import { Textarea } from '../../ui/textarea';
 import { Select } from '../../ui/select';
 import { cn } from '../../../lib/utils';
+import { STUDIO_PRIMARY, STUDIO_ACCENT } from '../studio-tokens';
 
 // --- TYPES ---
 interface Lesson {
@@ -399,7 +400,7 @@ const CourseCurriculumTemplate: React.FC<CourseCurriculumTemplateProps> = ({
               </Button>
               <Button
                 onClick={() => onNavigate('lessons')}
-                className="bg-primary text-primary-foreground"
+                className="bg-primary -foreground" style={color: STUDIO_PRIMARY}
               >
                 Gerar Lições
                 <Icon name="arrow-right" className="ml-2 size-4" />
@@ -422,7 +423,7 @@ const CourseCurriculumTemplate: React.FC<CourseCurriculumTemplateProps> = ({
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 font-bold text-primary">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg  font-bold " style={color: STUDIO_PRIMARY} style={backgroundColor: `${STUDIO_PRIMARY}10`}>
                           {modIndex + 1}
                         </div>
                         <div>
@@ -563,7 +564,7 @@ const CourseCurriculumTemplate: React.FC<CourseCurriculumTemplateProps> = ({
               {/* Add Module Button */}
               <Button
                 variant="outline"
-                className="w-full border-dashed py-8 hover:border-primary hover:bg-primary/5"
+                className="w-full border-dashed py-8 hover:border-primary hover:" style={backgroundColor: `${STUDIO_PRIMARY}5`}
                 onClick={() => setIsAddModuleOpen(true)}
               >
                 <Icon name="plus" className="mr-2 size-5" />

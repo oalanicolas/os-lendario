@@ -221,7 +221,7 @@ const ComponentSection: React.FC = () => {
                   <AvatarFallback className="bg-blue-100 text-blue-700">B</AvatarFallback>
                 </Avatar>
                 <Avatar>
-                  <AvatarFallback className="bg-purple-100 text-purple-700">C</AvatarFallback>
+                  <AvatarFallback className="bg-blue-100 text-blue-700">C</AvatarFallback>
                 </Avatar>
                 <Avatar>
                   <AvatarFallback className="bg-orange-100 text-orange-700">D</AvatarFallback>

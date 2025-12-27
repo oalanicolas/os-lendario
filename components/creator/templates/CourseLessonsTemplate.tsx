@@ -13,6 +13,7 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '.
 import { Select } from '../../ui/select';
 import { Checkbox } from '../../ui/checkbox';
 import { cn } from '../../../lib/utils';
+import { STUDIO_PRIMARY, STUDIO_ACCENT } from '../studio-tokens';
 
 // --- TYPES ---
 interface Lesson {
@@ -322,7 +323,7 @@ const CourseLessonsTemplate: React.FC<CourseLessonsTemplateProps> = ({
         );
       case 'generating':
         return (
-          <Badge className="animate-pulse border-0 bg-primary/10 text-[10px] text-primary">
+          <Badge className="animate-pulse border-0  text-[10px] " style={color: STUDIO_PRIMARY} style={backgroundColor: `${STUDIO_PRIMARY}10`}>
             Gerando...
           </Badge>
         );
@@ -398,7 +399,7 @@ const CourseLessonsTemplate: React.FC<CourseLessonsTemplateProps> = ({
               )}
               <Button
                 onClick={() => onNavigate('validation')}
-                className="bg-primary text-primary-foreground"
+                className="bg-primary -foreground" style={color: STUDIO_PRIMARY}
                 disabled={stats.completed < stats.total}
               >
                 Ir para Validação

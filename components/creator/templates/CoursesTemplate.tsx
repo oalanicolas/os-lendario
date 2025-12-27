@@ -743,7 +743,8 @@ const CoursesTemplate: React.FC<{ setSection: (s: Section) => void }> = ({ setSe
         {view === 'list' && (
           <Button
             onClick={() => setView('new')}
-            className="bg-primary text-primary-foreground shadow-lg shadow-primary/20 transition-transform hover:scale-105"
+            className="shadow-lg transition-transform hover:scale-105 text-white"
+            style={{backgroundColor: STUDIO_PRIMARY}}
           >
             <Icon name="plus" className="mr-2 size-4" /> Novo Curso
           </Button>
@@ -1411,7 +1412,7 @@ const CoursesTemplate: React.FC<{ setSection: (s: Section) => void }> = ({ setSe
                     <Icon name="seedling" size="size-6" />
                   </div>
                   {mode === 'greenfield' && (
-                    <Icon name="check-circle" className="size-6 text-primary" type="solid" />
+                    <Icon name="check-circle" className="size-6" style={{ color: STUDIO_PRIMARY }} type="solid" />
                   )}
                 </div>
                 <div>
@@ -1557,7 +1558,7 @@ const CoursesTemplate: React.FC<{ setSection: (s: Section) => void }> = ({ setSe
         <div className="absolute inset-0 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
         <Icon
           name="search-alt"
-          className="absolute inset-0 m-auto size-10 animate-pulse text-primary"
+          className="absolute inset-0 m-auto size-10 animate-pulse " style={{ color: STUDIO_PRIMARY }}
         />
       </div>
       <div className="space-y-2">
@@ -1607,21 +1608,21 @@ const CoursesTemplate: React.FC<{ setSection: (s: Section) => void }> = ({ setSe
             </div>
           </CardContent>
         </Card>
-        <Card className="border-primary/20 bg-primary/5">
+        <Card className="border-primary/20 " style={{ backgroundColor: `${STUDIO_PRIMARY}5` }}>
           <CardHeader>
-            <CardTitle className="text-primary">Oportunidades (Gaps)</CardTitle>
+            <CardTitle className="" style={{ color: STUDIO_PRIMARY }}>Oportunidades (Gaps)</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-start gap-2">
-              <Icon name="check-circle" className="mt-1 size-4 text-primary" />
+              <Icon name="check-circle" className="mt-1 size-4 " style={{ color: STUDIO_PRIMARY }} />
               <span className="text-sm">Incluir módulo sobre IA aplicada</span>
             </div>
             <div className="flex items-start gap-2">
-              <Icon name="check-circle" className="mt-1 size-4 text-primary" />
+              <Icon name="check-circle" className="mt-1 size-4 " style={{ color: STUDIO_PRIMARY }} />
               <span className="text-sm">Fornecer scripts prontos (Copy & Paste)</span>
             </div>
             <div className="flex items-start gap-2">
-              <Icon name="check-circle" className="mt-1 size-4 text-primary" />
+              <Icon name="check-circle" className="mt-1 size-4 " style={{ color: STUDIO_PRIMARY }} />
               <span className="text-sm">Focar em Mobile-First learning</span>
             </div>
           </CardContent>
@@ -1664,29 +1665,29 @@ const CoursesTemplate: React.FC<{ setSection: (s: Section) => void }> = ({ setSe
           </Card>
         </div>
         <div className="space-y-4">
-          <h3 className="text-center text-sm font-bold uppercase tracking-widest text-primary">
+          <h3 className="text-center text-sm font-bold uppercase tracking-widest " style={{ color: STUDIO_PRIMARY }}>
             Sugestão da IA (Baseada em Dados)
           </h3>
-          <Card className="relative border-primary bg-primary/5 shadow-lg">
-            <Badge className="absolute -top-3 right-4 bg-primary text-primary-foreground">
+          <Card className="relative border-primary  shadow-lg" style={{ backgroundColor: `${STUDIO_PRIMARY}5` }}>
+            <Badge className="absolute -top-3 right-4 bg-primary -foreground" style={{ color: STUDIO_PRIMARY }}>
               Otimizado
             </Badge>
             <CardContent className="p-6 font-serif text-sm">
               <p className="mb-2">
                 <strong>Promessa:</strong>{' '}
-                <span className="rounded bg-primary/20 px-1">
+                <span className="rounded  px-1" style={{ backgroundColor: `${STUDIO_PRIMARY}20` }}>
                   Dominar o ciclo de vendas B2B e fechar contratos High-Ticket em 30 dias.
                 </span>
               </p>
               <p>
                 <strong>Público:</strong>{' '}
-                <span className="rounded bg-primary/20 px-1">
+                <span className="rounded  px-1" style={{ backgroundColor: `${STUDIO_PRIMARY}20` }}>
                   Account Executives e SDRs buscando promoção.
                 </span>
               </p>
               <p>
                 <strong>Diferencial:</strong>{' '}
-                <span className="rounded bg-primary/20 px-1">
+                <span className="rounded  px-1" style={{ backgroundColor: `${STUDIO_PRIMARY}20` }}>
                   Único com templates de IA e foco em Social Selling.
                 </span>
               </p>
@@ -1697,7 +1698,7 @@ const CoursesTemplate: React.FC<{ setSection: (s: Section) => void }> = ({ setSe
 
       <div className="flex justify-center gap-4 pt-8">
         <Button variant="outline">Manter Original</Button>
-        <Button onClick={goToCurriculum} className="bg-primary text-primary-foreground shadow-xl">
+        <Button onClick={goToCurriculum} className="bg-primary -foreground shadow-xl" style={{ color: STUDIO_PRIMARY }}>
           Aceitar & Gerar Currículo <Icon name="check" className="ml-2" />
         </Button>
       </div>
@@ -1800,7 +1801,7 @@ const CoursesTemplate: React.FC<{ setSection: (s: Section) => void }> = ({ setSe
               <Card key={mod.id}>
                 <CardHeader className="border-b border-border bg-muted/20 py-3">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-base font-bold text-primary">
+                    <CardTitle className="text-base font-bold " style={{ color: STUDIO_PRIMARY }}>
                       Módulo {modIndex + 1}: {mod.title}
                     </CardTitle>
                     <Badge variant="outline" className="text-[10px]">
@@ -1960,7 +1961,7 @@ const CoursesTemplate: React.FC<{ setSection: (s: Section) => void }> = ({ setSe
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="text-center">
-              <div className="mb-2 font-mono text-4xl font-bold text-primary">35%</div>
+              <div className="mb-2 font-mono text-4xl font-bold " style={{ color: STUDIO_PRIMARY }}>35%</div>
               <Progress value={35} className="h-2" />
               <p className="mt-2 text-xs text-muted-foreground">Estimativa: 4 min restantes</p>
             </div>
@@ -2029,7 +2030,7 @@ const CoursesTemplate: React.FC<{ setSection: (s: Section) => void }> = ({ setSe
         <Button variant="outline" size="lg" onClick={goBack}>
           Voltar ao Dashboard
         </Button>
-        <Button size="lg" className="bg-primary text-primary-foreground shadow-xl">
+        <Button size="lg" className="bg-primary -foreground shadow-xl" style={{ color: STUDIO_PRIMARY }}>
           Publicar Agora
         </Button>
       </div>

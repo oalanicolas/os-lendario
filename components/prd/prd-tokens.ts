@@ -62,10 +62,10 @@ export const PRD_STATUS = {
   },
   /** Roxo - PRD (documentação) */
   prd: {
-    bg: 'bg-purple-500/20',
-    text: 'text-purple-400',
-    border: 'border-purple-500/30',
-    dot: 'bg-purple-500',
+    bg: 'bg-blue-600/20',
+    text: 'text-blue-500',
+    border: 'border-blue-600/30',
+    dot: 'bg-blue-600',
     icon: 'clipboard-list',
   },
   /** Ciano - Épicos (estruturação) */

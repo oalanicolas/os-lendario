@@ -2,7 +2,7 @@ import React from 'react';
 import { Icon } from '../ui/icon';
 import { ScrollArea } from '../ui/scroll-area';
 import { cn } from '../../lib/utils';
-import { STUDIO_STATUS, STUDIO_PRIMARY, type PipelineStep } from './studio-tokens';
+import { STUDIO_STATUS, STUDIO_PRIMARY, type PipelineStep } from '../creator/studio-tokens';
 
 // =============================================================================
 // TYPES
@@ -102,12 +102,19 @@ export const StudioSidebar: React.FC<StudioSidebarProps> = ({
                 className={cn(
                   'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-all',
                   isActive
-                    ? 'bg-primary/10 font-medium ring-1 ring-primary/20'
+                    ? 'font-medium'
                     : step.status === 'pending'
                       ? 'cursor-not-allowed text-muted-foreground/50'
                       : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 )}
-                style={isActive ? { color: primaryColor } : undefined}
+                style={
+                  isActive
+                    ? {
+                        color: primaryColor,
+                        backgroundColor: `${primaryColor}20`,
+                      }
+                    : undefined
+                }
               >
                 <Icon
                   name={statusConfig.icon}

@@ -41,7 +41,7 @@ const CATEGORY_CONFIG: Record<
     color: 'text-blue-500',
     bgColor: 'bg-blue-500/10',
   },
-  idea: { icon: 'chat-alt', label: 'Ideia', color: 'text-purple-500', bgColor: 'bg-purple-500/10' },
+  idea: { icon: 'chat-alt', label: 'Ideia', color: 'text-blue-600', bgColor: 'bg-blue-600/10' },
   risk: {
     icon: 'exclamation-triangle',
     label: 'Risco',

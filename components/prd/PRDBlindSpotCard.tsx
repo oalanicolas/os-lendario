@@ -30,7 +30,7 @@ export interface PRDBlindSpotCardProps {
 const CATEGORY_CONFIG: Record<BlindSpotCategory, { icon: string; label: string; color: string }> = {
   Técnico: { icon: 'code', label: 'Técnico', color: 'text-blue-500 bg-blue-500/10' },
   Mercado: { icon: 'chart-line', label: 'Mercado', color: 'text-green-500 bg-green-500/10' },
-  UX: { icon: 'user', label: 'UX', color: 'text-purple-500 bg-purple-500/10' },
+  UX: { icon: 'user', label: 'UX', color: 'text-blue-600 bg-blue-600/10' },
   Viabilidade: { icon: 'scale', label: 'Viabilidade', color: 'text-amber-500 bg-amber-500/10' },
 };
 

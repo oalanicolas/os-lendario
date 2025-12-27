@@ -41,6 +41,7 @@ export enum Section {
   TYPOGRAPHY = 'typography',
   SPACING = 'spacing',
   ICONS = 'icons',
+  ICONS_COMPARE = 'icons_compare',
   LISTS = 'lists',
   MOTION = 'motion',
   GRAPHS = 'graphs',
@@ -99,7 +100,11 @@ export enum Section {
   STUDIO_PRD_DASHBOARD = 'studio_prd_dashboard',
   STUDIO_PRD_NEW = 'studio_prd_new',
   STUDIO_PRD_EDITOR = 'studio_prd_editor',
-  STUDIO_PRD_EXPORT = 'studio_prd_export'
+  STUDIO_PRD_EXPORT = 'studio_prd_export',
+
+  // Ops Studio
+  STUDIO_OPS_DB = 'studio_ops_db',
+  STUDIO_OPS_SCHEMA = 'studio_ops_schema'
 }
 
 export interface TypeScale {

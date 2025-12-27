@@ -11,6 +11,7 @@ const ColorSection = React.lazy(() => import('./ColorSection'));
 const TypographySection = React.lazy(() => import('./TypographySection'));
 const SpacingSection = React.lazy(() => import('./SpacingSection'));
 const IconSection = React.lazy(() => import('./IconSection'));
+const IconCompareSection = React.lazy(() => import('./IconCompareSection'));
 const ListSection = React.lazy(() => import('./ListSection'));
 const MotionSection = React.lazy(() => import('./MotionSection'));
 const GraphSection = React.lazy(() => import('./GraphSection'));
@@ -110,6 +111,7 @@ const DesignSystemRouter: React.FC<DesignSystemRouterProps> = ({
             <Route path="typography" element={<TypographySection />} />
             <Route path="spacing" element={<SpacingSection />} />
             <Route path="icons" element={<IconSection />} />
+            <Route path="icons-compare" element={<IconCompareSection />} />
             <Route path="lists" element={<ListSection />} />
             <Route path="motion" element={<MotionSection />} />
             <Route path="graphs" element={<GraphSection />} />

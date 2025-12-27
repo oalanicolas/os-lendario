@@ -17,21 +17,20 @@
 
 /**
  * Paleta do Course Creator:
- * - Primary: Indigo #5856D6 (Studio color)
- * - Accent: Gold #C9B298 (Cross-studio accent)
- * - Secondary: Cream #F2EBE4
+ * - Primary: Azul #538096 (Studio color)
+ * - Accent: Bege/Cream #F2EBE4 (Cross-studio accent)
  *
  * Estas cores são aplicadas dinamicamente no App.tsx
  * quando o Studio Creator é ativado.
  */
 
-/** HEX Reference: #5856D6 Indigo - Use class: bg-studio-primary */
-export const STUDIO_PRIMARY = '#5856D6';
+/** HEX Reference: #538096 Azul - Use class: bg-studio-primary */
+export const STUDIO_PRIMARY = '#538096';
 
-/** HEX Reference: #C9B298 Gold - Use class: bg-studio-accent */
-export const STUDIO_GOLD = '#C9B298';
+/** HEX Reference: #F2EBE4 Bege/Cream - Use class: bg-studio-accent */
+export const STUDIO_GOLD = '#F2EBE4';
 
-/** HEX Reference: #F2EBE4 Cream - Use class: bg-studio-secondary-light */
+/** HEX Reference: #F2EBE4 Bege/Cream - Use class: bg-studio-secondary-light */
 export const STUDIO_ACCENT = '#F2EBE4';
 
 // =============================================================================
@@ -110,7 +109,7 @@ export const PIPELINE_STAGES = [
 // =============================================================================
 
 export const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
-  'dev-no-code': { bg: 'bg-violet-500/20', text: 'text-violet-400' },
+  'dev-no-code': { bg: 'bg-blue-600/20', text: 'text-blue-500' },
   'ia-generativa': { bg: 'bg-cyan-500/20', text: 'text-cyan-400' },
   produtividade: { bg: 'bg-amber-500/20', text: 'text-amber-400' },
   'soft-skills': { bg: 'bg-pink-500/20', text: 'text-pink-400' },

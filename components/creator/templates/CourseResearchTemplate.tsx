@@ -22,6 +22,7 @@ import { Alert, AlertDescription, AlertTitle } from '../../ui/alert';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../ui/tabs';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../ui/table';
 import { cn } from '../../../lib/utils';
+import { STUDIO_PRIMARY, STUDIO_ACCENT } from '../studio-tokens';
 
 // --- TYPES ---
 interface Competitor {
@@ -331,7 +332,7 @@ const CourseResearchTemplate: React.FC<CourseResearchTemplateProps> = ({
               </Button>
               <Button
                 onClick={() => onNavigate('curriculum')}
-                className="bg-primary text-primary-foreground"
+                className="bg-primary -foreground" style={color: STUDIO_PRIMARY}
               >
                 Aprovar e Gerar Currículo
                 <Icon name="arrow-right" className="ml-2 size-4" />
@@ -343,8 +344,8 @@ const CourseResearchTemplate: React.FC<CourseResearchTemplateProps> = ({
           <div className="flex-1 overflow-y-auto p-6">
             <div className="mx-auto max-w-6xl space-y-6">
               {/* AI Insights Alert */}
-              <Alert className="border-primary/20 bg-primary/5">
-                <Icon name="lightbulb-on" className="size-4 text-primary" />
+              <Alert className="border-primary/20 " style={backgroundColor: `${STUDIO_PRIMARY}5`}>
+                <Icon name="lightbulb-on" className="size-4 " style={color: STUDIO_PRIMARY} />
                 <AlertTitle>Insight Principal da IA</AlertTitle>
                 <AlertDescription>
                   90% dos cursos de didática focam em teoria. A maior reclamação dos alunos é{' '}
@@ -528,7 +529,7 @@ const CourseResearchTemplate: React.FC<CourseResearchTemplateProps> = ({
 
                   <div className="rounded-lg border border-border bg-muted/20 p-4">
                     <div className="mb-2 flex items-center gap-2">
-                      <Icon name="chart-pie" className="size-4 text-primary" />
+                      <Icon name="chart-pie" className="size-4 " style={color: STUDIO_PRIMARY} />
                       <span className="text-sm font-medium">Resumo</span>
                     </div>
                     <div className="grid grid-cols-3 gap-4 text-center">
@@ -593,7 +594,7 @@ const CourseResearchTemplate: React.FC<CourseResearchTemplateProps> = ({
                                 {source.url && (
                                   <a
                                     href={source.url}
-                                    className="text-xs text-primary hover:underline"
+                                    className="text-xs  hover:underline" style={color: STUDIO_PRIMARY}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                   >

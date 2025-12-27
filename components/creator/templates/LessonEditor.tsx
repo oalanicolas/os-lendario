@@ -14,15 +14,13 @@ import { Progress } from '../../ui/progress';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../ui/tooltip';
 import { cn } from '../../../lib/utils';
 import { FileUpload } from '../../ui/file-upload';
+import { STUDIO_PRIMARY, STUDIO_ACCENT } from '../studio-tokens';
 
 interface LessonEditorProps {
   onBack: () => void;
   courseSlug?: string;
   lessonId?: string;
 }
-
-// Studio color palette
-const STUDIO_PRIMARY = '#538096';
 
 const LessonEditor: React.FC<LessonEditorProps> = ({
   onBack,
@@ -210,9 +208,12 @@ vault/
                   className={cn(
                     'flex-1 px-4 py-3 text-xs font-bold uppercase tracking-wider transition-colors',
                     sidebarTab === 'index'
-                      ? 'border-b-2 border-[#538096] text-foreground'
+                      ? 'border-b-2 text-foreground'
                       : 'text-muted-foreground hover:text-foreground'
                   )}
+                  style={{
+                    borderBottomColor: sidebarTab === 'index' ? STUDIO_PRIMARY : undefined,
+                  }}
                 >
                   Índice
                 </button>
@@ -221,9 +222,12 @@ vault/
                   className={cn(
                     'flex flex-1 items-center justify-center gap-1.5 px-4 py-3 text-xs font-bold uppercase tracking-wider transition-colors',
                     sidebarTab === 'audit'
-                      ? 'border-b-2 border-[#538096] text-foreground'
+                      ? 'border-b-2 text-foreground'
                       : 'text-muted-foreground hover:text-foreground'
                   )}
+                  style={{
+                    borderBottomColor: sidebarTab === 'audit' ? STUDIO_PRIMARY : undefined,
+                  }}
                 >
                   <Icon name="sparkles" size="size-3" />
                   Auditoria
@@ -245,7 +249,7 @@ vault/
                       <div key={mod.id} className="space-y-1">
                         <div
                           className="flex items-center justify-between px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider"
-                          style={{ color: STUDIO_PRIMARY }}
+                          style={{ color: STUDIO_PRIMARY, borderBottomColor: undefined }}
                         >
                           <span className="truncate">{mod.title}</span>
                           <span className="font-mono text-[10px] font-normal text-muted-foreground">
@@ -258,17 +262,24 @@ vault/
                             className={cn(
                               'flex w-full items-start gap-2 rounded-lg px-2 py-2 text-left text-xs transition-all',
                               lesson.active
-                                ? 'bg-[#538096]/10 font-medium text-foreground'
+                                ? 'font-medium text-foreground'
                                 : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
                             )}
+                            style={{
+                              backgroundColor: lesson.active ? `${STUDIO_PRIMARY}10` : undefined,
+                            }}
                           >
                             <span
                               className={cn(
                                 'mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border',
                                 lesson.active
-                                  ? 'border-[#538096] bg-[#538096]'
+                                  ? ''
                                   : 'border-muted-foreground/30'
                               )}
+                              style={{
+                                borderColor: lesson.active ? STUDIO_PRIMARY : undefined,
+                                backgroundColor: lesson.active ? STUDIO_PRIMARY : undefined,
+                              }}
                             >
                               {lesson.active && (
                                 <Icon name="check" size="size-2" className="text-white" />
@@ -297,7 +308,10 @@ vault/
                           variant="outline"
                           size="sm"
                           className="gap-2"
-                          style={{ borderColor: `${STUDIO_PRIMARY}40`, color: STUDIO_PRIMARY }}
+                          style={{
+                            borderColor: `${STUDIO_PRIMARY}40`,
+                            color: STUDIO_PRIMARY,
+                          }}
                         >
                           <Icon name="sparkles" size="size-3" />
                           Analisar Conteúdo
@@ -321,10 +335,9 @@ vault/
                                 strokeWidth="3"
                               />
                               <path
-                                style={{ color: STUDIO_PRIMARY }}
                                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                                 fill="none"
-                                stroke="currentColor"
+                                stroke={STUDIO_PRIMARY}
                                 strokeWidth="3"
                                 strokeDasharray={`${aiAudit.overallScore || 0}, 100`}
                               />
@@ -332,7 +345,9 @@ vault/
                             <div className="absolute inset-0 flex flex-col items-center justify-center">
                               <span
                                 className="text-2xl font-bold"
-                                style={{ color: STUDIO_PRIMARY }}
+                                style={{
+                                  color: STUDIO_PRIMARY,
+                                }}
                               >
                                 {aiAudit.overallScore}
                               </span>
@@ -400,9 +415,13 @@ vault/
                     className={cn(
                       'flex h-8 w-8 items-center justify-center rounded-lg transition-colors',
                       sidebarTab === 'index'
-                        ? 'bg-[#538096]/10 text-[#538096]'
+                        ? 'text-white'
                         : 'text-muted-foreground hover:bg-muted'
                     )}
+                    style={{
+                      backgroundColor: sidebarTab === 'index' ? `${STUDIO_PRIMARY}40` : undefined,
+                      color: sidebarTab === 'index' ? STUDIO_PRIMARY : undefined,
+                    }}
                   >
                     <Icon name="list" size="size-4" />
                   </button>
@@ -419,9 +438,13 @@ vault/
                     className={cn(
                       'flex h-8 w-8 items-center justify-center rounded-lg transition-colors',
                       sidebarTab === 'audit'
-                        ? 'bg-[#538096]/10 text-[#538096]'
+                        ? 'text-white'
                         : 'text-muted-foreground hover:bg-muted'
                     )}
+                    style={{
+                      backgroundColor: sidebarTab === 'audit' ? `${STUDIO_PRIMARY}40` : undefined,
+                      color: sidebarTab === 'audit' ? STUDIO_PRIMARY : undefined,
+                    }}
                   >
                     <Icon name="sparkles" size="size-4" />
                   </button>
@@ -519,7 +542,7 @@ vault/
               <TabsContent value="content" className="animate-fade-in pt-6">
                 {/* App Icon/Logo (like ClickUp in screenshot) */}
                 <div className="mb-8 flex items-center gap-4">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-pink-500">
                     <Icon name="folder" size="size-8" className="text-white" />
                   </div>
                   <div>

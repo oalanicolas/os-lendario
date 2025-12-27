@@ -3,9 +3,10 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Icon } from '../ui/icon';
 import { DropdownNav, type NavCategory } from '../shared/module';
 import { DS_PRIMARY, DS_ACCENT, DS_THEME } from './design-system-tokens';
+import { cn } from '../../lib/utils';
 
 // =============================================================================
-// NAVIGATION STRUCTURE (mirrors Sidebar exactly)
+// NAVIGATION STRUCTURE
 // =============================================================================
 
 const NAV_CATEGORIES: NavCategory[] = [
@@ -125,55 +126,53 @@ const DesignSystemTopbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 h-16 border-b border-border/50 bg-[#0A0A0F]/95 backdrop-blur-sm">
-      <div className="mx-auto flex h-full w-full max-w-[1400px] items-center justify-between px-6 md:px-12">
-        {/* Left: Brand */}
-        <div className="flex items-center gap-3">
-          <div
-            className="flex h-10 w-10 items-center justify-center rounded-xl border"
-            style={{
-              backgroundColor: DS_ACCENT,
-              borderColor: `${DS_PRIMARY}30`,
-              color: DS_PRIMARY,
-            }}
-          >
-            <Icon name={DS_THEME.icon} size="size-5" />
-          </div>
-          <div>
-            <h1
-              className="text-sm font-bold leading-none tracking-tight"
-              style={{ color: DS_PRIMARY }}
+    <div className="sticky top-0 z-40 h-16 w-full border-b border-border bg-card font-sans shadow-sm">
+      <div className="mx-auto flex h-full w-full max-w-[1400px] items-center justify-between px-6">
+        {/* Left: Brand & Nav */}
+        <div className="flex items-center gap-8">
+          <div className="flex items-center gap-2">
+            <div
+              className="flex h-8 w-8 items-center justify-center rounded-md border font-bold shadow-[0_0_10px_rgba(255,255,255,0.1)]"
+              style={{
+                backgroundColor: `${DS_PRIMARY}20`,
+                borderColor: `${DS_PRIMARY}50`,
+                color: DS_PRIMARY,
+              }}
             >
-              {DS_THEME.name}
-            </h1>
-            <p className="mt-0.5 text-[10px] text-muted-foreground">{getCurrentLabel()}</p>
+              <Icon name={DS_THEME.icon} size="size-5" />
+            </div>
+            <div className="hidden md:block">
+              <h1 className="text-sm font-bold leading-none tracking-tight">{DS_THEME.name}</h1>
+              <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                {getCurrentLabel()}
+              </p>
+            </div>
+          </div>
+
+          {/* Navigation: Dropdown centered */}
+          <div className="hidden items-center gap-1 lg:flex">
+            <DropdownNav categories={NAV_CATEGORIES} primaryColor={DS_PRIMARY} />
           </div>
         </div>
 
-        {/* Center: Navigation (using shared DropdownNav) */}
-        <DropdownNav categories={NAV_CATEGORIES} primaryColor={DS_PRIMARY} />
-
-        {/* Right: Home button */}
-        <div className="flex items-center gap-3">
+        {/* Right: Actions */}
+        <div className="flex items-center gap-4">
           <button
             onClick={() => navigate('/design/concept')}
-            className="hidden items-center gap-2 rounded-xl border px-3 py-2 text-xs font-semibold transition-all duration-200 hover:opacity-90 sm:flex"
+            className="relative p-2 text-muted-foreground transition-colors hover:text-foreground"
             style={{
-              borderColor: `${DS_PRIMARY}50`,
-              color: DS_PRIMARY,
+              color: 'currentColor',
             }}
           >
-            <Icon name="home" size="size-3.5" />
-            Início
+            <Icon name="bell" size="size-5" />
+            <span
+              className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full"
+              style={{ backgroundColor: DS_PRIMARY }}
+            ></span>
           </button>
         </div>
-
-        {/* Mobile Menu Button */}
-        <button className="p-2 text-muted-foreground hover:text-foreground md:hidden">
-          <Icon name="menu-burger" size="size-5" />
-        </button>
       </div>
-    </header>
+    </div>
   );
 };
 

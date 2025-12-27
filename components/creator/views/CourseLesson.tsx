@@ -604,7 +604,7 @@ const CourseLesson: React.FC<CourseLessonProps> = ({ setSection }) => {
                             className={cn(
                               'flex w-full items-start gap-2 rounded-lg px-2 py-2 text-left text-xs transition-all',
                               les.id === lessonId
-                                ? 'bg-[#538096]/10 font-medium text-foreground'
+                                ? 'font-medium text-foreground'
                                 : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
                             )}
                           >
@@ -612,7 +612,7 @@ const CourseLesson: React.FC<CourseLessonProps> = ({ setSection }) => {
                               className={cn(
                                 'mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border',
                                 les.id === lessonId
-                                  ? 'border-[#538096] bg-[#538096]'
+                                  ? ''
                                   : 'border-muted-foreground/30'
                               )}
                             >
@@ -737,7 +737,7 @@ const CourseLesson: React.FC<CourseLessonProps> = ({ setSection }) => {
                     className={cn(
                       'flex h-8 w-8 items-center justify-center rounded-lg transition-colors',
                       sidebarTab === 'index'
-                        ? 'bg-[#538096]/10 text-[#538096]'
+                        ? 'text-white'
                         : 'text-muted-foreground hover:bg-muted'
                     )}
                   >
@@ -756,7 +756,7 @@ const CourseLesson: React.FC<CourseLessonProps> = ({ setSection }) => {
                     className={cn(
                       'flex h-8 w-8 items-center justify-center rounded-lg transition-colors',
                       sidebarTab === 'audit'
-                        ? 'bg-[#538096]/10 text-[#538096]'
+                        ? 'text-white'
                         : 'text-muted-foreground hover:bg-muted'
                     )}
                   >
@@ -779,7 +779,7 @@ const CourseLesson: React.FC<CourseLessonProps> = ({ setSection }) => {
                 className={cn(
                   '-mb-px flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition-colors',
                   editorTab === 'script'
-                    ? 'border-[#538096] text-foreground'
+                    ? 'border-b-2 text-foreground'
                     : 'border-transparent text-muted-foreground hover:text-foreground'
                 )}
               >
@@ -858,7 +858,7 @@ const CourseLesson: React.FC<CourseLessonProps> = ({ setSection }) => {
                   <Card>
                     <CardContent className="space-y-4 p-6">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#538096]/10">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-opacity-10">
                           <Icon name="video" size="size-5" style={{ color: STUDIO_PRIMARY }} />
                         </div>
                         <div>
@@ -898,7 +898,7 @@ const CourseLesson: React.FC<CourseLessonProps> = ({ setSection }) => {
                   <Card>
                     <CardContent className="space-y-4 p-6">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#538096]/10">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-opacity-10">
                           <Icon
                             name="folder-open"
                             size="size-5"
@@ -1011,8 +1011,8 @@ const CourseLesson: React.FC<CourseLessonProps> = ({ setSection }) => {
                     <CardContent className="space-y-4 p-6">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/10">
-                            <Icon name="laptop-code" size="size-5" className="text-purple-500" />
+                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600/10">
+                            <Icon name="laptop-code" size="size-5" style={{color: STUDIO_PRIMARY}} />
                           </div>
                           <div>
                             <h4 className="font-medium">Exercício Prático</h4>

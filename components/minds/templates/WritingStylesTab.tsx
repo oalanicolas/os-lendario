@@ -310,9 +310,9 @@ export const WritingStylesTab: React.FC<WritingStylesTabProps> = ({ profile }) =
         </Card>
 
         {/* TIER 3: CONTEXTUAL */}
-        <Card className="bg-studio-card border-purple-500/20">
+        <Card className="bg-studio-card border-blue-600/20">
           <CardHeader className="border-b border-white/5 pb-3">
-            <CardTitle className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-purple-400">
+            <CardTitle className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-blue-500">
               <Icon name="git-merge" size="size-3" />{' '}
               {semantics.tier3?.label || 'Tier 3: Contextual'}
             </CardTitle>
@@ -323,7 +323,7 @@ export const WritingStylesTab: React.FC<WritingStylesTabProps> = ({ profile }) =
                 key={i}
                 className="group flex items-center gap-2 rounded p-2 text-sm text-zinc-300 transition-colors hover:bg-white/5"
               >
-                <div className="h-1 w-1 rounded-full bg-purple-500 transition-transform group-hover:scale-150"></div>
+                <div className="h-1 w-1 rounded-full bg-blue-600 transition-transform group-hover:scale-150"></div>
                 {word}
               </div>
             ))}

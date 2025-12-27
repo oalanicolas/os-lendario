@@ -20,7 +20,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  pedagogical: { bg: 'bg-violet-500/20', text: 'text-violet-400', border: 'border-violet-500/30' },
+  pedagogical: { bg: `opacity-20`, text: 'text-white', border: 'opacity-30' },
   marketing: { bg: 'bg-amber-500/20', text: 'text-amber-400', border: 'border-amber-500/30' },
   content_structure: { bg: 'bg-cyan-500/20', text: 'text-cyan-400', border: 'border-cyan-500/30' },
   storytelling: {
@@ -119,7 +119,20 @@ const FrameworksTemplate: React.FC<{ setSection: (s: Section) => void }> = ({ se
             return (
               <Card
                 key={framework.id}
-                className="group cursor-pointer overflow-hidden transition-all hover:border-[#538096]/50"
+                className="group cursor-pointer overflow-hidden transition-all"
+                style={{
+                  borderColor: framework.frameworkType === 'pedagogical' ? `${STUDIO_PRIMARY}50` : undefined,
+                }}
+                onMouseEnter={(e) => {
+                  if (framework.frameworkType === 'pedagogical') {
+                    e.currentTarget.style.borderColor = `${STUDIO_PRIMARY}80`;
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (framework.frameworkType === 'pedagogical') {
+                    e.currentTarget.style.borderColor = `${STUDIO_PRIMARY}50`;
+                  }
+                }}
                 onClick={() => setSelectedFramework(framework)}
               >
                 {/* Color Bar */}
@@ -183,7 +196,12 @@ const FrameworksTemplate: React.FC<{ setSection: (s: Section) => void }> = ({ se
 
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
                     <span>{framework.steps.length} etapas</span>
-                    <span className="flex items-center gap-1 font-medium transition-colors group-hover:text-[#538096]">
+                    <span
+                      className="flex items-center gap-1 font-medium transition-colors"
+                      style={{
+                        color: framework.frameworkType === 'pedagogical' ? STUDIO_PRIMARY : 'inherit',
+                      }}
+                    >
                       Ver detalhes <Icon name="arrow-right" size="size-3" />
                     </span>
                   </div>
@@ -287,7 +305,20 @@ const FrameworksTemplate: React.FC<{ setSection: (s: Section) => void }> = ({ se
                 {selectedFramework.steps.map((step, i) => (
                   <div
                     key={i}
-                    className="flex items-start gap-4 rounded-lg border border-border/50 p-4 transition-colors hover:border-[#538096]/30"
+                    className="flex items-start gap-4 rounded-lg border border-border/50 p-4 transition-colors"
+                    style={{
+                      borderColor: selectedFramework.frameworkType === 'pedagogical' ? `${STUDIO_PRIMARY}50` : undefined,
+                    }}
+                    onMouseEnter={(e) => {
+                      if (selectedFramework.frameworkType === 'pedagogical') {
+                        e.currentTarget.style.borderColor = `${STUDIO_PRIMARY}80`;
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (selectedFramework.frameworkType === 'pedagogical') {
+                        e.currentTarget.style.borderColor = `${STUDIO_PRIMARY}50`;
+                      }
+                    }}
                   >
                     <div
                       className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold"

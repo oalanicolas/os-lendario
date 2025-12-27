@@ -58,7 +58,7 @@ const GlobalMetrics: React.FC<GlobalMetricsProps> = ({
   return (
     <div className={cn('grid grid-cols-2 gap-3 lg:grid-cols-4', className)}>
       <MetricCard icon="graduation-cap" value={coursesCount} label="Cursos" color="bg-blue-500" />
-      <MetricCard icon="document" value={lessonsCount} label="Licoes" color="bg-purple-500" />
+      <MetricCard icon="document" value={lessonsCount} label="Licoes" color="bg-blue-600" />
       <MetricCard
         icon="clock"
         value={typeof totalHours === 'number' ? `${totalHours}h` : totalHours}

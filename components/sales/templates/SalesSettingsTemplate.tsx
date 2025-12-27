@@ -290,7 +290,7 @@ Constraints:
                 <div className="flex items-start justify-between pt-6">
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <Icon name="check-square" className="text-brand-purple" />
+                      <Icon name="check-square" className="text-brand-blue" />
                       <h4 className="text-sm font-bold">ClickUp</h4>
                     </div>
                     <p className="max-w-md text-xs text-muted-foreground">

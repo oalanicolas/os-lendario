@@ -8,74 +8,70 @@ import { Icon } from './components/ui/icon';
 import { Toaster } from './components/ui/toaster';
 import { TooltipProvider } from './components/ui/tooltip';
 import { cn } from './lib/utils';
-import { TemplateSkeleton } from './components/TemplateSkeleton';
-import { trackWebVitals } from './lib/vitals';
-import { useTheme } from './lib/ThemeContext';
 
 // Design System Router (lazy loads 22 sections internally)
 import DesignSystemRouter, { DocsRouter } from './components/design-system/DesignSystemRouter';
 
 // Shared Templates (only used outside design system)
-const SaasSettingsTemplate = React.lazy(() => import('./components/shared/templates/SaasSettingsTemplate'));
+import SaasSettingsTemplate from './components/shared/templates/SaasSettingsTemplate';
 const CmsTemplate = React.lazy(() => import('./components/shared/templates/CmsTemplate'));
 
 // Creator Templates
 import CoursesRouter from './components/creator/CoursesRouter';
-const PersonasTemplate = React.lazy(() => import('./components/creator/templates/PersonasTemplate'));
-const FrameworksTemplate = React.lazy(() => import('./components/creator/templates/FrameworksTemplate'));
+import PersonasTemplate from './components/creator/templates/PersonasTemplate';
+import FrameworksTemplate from './components/creator/templates/FrameworksTemplate';
 import CreatorTopbar from './components/creator/CreatorTopbar';
 
 // PRD Studio
 import PRDRouter from './components/prd/PRDRouter';
 
 // Sales Templates
-const SalesDashboardTemplate = React.lazy(() => import('./components/sales/templates/SalesDashboardTemplate'));
-const SalesCallsTemplate = React.lazy(() => import('./components/sales/templates/SalesCallsTemplate'));
-const SalesCallDetailsTemplate = React.lazy(() => import('./components/sales/templates/SalesCallDetailsTemplate'));
-const SalesMarketingTemplate = React.lazy(() => import('./components/sales/templates/SalesMarketingTemplate'));
-const SalesProductTemplate = React.lazy(() => import('./components/sales/templates/SalesProductTemplate'));
-const SalesSettingsTemplate = React.lazy(() => import('./components/sales/templates/SalesSettingsTemplate'));
-const SalesObjectionsTemplate = React.lazy(() => import('./components/sales/templates/SalesObjectionsTemplate'));
+import SalesDashboardTemplate from './components/sales/templates/SalesDashboardTemplate';
+import SalesCallsTemplate from './components/sales/templates/SalesCallsTemplate';
+import SalesCallDetailsTemplate from './components/sales/templates/SalesCallDetailsTemplate';
+import SalesMarketingTemplate from './components/sales/templates/SalesMarketingTemplate';
+import SalesProductTemplate from './components/sales/templates/SalesProductTemplate';
+import SalesSettingsTemplate from './components/sales/templates/SalesSettingsTemplate';
+import SalesObjectionsTemplate from './components/sales/templates/SalesObjectionsTemplate';
 
 // Minds Templates (New)
-const MindsGalleryTemplate = React.lazy(() => import('./components/minds/templates/MindsGalleryTemplate'));
-const MindProfileTemplate = React.lazy(() => import('./components/minds/templates/MindProfileTemplate'));
-const MindComparisonTemplate = React.lazy(() => import('./components/minds/templates/MindComparisonTemplate'));
-const ArtifactEditorTemplate = React.lazy(() => import('./components/minds/templates/ArtifactEditorTemplate'));
-const ArenaTemplate = React.lazy(() => import('./components/minds/templates/ArenaTemplate'));
+import MindsGalleryTemplate from './components/minds/templates/MindsGalleryTemplate';
+import MindProfileTemplate from './components/minds/templates/MindProfileTemplate';
+import MindComparisonTemplate from './components/minds/templates/MindComparisonTemplate';
+import ArtifactEditorTemplate from './components/minds/templates/ArtifactEditorTemplate';
+import ArenaTemplate from './components/minds/templates/ArenaTemplate';
 
 // Marketing Templates
-const MarketingTemplatesPage = React.lazy(() => import('./components/marketing/templates/MarketingTemplatesPage'));
-const LandingPageTemplate = React.lazy(() => import('./components/marketing/templates/LandingPageTemplate'));
-const AdvertorialTemplate = React.lazy(() => import('./components/marketing/templates/AdvertorialTemplate'));
-const EbookTemplate = React.lazy(() => import('./components/marketing/templates/EbookTemplate'));
-const VSLTemplate = React.lazy(() => import('./components/marketing/templates/VSLTemplate'));
-const WebinarTemplate = React.lazy(() => import('./components/marketing/templates/WebinarTemplate'));
-const ThankYouTemplate = React.lazy(() => import('./components/marketing/templates/ThankYouTemplate'));
-const CommunityTemplatesPage = React.lazy(() => import('./components/marketing/templates/CommunityTemplatesPage'));
-const CommunityCaptureTemplate = React.lazy(() => import('./components/marketing/templates/CommunityCaptureTemplate'));
-const CommunityAdvertorialTemplate = React.lazy(() => import('./components/marketing/templates/CommunityAdvertorialTemplate'));
-const CommunitySalesTemplate = React.lazy(() => import('./components/marketing/templates/CommunitySalesTemplate'));
-const CommunityVSLTemplate = React.lazy(() => import('./components/marketing/templates/CommunityVSLTemplate'));
-const SalesPageTemplate = React.lazy(() => import('./components/sales/templates/SalesPageTemplate'));
+import MarketingTemplatesPage from './components/marketing/templates/MarketingTemplatesPage';
+import LandingPageTemplate from './components/marketing/templates/LandingPageTemplate';
+
+// Ops Templates
+import OpsDBTemplate from './components/ops/templates/OpsDBTemplate';
+import OpsSchemaTemplate from './components/ops/templates/OpsSchemaTemplate';
+import AdvertorialTemplate from './components/marketing/templates/AdvertorialTemplate';
+import EbookTemplate from './components/marketing/templates/EbookTemplate';
+import VSLTemplate from './components/marketing/templates/VSLTemplate';
+import WebinarTemplate from './components/marketing/templates/WebinarTemplate';
+import ThankYouTemplate from './components/marketing/templates/ThankYouTemplate';
+import CommunityTemplatesPage from './components/marketing/templates/CommunityTemplatesPage';
+import CommunityCaptureTemplate from './components/marketing/templates/CommunityCaptureTemplate';
+import CommunityAdvertorialTemplate from './components/marketing/templates/CommunityAdvertorialTemplate';
+import CommunitySalesTemplate from './components/marketing/templates/CommunitySalesTemplate';
+import CommunityVSLTemplate from './components/marketing/templates/CommunityVSLTemplate';
+import SalesPageTemplate from './components/sales/templates/SalesPageTemplate';
 
 import { SECTION_ROUTES, getSectionFromPath } from './routes';
 
 const App: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isDark, setIsDark } = useTheme();
   const [currentSection, setCurrentSection] = useState<Section>(Section.TEMPLATE_SALES_DASHBOARD);
+  const [isDark, setIsDark] = useState(true);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const [currentTheme, setCurrentTheme] = useState<ThemeName>('Gold');
   const [language, setLanguage] = useState<Language>('pt');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [selectedMindSlug, setSelectedMindSlug] = useState<string | null>(null);
-
-  // Track Web Vitals on mount
-  useEffect(() => {
-    trackWebVitals();
-  }, []);
 
   // Sync URL -> State (Initial Load + Back/Forward)
   useEffect(() => {
@@ -114,6 +110,11 @@ const App: React.FC = () => {
   // Helper to check if it's an external iframe section
   const isExternal = (section: Section) => {
     return section === Section.EXTERNAL_CHALLENGES || section === Section.EXTERNAL_PROMPT_OPS || section === Section.EXTERNAL_VAULT;
+  };
+
+  // Helper to check if current section is part of Ops Studio
+  const isOpsApp = (section: Section) => {
+    return section.startsWith('studio_ops');
   };
 
   // Apply Theme & Dark Mode
@@ -158,7 +159,7 @@ const App: React.FC = () => {
   const isDesignSystemApp = (section: Section) => {
     const dsRoutes = [
       Section.CONCEPT, Section.IDENTITY, Section.LEGENDARY_VS_MEDIOCRE,
-      Section.COLORS, Section.TYPOGRAPHY, Section.SPACING, Section.ICONS,
+      Section.COLORS, Section.TYPOGRAPHY, Section.SPACING, Section.ICONS, Section.ICONS_COMPARE,
       Section.LISTS, Section.MOTION, Section.GRAPHS, Section.CHARTS,
       Section.COMPONENTS, Section.BUTTONS, Section.ADVANCED, Section.FEEDBACK,
       Section.STATES, Section.CARDS, Section.FORMS, Section.TABLES,
@@ -187,6 +188,7 @@ const App: React.FC = () => {
       case Section.TYPOGRAPHY:
       case Section.SPACING:
       case Section.ICONS:
+      case Section.ICONS_COMPARE:
       case Section.LISTS:
       case Section.MOTION:
       case Section.GRAPHS:
@@ -208,6 +210,7 @@ const App: React.FC = () => {
             <Route path="/design/*" element={
               <DesignSystemRouter
                 setSection={handleSetSection}
+                isDark={isDark}
                 currentTheme={currentTheme}
                 language={language}
               />
@@ -341,12 +344,18 @@ const App: React.FC = () => {
       case Section.TEMPLATE_COMMUNITY_EMAILS:
         return <CommunityTemplatesPage />;
 
+      // Ops Studio
+      case Section.STUDIO_OPS_DB:
+        return <OpsDBTemplate setSection={handleSetSection} />;
+      case Section.STUDIO_OPS_SCHEMA:
+        return <OpsSchemaTemplate setSection={handleSetSection} />;
+
       default:
         return <div className="p-12 text-center text-muted-foreground">Em desenvolvimento: {currentSection}</div>;
     }
   };
 
-  const isFullWidthPage = isSalesApp(currentSection) || isMindsApp(currentSection) || isCreatorApp(currentSection) || isPRDApp(currentSection) || isExternal(currentSection) || isDesignSystemApp(currentSection);
+  const isFullWidthPage = isSalesApp(currentSection) || isMindsApp(currentSection) || isCreatorApp(currentSection) || isPRDApp(currentSection) || isExternal(currentSection) || isDesignSystemApp(currentSection) || isOpsApp(currentSection);
 
   return (
     <TooltipProvider>
@@ -365,6 +374,8 @@ const App: React.FC = () => {
         <Sidebar
           currentSection={currentSection}
           setSection={handleSetSection}
+          isDark={isDark}
+          toggleTheme={() => setIsDark(!isDark)}
           isCollapsed={isSidebarCollapsed}
           toggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
           currentThemeName={currentTheme}
@@ -385,9 +396,7 @@ const App: React.FC = () => {
           <div className={cn(
             isFullWidthPage ? "h-full p-0 w-full" : "max-w-[1920px] mx-auto p-6 md:p-12"
           )}>
-            <Suspense fallback={<TemplateSkeleton />}>
-              {renderContent()}
-            </Suspense>
+            {renderContent()}
           </div>
         </main>
 

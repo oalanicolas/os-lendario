@@ -132,11 +132,11 @@ const SalesProductTemplate: React.FC<{ setSection: (s: Section) => void }> = ({ 
             </CardContent>
           </Card>
 
-          <Card className="border-l-brand-purple border-l-4 bg-card shadow-sm transition-shadow hover:shadow-md">
+          <Card className="border-l-brand-blue border-l-4 bg-card shadow-sm transition-shadow hover:shadow-md">
             <CardHeader className="pb-2">
               <CardTitle className="flex justify-between text-sm font-bold uppercase tracking-widest text-muted-foreground">
                 Gaps de Funcionalidade
-                <Icon name="puzzle-piece" className="text-brand-purple" />
+                <Icon name="puzzle-piece" className="text-brand-blue" />
               </CardTitle>
             </CardHeader>
             <CardContent>

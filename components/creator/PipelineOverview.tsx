@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Icon } from '../ui/icon';
 import { cn } from '../../lib/utils';
+import { STUDIO_PRIMARY, STUDIO_ACCENT } from './studio-tokens';
 
 type PipelineStage =
   | 'brief'
@@ -39,15 +40,15 @@ const STAGES: StageConfig[] = [
     id: 'curriculum',
     label: 'Curriculo',
     icon: 'list-ul',
-    color: 'text-violet-500',
-    bgColor: 'bg-violet-500',
+    color: STUDIO_PRIMARY,
+    bgColor: STUDIO_PRIMARY,
   },
   {
     id: 'generation',
     label: 'Geracao',
     icon: 'magic-wand',
-    color: 'text-purple-500',
-    bgColor: 'bg-purple-500',
+    color: STUDIO_ACCENT,
+    bgColor: STUDIO_ACCENT,
   },
   {
     id: 'validation',
@@ -89,8 +90,11 @@ const PipelineStageItem: React.FC<PipelineStageProps> = ({ stage, count, isLast 
       <div
         className={cn(
           'flex h-8 w-8 items-center justify-center rounded-full',
-          count > 0 ? stage.bgColor : 'bg-muted'
+          count > 0 ? 'text-white' : 'bg-muted'
         )}
+        style={{
+          backgroundColor: count > 0 ? stage.bgColor : undefined,
+        }}
       >
         <Icon
           name={stage.icon}
@@ -100,8 +104,11 @@ const PipelineStageItem: React.FC<PipelineStageProps> = ({ stage, count, isLast 
       <span
         className={cn(
           'text-[10px] font-medium uppercase tracking-wide',
-          count > 0 ? stage.color : 'text-muted-foreground'
+          count > 0 ? 'text-white' : 'text-muted-foreground'
         )}
+        style={{
+          color: count > 0 && typeof stage.color === 'string' && stage.color.startsWith('#') ? stage.color : undefined,
+        }}
       >
         {stage.label}
       </span>
@@ -131,7 +138,7 @@ const PipelineOverview: React.FC<PipelineOverviewProps> = ({ stageCounts, classN
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground">
-            <Icon name="sitemap" className="size-4 text-primary" />
+            <Icon name="sitemap" className="size-4 " style={color: STUDIO_PRIMARY} />
             Pipeline de Producao
           </CardTitle>
           <span className="text-xs text-muted-foreground">{total} cursos no pipeline</span>

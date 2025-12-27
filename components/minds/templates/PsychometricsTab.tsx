@@ -54,7 +54,7 @@ export const PsychometricsTab: React.FC<PsychometricsTabProps> = ({ psychometric
                   <div className="flex items-center gap-3">
                     <Badge
                       variant="outline"
-                      className="border-purple-500/30 px-3 py-1 font-mono text-2xl font-bold text-purple-400"
+                      className="border-blue-600/30 px-3 py-1 font-mono text-2xl font-bold text-blue-500"
                     >
                       {psychometrics.mbtiType}
                     </Badge>
@@ -67,7 +67,7 @@ export const PsychometricsTab: React.FC<PsychometricsTabProps> = ({ psychometric
                       {psychometrics.mbtiStack.map((fn, i) => (
                         <span
                           key={i}
-                          className="rounded bg-purple-500/10 px-1.5 py-0.5 font-mono text-[10px] text-purple-400"
+                          className="rounded bg-blue-600/10 px-1.5 py-0.5 font-mono text-[10px] text-blue-500"
                         >
                           {fn}
                         </span>
@@ -265,7 +265,7 @@ export const PsychometricsTab: React.FC<PsychometricsTabProps> = ({ psychometric
                 {
                   label: 'Abertura (Openness)',
                   value: psychometrics.bigFive.openness,
-                  color: 'bg-purple-500',
+                  color: 'bg-blue-600',
                   desc: 'Curiosidade, criatividade, abertura a novas experiências',
                 },
                 {

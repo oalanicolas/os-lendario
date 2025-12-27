@@ -13,6 +13,7 @@ import { Separator } from '../../ui/separator';
 import { Progress } from '../../ui/progress';
 import { Alert, AlertDescription } from '../../ui/alert';
 import { cn } from '../../../lib/utils';
+import { STUDIO_PRIMARY, STUDIO_ACCENT } from '../studio-tokens';
 
 // --- TYPES ---
 interface BriefData {
@@ -303,7 +304,7 @@ const CourseBriefTemplate: React.FC<CourseBriefTemplateProps> = ({
                   key={point.id}
                   className="flex items-start gap-3 rounded-lg border border-border bg-muted/20 p-4"
                 >
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full  text-xs font-bold " style={color: STUDIO_PRIMARY} style={backgroundColor: `${STUDIO_PRIMARY}10`}>
                     {index + 1}
                   </span>
                   <div className="flex-1 space-y-3">
@@ -407,19 +408,19 @@ const CourseBriefTemplate: React.FC<CourseBriefTemplateProps> = ({
               value={briefData.methodology}
               onChange={(e) => handleInputChange('methodology', e.target.value)}
             />
-            <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
-              <h4 className="mb-2 text-sm font-bold text-primary">Framework GPS Sugerido</h4>
+            <div className="rounded-lg border border-primary/20  p-4" style={backgroundColor: `${STUDIO_PRIMARY}5`}>
+              <h4 className="mb-2 text-sm font-bold " style={color: STUDIO_PRIMARY}>Framework GPS Sugerido</h4>
               <ul className="space-y-1 text-xs text-muted-foreground">
                 <li className="flex items-center gap-2">
-                  <Icon name="target" size="size-3" className="text-primary" />
+                  <Icon name="target" size="size-3" className="" style={color: STUDIO_PRIMARY} />
                   <strong>Destino:</strong> Onde o aluno quer chegar
                 </li>
                 <li className="flex items-center gap-2">
-                  <Icon name="location-arrow" size="size-3" className="text-primary" />
+                  <Icon name="location-arrow" size="size-3" className="" style={color: STUDIO_PRIMARY} />
                   <strong>Origem:</strong> Onde o aluno está hoje
                 </li>
                 <li className="flex items-center gap-2">
-                  <Icon name="route" size="size-3" className="text-primary" />
+                  <Icon name="route" size="size-3" className="" style={color: STUDIO_PRIMARY} />
                   <strong>Rota:</strong> O caminho otimizado
                 </li>
               </ul>
@@ -567,7 +568,7 @@ const CourseBriefTemplate: React.FC<CourseBriefTemplateProps> = ({
                   <Card>
                     <CardHeader>
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg  " style={color: STUDIO_PRIMARY} style={backgroundColor: `${STUDIO_PRIMARY}10`}>
                           <Icon name={currentSectionData?.icon || 'document'} size="size-5" />
                         </div>
                         <div>
@@ -598,7 +599,7 @@ const CourseBriefTemplate: React.FC<CourseBriefTemplateProps> = ({
                     ) : (
                       <Button
                         onClick={() => onNavigate('research')}
-                        className="bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                        className="bg-primary -foreground shadow-lg shadow-primary/20" style={color: STUDIO_PRIMARY}
                       >
                         Concluir Brief e Iniciar Research
                         <Icon name="search-alt" className="ml-2 size-4" />

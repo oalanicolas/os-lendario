@@ -107,7 +107,7 @@ export const STUDIO_STATUS = {
 
 export const MIND_TYPE_COLORS: Record<string, { bg: string; text: string }> = {
   analista: { bg: 'bg-blue-500/20', text: 'text-blue-400' },
-  criativo: { bg: 'bg-purple-500/20', text: 'text-purple-400' },
+  criativo: { bg: 'bg-blue-600/20', text: 'text-blue-500' },
   estrategista: { bg: 'bg-amber-500/20', text: 'text-amber-400' },
   executor: { bg: 'bg-emerald-500/20', text: 'text-emerald-400' },
   comunicador: { bg: 'bg-pink-500/20', text: 'text-pink-400' },

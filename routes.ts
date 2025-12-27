@@ -21,6 +21,7 @@ export const SECTION_ROUTES: Record<Section, string> = {
     [Section.TYPOGRAPHY]: '/design/typography',
     [Section.SPACING]: '/design/spacing',
     [Section.ICONS]: '/design/icons',
+    [Section.ICONS_COMPARE]: '/design/icons-compare',
     [Section.LISTS]: '/design/lists',
     [Section.MOTION]: '/design/motion',
     [Section.GRAPHS]: '/design/graphs',
@@ -95,7 +96,11 @@ export const SECTION_ROUTES: Record<Section, string> = {
     [Section.STUDIO_PRD_DASHBOARD]: '/prd',
     [Section.STUDIO_PRD_NEW]: '/prd/novo',
     [Section.STUDIO_PRD_EDITOR]: '/prd/:slug',
-    [Section.STUDIO_PRD_EXPORT]: '/prd/:slug/exportar'
+    [Section.STUDIO_PRD_EXPORT]: '/prd/:slug/exportar',
+
+    // Ops Studio
+    [Section.STUDIO_OPS_DB]: '/studio/ops/db',
+    [Section.STUDIO_OPS_SCHEMA]: '/studio/ops/schema'
 };
 
 export const getSectionFromPath = (path: string): Section | null => {

@@ -247,7 +247,7 @@ export const MindHeroSection: React.FC<MindHeroSectionProps> = ({
                 <Icon
                   name="trophy"
                   size="size-3"
-                  className="text-zinc-600 group-hover:text-purple-500"
+                  className="text-zinc-600 group-hover:text-blue-600"
                 />
               </div>
               <div className="flex h-full flex-col justify-end">
@@ -265,11 +265,11 @@ export const MindHeroSection: React.FC<MindHeroSectionProps> = ({
                     {[...Array(5)].map((_, i) => (
                       <div
                         key={i}
-                        className={`h-1.5 w-1.5 rounded-full ${i < (topProficiency ? Math.ceil(topProficiency.level / 2) : 0) ? 'bg-purple-500' : 'bg-zinc-800'}`}
+                        className={`h-1.5 w-1.5 rounded-full ${i < (topProficiency ? Math.ceil(topProficiency.level / 2) : 0) ? 'bg-blue-600' : 'bg-zinc-800'}`}
                       ></div>
                     ))}
                   </div>
-                  <span className="font-mono text-[9px] text-purple-400">
+                  <span className="font-mono text-[9px] text-blue-500">
                     LVL {topProficiency?.level || 0}
                   </span>
                 </div>

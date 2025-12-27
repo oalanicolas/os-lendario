@@ -122,7 +122,7 @@ const MindCard: React.FC<MindCardProps> = ({ mind, onClick }) => {
           {mind.psychometrics && (
             <div className="mb-2 flex gap-2">
               <div
-                className="flex items-center gap-1 rounded border border-purple-500/20 bg-purple-500/10 px-1.5 py-0.5 font-mono text-[9px] text-purple-400"
+                className="flex items-center gap-1 rounded border border-blue-600/20 bg-blue-600/10 px-1.5 py-0.5 font-mono text-[9px] text-blue-500"
                 title={`MBTI: ${mind.psychometrics.mbti.role}`}
               >
                 {mind.psychometrics.mbti.type}

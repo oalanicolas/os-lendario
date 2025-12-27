@@ -82,8 +82,8 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
         };
       case 'learning':
         return {
-          bg: 'bg-purple-500',
-          border: 'border-purple-500',
+          bg: 'bg-blue-600',
+          border: 'border-blue-600',
           label: 'Estudo',
           icon: 'book-open',
         };

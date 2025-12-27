@@ -1,3 +1,25 @@
+/**
+ * useCourses Hook
+ *
+ * Fetch a list of all courses with metadata, progress, and content statistics.
+ * Returns courses sorted by creation date with latest first.
+ *
+ * @returns Object containing:
+ *   - courses: Course[] - Array of course objects
+ *   - isLoading: boolean - true while fetching
+ *   - error: Error | null - Error object if fetch failed
+ *   - refetch: () => Promise<void> - Function to manually re-fetch
+ *
+ * @example
+ * const { courses, isLoading, error } = useCourses();
+ *
+ * if (error) return <ErrorMessage error={error} />;
+ * if (isLoading) return <LoadingSpinner />;
+ * return <CoursesList courses={courses} />;
+ *
+ * @throws Throws error if Supabase is not configured
+ */
+
 // @ts-nocheck
 import { useState, useEffect, useCallback } from 'react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
