@@ -152,12 +152,12 @@ const KanbanTemplate: React.FC = () => {
                   </span>
                 </div>
                 <div className="flex gap-1 opacity-0 transition-opacity hover:opacity-100">
-                  <button className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground">
+                  <Button variant="ghost" className="h-auto w-auto rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground">
                     <Icon name="plus" size="size-3" />
-                  </button>
-                  <button className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground">
+                  </Button>
+                  <Button variant="ghost" className="h-auto w-auto rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground">
                     <Icon name="menu-dots" size="size-3" />
-                  </button>
+                  </Button>
                 </div>
               </div>
 
@@ -229,9 +229,9 @@ const KanbanTemplate: React.FC = () => {
                   ))}
 
                   {/* Add Button at bottom of list */}
-                  <button className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-transparent py-3 text-sm text-muted-foreground opacity-60 transition-all hover:border-border/50 hover:bg-muted/30 hover:text-primary hover:opacity-100">
+                  <Button variant="ghost" className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-transparent py-3 text-sm text-muted-foreground opacity-60 transition-all hover:border-border/50 hover:bg-muted/30 hover:text-primary hover:opacity-100 font-normal h-auto">
                     <Icon name="plus" size="size-3" /> Criar nova tarefa
-                  </button>
+                  </Button>
                 </div>
               </ScrollArea>
             </div>

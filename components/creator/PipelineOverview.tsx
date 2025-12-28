@@ -138,7 +138,7 @@ const PipelineOverview: React.FC<PipelineOverviewProps> = ({ stageCounts, classN
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground">
-            <Icon name="sitemap" className="size-4 " style={color: STUDIO_PRIMARY} />
+            <Icon name="sitemap" className="size-4 " style={{ color: STUDIO_PRIMARY }} />
             Pipeline de Producao
           </CardTitle>
           <span className="text-xs text-muted-foreground">{total} cursos no pipeline</span>

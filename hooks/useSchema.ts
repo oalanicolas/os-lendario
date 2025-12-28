@@ -69,10 +69,10 @@ export function useSchema(): UseSchemaResult {
 
             if (schemaRes.error) throw schemaRes.error;
 
-            setTables((schemaRes.data as SchemaTable[]) || []);
-            setEnums((enumRes.data as Record<string, string[]>) || {});
-            setMetadata((metaRes.data as DbMetadata) || null);
-            setPolicies((policyRes.data as DbPolicy[]) || []);
+            setTables((schemaRes.data as unknown as SchemaTable[]) || []);
+            setEnums((enumRes.data as unknown as Record<string, string[]>) || {});
+            setMetadata((metaRes.data as unknown as DbMetadata) || null);
+            setPolicies((policyRes.data as unknown as DbPolicy[]) || []);
         } catch (err) {
             console.error('Failed to fetch schema metadata:', err);
             setError(err as Error);

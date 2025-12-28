@@ -1,6 +1,6 @@
 import React from 'react';
 import { DebateFramework, frameworkService } from '../../../services/frameworkService';
-import { Users, Clock, Target, Info } from 'lucide-react';
+import { Icon } from '../../ui/icon';
 
 interface FrameworkCardProps {
   framework: DebateFramework;
@@ -42,21 +42,21 @@ const FrameworkCardComponent: React.FC<FrameworkCardProps> = ({
       <div className="mb-4 grid grid-cols-3 gap-4">
         {/* Participants */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Users className="h-4 w-4 text-primary" />
+          <Icon name="users-alt" className="h-4 w-4 text-primary" />
           <span>{participantsRange}</span>
         </div>
 
         {/* Rounds */}
         {rounds > 0 && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Clock className="h-4 w-4 text-primary" />
+            <Icon name="clock" className="h-4 w-4 text-primary" />
             <span>{rounds} rounds</span>
           </div>
         )}
 
         {/* Best For Icon */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Target className="h-4 w-4 text-primary" />
+          <Icon name="target" className="h-4 w-4 text-primary" />
         </div>
       </div>
 
@@ -83,7 +83,7 @@ const FrameworkCardComponent: React.FC<FrameworkCardProps> = ({
             onClick={() => onViewDetails(framework)}
             className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium transition-colors hover:border-primary/50 hover:bg-accent"
           >
-            <Info className="h-4 w-4" />
+            <Icon name="info" className="h-4 w-4" />
             Detalhes
           </button>
         )}

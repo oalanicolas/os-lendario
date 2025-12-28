@@ -92,8 +92,8 @@ const MindProfileTemplate: React.FC<MindProfileProps> = ({ setSection, mindSlug:
 
     setIsDeleting(true);
     try {
-      const { error: deleteError } = await supabase
-        .from('minds')
+      const { error: deleteError } = await (supabase
+        .from('minds') as any)
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', mind.id);
 

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from './dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from './dialog';
 import { Button } from './button';
 
 const meta = {
@@ -16,14 +16,16 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  args: {
+    open: false,
+    onOpenChange: () => { },
+  },
   render: () => {
     const [open, setOpen] = useState(false);
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button>Open Dialog</Button>
-        </DialogTrigger>
-        <DialogContent>
+        <Button onClick={() => setOpen(true)}>Open Dialog</Button>
+        <DialogContent onClose={() => setOpen(false)}>
           <DialogHeader>
             <DialogTitle>Dialog Title</DialogTitle>
             <DialogDescription>
@@ -34,10 +36,8 @@ export const Default: Story = {
             <p className="text-sm text-foreground">Dialog content goes here</p>
           </div>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button>Confirm</Button>
+            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={() => setOpen(false)}>Confirm</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -46,14 +46,16 @@ export const Default: Story = {
 };
 
 export const Confirmation: Story = {
+  args: {
+    open: false,
+    onOpenChange: () => { },
+  },
   render: () => {
     const [open, setOpen] = useState(false);
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button variant="destructive">Delete Item</Button>
-        </DialogTrigger>
-        <DialogContent>
+        <Button variant="destructive" onClick={() => setOpen(true)}>Delete Item</Button>
+        <DialogContent onClose={() => setOpen(false)}>
           <DialogHeader>
             <DialogTitle>Delete Confirmation</DialogTitle>
             <DialogDescription>
@@ -61,10 +63,8 @@ export const Confirmation: Story = {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button variant="destructive">Delete</Button>
+            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button variant="destructive" onClick={() => setOpen(false)}>Delete</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -73,14 +73,16 @@ export const Confirmation: Story = {
 };
 
 export const FormDialog: Story = {
+  args: {
+    open: false,
+    onOpenChange: () => { },
+  },
   render: () => {
     const [open, setOpen] = useState(false);
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button>Open Form</Button>
-        </DialogTrigger>
-        <DialogContent>
+        <Button onClick={() => setOpen(true)}>Open Form</Button>
+        <DialogContent onClose={() => setOpen(false)}>
           <DialogHeader>
             <DialogTitle>Create New Item</DialogTitle>
           </DialogHeader>
@@ -95,10 +97,8 @@ export const FormDialog: Story = {
             </div>
           </form>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button>Create</Button>
+            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={() => setOpen(false)}>Create</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

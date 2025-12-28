@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Icon } from '../ui/icon';
+import { Button } from '../ui/button';
 import { cn } from '../../lib/utils';
 
 export interface ModuleTopbarNavItem {
@@ -101,19 +102,20 @@ const ModuleTopbar: React.FC<ModuleTopbarProps> = ({
                 const isActive =
                   currentSection === item.section || location.pathname.startsWith(item.path || '');
                 return (
-                  <button
+                  <Button
                     key={index}
+                    variant="ghost"
                     onClick={() => handleNavClick(item)}
                     disabled={!item.section || item.disabled}
                     className={cn(
-                      'rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200',
+                      'rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 h-auto',
                       isActive ? 'bg-background shadow-sm' : 'hover:bg-studio-primary/20',
                       (!item.section || item.disabled) && 'cursor-not-allowed opacity-50'
                     )}
                     style={{ color: effectiveBrandColor }}
                   >
                     {item.label}
-                  </button>
+                  </Button>
                 );
               })}
             </div>
@@ -122,9 +124,9 @@ const ModuleTopbar: React.FC<ModuleTopbarProps> = ({
           {/* Right: Actions */}
           <div className="flex items-center gap-3">
             {actionButton && actionButton.show !== false && (
-              <button
+              <Button
                 onClick={actionButton.onClick}
-                className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:opacity-90"
+                className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:opacity-90 h-auto"
                 style={{
                   backgroundColor: effectiveBrandColor,
                   boxShadow: `0 10px 15px -3px ${effectiveBrandColor}30`,
@@ -132,7 +134,7 @@ const ModuleTopbar: React.FC<ModuleTopbarProps> = ({
               >
                 <Icon name={actionButton.icon} size="size-4" />
                 <span className="hidden sm:inline">{actionButton.label}</span>
-              </button>
+              </Button>
             )}
           </div>
         </div>
@@ -171,12 +173,13 @@ const ModuleTopbar: React.FC<ModuleTopbarProps> = ({
             {navItems.map((item, index) => {
               const isActive = currentSection === item.section;
               return (
-                <button
+                <Button
                   key={index}
+                  variant="ghost"
                   onClick={() => handleNavClick(item)}
                   disabled={!item.section || item.disabled}
                   className={cn(
-                    'flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200',
+                    'flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200 h-auto',
                     isActive
                       ? 'text-foreground'
                       : 'text-muted-foreground hover:bg-muted hover:text-foreground',
@@ -189,7 +192,7 @@ const ModuleTopbar: React.FC<ModuleTopbarProps> = ({
                 >
                   <Icon name={item.icon} size="size-4" />
                   <span>{item.label}</span>
-                </button>
+                </Button>
               );
             })}
           </nav>
@@ -198,18 +201,21 @@ const ModuleTopbar: React.FC<ModuleTopbarProps> = ({
         {/* Right: Actions */}
         <div className="flex items-center gap-4">
           {actionButton && actionButton.show !== false && (
-            <button
+            <Button
+              variant="ghost"
               onClick={actionButton.onClick}
-              className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors"
+              className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors h-auto"
               style={{
                 color: effectiveBrandColor,
               }}
             >
               <Icon name={actionButton.icon} size="size-5" />
-            </button>
+            </Button>
           )}
-          <button
-            className="relative rounded-md p-2 text-muted-foreground transition-colors hover:text-foreground"
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative rounded-md text-muted-foreground transition-colors hover:text-foreground h-9 w-9"
             style={{
               color: 'currentColor',
             }}
@@ -219,7 +225,7 @@ const ModuleTopbar: React.FC<ModuleTopbarProps> = ({
               className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full"
               style={{ backgroundColor: effectiveBrandColor }}
             ></span>
-          </button>
+          </Button>
         </div>
       </div>
     </div>

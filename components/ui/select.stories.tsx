@@ -27,6 +27,9 @@ const defaultOptions = [
 ];
 
 export const Default: Story = {
+  args: {
+    options: defaultOptions,
+  },
   render: () => {
     const [value, setValue] = useState<string>('');
     return (
@@ -41,6 +44,9 @@ export const Default: Story = {
 };
 
 export const WithLabel: Story = {
+  args: {
+    options: defaultOptions,
+  },
   render: () => {
     const [value, setValue] = useState<string>('');
     return (
@@ -58,6 +64,10 @@ export const WithLabel: Story = {
 };
 
 export const Disabled: Story = {
+  args: {
+    options: defaultOptions,
+    disabled: true,
+  },
   render: () => (
     <Select
       options={defaultOptions}
@@ -68,6 +78,10 @@ export const Disabled: Story = {
 };
 
 export const WithDefault: Story = {
+  args: {
+    options: defaultOptions,
+    value: 'option2',
+  },
   render: () => {
     const [value, setValue] = useState('option2');
     return (
@@ -82,6 +96,9 @@ export const WithDefault: Story = {
 };
 
 export const Countries: Story = {
+  args: {
+    options: [],
+  },
   render: () => {
     const [value, setValue] = useState('');
     const countries = [

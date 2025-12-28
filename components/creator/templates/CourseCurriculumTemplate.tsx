@@ -400,7 +400,7 @@ const CourseCurriculumTemplate: React.FC<CourseCurriculumTemplateProps> = ({
               </Button>
               <Button
                 onClick={() => onNavigate('lessons')}
-                className="bg-primary -foreground" style={color: STUDIO_PRIMARY}
+                className="bg-primary text-white" style={{ backgroundColor: STUDIO_PRIMARY }}
               >
                 Gerar Lições
                 <Icon name="arrow-right" className="ml-2 size-4" />
@@ -423,7 +423,7 @@ const CourseCurriculumTemplate: React.FC<CourseCurriculumTemplateProps> = ({
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg  font-bold " style={color: STUDIO_PRIMARY} style={backgroundColor: `${STUDIO_PRIMARY}10`}>
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg font-bold" style={{ color: STUDIO_PRIMARY, backgroundColor: `${STUDIO_PRIMARY}10` }}>
                           {modIndex + 1}
                         </div>
                         <div>
@@ -564,7 +564,7 @@ const CourseCurriculumTemplate: React.FC<CourseCurriculumTemplateProps> = ({
               {/* Add Module Button */}
               <Button
                 variant="outline"
-                className="w-full border-dashed py-8 hover:border-primary hover:" style={backgroundColor: `${STUDIO_PRIMARY}5`}
+                className="w-full border-dashed py-8 hover:bg-primary/5 hover:border-primary/50" style={{ backgroundColor: `${STUDIO_PRIMARY}05` }}
                 onClick={() => setIsAddModuleOpen(true)}
               >
                 <Icon name="plus" className="mr-2 size-5" />

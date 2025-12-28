@@ -210,7 +210,6 @@ const App: React.FC = () => {
             <Route path="/design/*" element={
               <DesignSystemRouter
                 setSection={handleSetSection}
-                isDark={isDark}
                 currentTheme={currentTheme}
                 language={language}
               />
@@ -388,8 +387,7 @@ const App: React.FC = () => {
 
         <main
           className={cn(
-            "flex-1 transition-all duration-300 ease-in-out h-screen overflow-y-auto custom-scrollbar",
-            isSidebarCollapsed ? "md:ml-20" : "md:ml-64"
+            "flex-1 transition-all duration-300 ease-in-out h-screen overflow-y-auto custom-scrollbar"
           )}
         >
           {/* Apply padding only if NOT a sales/minds/creator template or external iframe */}

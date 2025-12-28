@@ -256,15 +256,15 @@ const FeedbackSection: React.FC = () => {
                 <div className="mb-1 border-b border-border px-2 py-1.5 text-sm font-semibold">
                   Minha Conta
                 </div>
-                <button className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm hover:bg-muted">
+                <Button variant="ghost" className="w-full justify-start gap-2 px-2 py-1.5 text-sm font-normal h-auto">
                   <Icon name="user" size="size-3" /> Perfil
-                </button>
-                <button className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm hover:bg-muted">
+                </Button>
+                <Button variant="ghost" className="w-full justify-start gap-2 px-2 py-1.5 text-sm font-normal h-auto">
                   <Icon name="credit-card" size="size-3" /> Faturamento
-                </button>
-                <button className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm text-destructive hover:bg-muted">
+                </Button>
+                <Button variant="ghost" className="w-full justify-start gap-2 px-2 py-1.5 text-sm font-normal h-auto text-destructive hover:text-destructive hover:bg-destructive/10">
                   <Icon name="sign-out-alt" size="size-3" /> Sair
-                </button>
+                </Button>
               </div>
             }
           />
@@ -349,12 +349,14 @@ const FeedbackSection: React.FC = () => {
           >
             <div className="relative h-48 w-full bg-[url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center">
               <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
-              <button
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => setShowImageModal(false)}
-                className="absolute right-4 top-4 rounded-full bg-black/20 p-1 text-white backdrop-blur-sm transition-colors hover:bg-black/40"
+                className="absolute right-4 top-4 h-8 w-8 rounded-full bg-black/20 text-white backdrop-blur-sm hover:bg-black/40 hover:text-white p-0"
               >
                 <Icon name="cross" size="size-3" />
-              </button>
+              </Button>
             </div>
             <div className="p-6 pt-2">
               <DialogHeader className="text-left sm:text-left">

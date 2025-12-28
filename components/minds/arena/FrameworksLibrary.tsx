@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DebateFramework, frameworkService } from '../../../services/frameworkService';
 import { FrameworkCard } from './FrameworkCard';
 import { FrameworkDetailModal } from './FrameworkDetailModal';
-import { Loader2, Library, Filter, Search } from 'lucide-react';
+import { Icon } from '../../ui/icon';
 
 interface FrameworksLibraryProps {
   onSelectFramework?: (framework: DebateFramework) => void;
@@ -90,7 +90,7 @@ export const FrameworksLibrary: React.FC<FrameworksLibraryProps> = ({
   if (loading) {
     return (
       <div className="flex h-96 items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Icon name="spinner" className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -117,7 +117,7 @@ export const FrameworksLibrary: React.FC<FrameworksLibraryProps> = ({
       {showHeader && (
         <div className="space-y-3 text-center">
           <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
-            <Library className="h-8 w-8 text-primary" />
+            <Icon name="library" className="h-8 w-8 text-primary" />
           </div>
           <h1 className="text-3xl font-bold text-foreground">Biblioteca de Frameworks</h1>
           <p className="mx-auto max-w-2xl text-muted-foreground">
@@ -131,7 +131,7 @@ export const FrameworksLibrary: React.FC<FrameworksLibraryProps> = ({
       <div className="space-y-4 rounded-xl border border-border bg-card p-6">
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+          <Icon name="search" className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
           <input
             type="text"
             placeholder="Buscar frameworks..."
@@ -145,18 +145,17 @@ export const FrameworksLibrary: React.FC<FrameworksLibraryProps> = ({
         <div className="flex flex-wrap gap-4">
           {/* Complexity Filter */}
           <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-muted-foreground" />
+            <Icon name="filter" className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm font-medium text-foreground">Complexidade:</span>
             <div className="flex gap-2">
               {['all', 'Baixa', 'Média', 'Alta', 'Muito Alta'].map((level) => (
                 <button
                   key={level}
                   onClick={() => setComplexityFilter(level)}
-                  className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
-                    complexityFilter === level
+                  className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${complexityFilter === level
                       ? 'border-primary bg-primary text-primary-foreground'
                       : 'border-border bg-card text-muted-foreground hover:border-primary/50'
-                  }`}
+                    }`}
                 >
                   {level === 'all' ? 'Todas' : level}
                 </button>
@@ -172,11 +171,10 @@ export const FrameworksLibrary: React.FC<FrameworksLibraryProps> = ({
                 <button
                   key={count}
                   onClick={() => setParticipantsFilter(count)}
-                  className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
-                    participantsFilter === count
+                  className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${participantsFilter === count
                       ? 'border-primary bg-primary text-primary-foreground'
                       : 'border-border bg-card text-muted-foreground hover:border-primary/50'
-                  }`}
+                    }`}
                 >
                   {count === 'all' ? 'Todos' : count}
                 </button>

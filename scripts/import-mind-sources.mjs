@@ -158,7 +158,7 @@ async function importMindSources(mindSlug, dryRun = false) {
   // 1. Get mind from database
   const { data: mind, error: mindError } = await supabase
     .from('minds')
-    .select('id, slug, display_name')
+    .select('id, slug, name')
     .eq('slug', mindSlug)
     .is('deleted_at', null)
     .single();
@@ -168,7 +168,7 @@ async function importMindSources(mindSlug, dryRun = false) {
     process.exit(1);
   }
 
-  console.log(`✓ Found mind: ${mind.display_name} (${mind.id})`);
+  console.log(`✓ Found mind: ${mind.name} (${mind.id})`);
 
   // 2. Get or create content_project for sources
   let { data: project, error: projectError } = await supabase
@@ -189,7 +189,7 @@ async function importMindSources(mindSlug, dryRun = false) {
           persona_mind_id: mind.id,
           project_type: 'mind_sources',
           slug: `mind-sources-${mindSlug}`,
-          name: `${mind.display_name} - Original Sources`,
+          name: `${mind.name} - Original Sources`,
           status: 'completed',
         })
         .select('id, slug')
@@ -302,7 +302,7 @@ async function importMindSources(mindSlug, dryRun = false) {
 
   // 6. Summary
   console.log(`\n${'='.repeat(50)}`);
-  console.log(`📊 Import Summary for ${mind.display_name}`);
+  console.log(`📊 Import Summary for ${mind.name}`);
   console.log(`${'='.repeat(50)}`);
   console.log(`✅ Imported: ${imported}`);
   console.log(`⏭️  Skipped:  ${skipped}`);

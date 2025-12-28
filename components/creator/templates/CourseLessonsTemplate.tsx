@@ -323,7 +323,7 @@ const CourseLessonsTemplate: React.FC<CourseLessonsTemplateProps> = ({
         );
       case 'generating':
         return (
-          <Badge className="animate-pulse border-0  text-[10px] " style={color: STUDIO_PRIMARY} style={backgroundColor: `${STUDIO_PRIMARY}10`}>
+          <Badge className="animate-pulse border-0 text-[10px]" style={{ color: STUDIO_PRIMARY, backgroundColor: `${STUDIO_PRIMARY}10` }}>
             Gerando...
           </Badge>
         );
@@ -399,7 +399,7 @@ const CourseLessonsTemplate: React.FC<CourseLessonsTemplateProps> = ({
               )}
               <Button
                 onClick={() => onNavigate('validation')}
-                className="bg-primary -foreground" style={color: STUDIO_PRIMARY}
+                className="bg-primary text-white" style={{ backgroundColor: STUDIO_PRIMARY }}
                 disabled={stats.completed < stats.total}
               >
                 Ir para Validação

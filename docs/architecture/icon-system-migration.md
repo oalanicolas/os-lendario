@@ -307,5 +307,5 @@ npm run typecheck
 ## Referencias
 
 - [Iconoir](https://iconoir.com/) - Biblioteca escolhida
-- [Comparacao de Icones](/design/icons-compare) - Pagina de comparacao criada
+- [Documentacao de Icones](/design/icons) - Pagina de referencia oficial
 - Conversa de decisao: 2025-12-27

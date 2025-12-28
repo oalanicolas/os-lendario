@@ -16,6 +16,7 @@ import { MindsSection } from '../sections/MindsSection';
 import { ContentsSection } from '../sections/ContentsSection';
 import { JobsSection } from '../sections/JobsSection';
 import { RelationshipsSection, AssessmentSystemsSection, InferenceBridgeSection } from '../sections';
+import MentalModelsSection from '../sections/MentalModelsSection';
 import { useOpsStats } from '../../../hooks/useOpsStats';
 import { OPS_KPI_CLASSES, OPS_CARD_CLASSES } from '../ops-tokens';
 
@@ -48,6 +49,7 @@ const NAV_GROUPS = [
       { id: 'mapping', label: 'Mapping Systems', icon: 'chart-pie', count: 'systems' },
       { id: 'assessment', label: 'Assessment Systems', icon: 'layers', count: 'systems' },
       { id: 'tools', label: 'Tools & Models', icon: 'settings-sliders', count: 'tools' },
+      { id: 'mental-models', label: 'Mental Models', icon: 'lightbulb', count: null },
     ]
   },
   {
@@ -108,6 +110,7 @@ const OpsDBTemplate: React.FC<OpsDBTemplateProps> = ({ setSection }) => {
       case 'jobs': return <JobsSection />;
       case 'gaps': return <GapsSection stats={stats} loading={loading} />;
       case 'example': return <ExampleSection />;
+      case 'mental-models': return <MentalModelsSection />;
       default: return <PipelineSection />;
     }
   };

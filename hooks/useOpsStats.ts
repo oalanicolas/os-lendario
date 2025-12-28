@@ -12,6 +12,7 @@ export interface OpsStats {
   drivers: number;
   driverRels: number;
   mindDrivers: number;
+  miuDriverEvidence: number;
   fragmentDrivers: number;
   // Mapping Systems
   systems: number;
@@ -60,7 +61,7 @@ const FALLBACK_STATS: OpsStats = {
   tables: 32,
   lastUpdated: new Date().toISOString().split('T')[0],
   minds: 0, tags: 0, mindTags: 0,
-  drivers: 0, driverRels: 0, mindDrivers: 0, fragmentDrivers: 0,
+  drivers: 0, driverRels: 0, mindDrivers: 0, miuDriverEvidence: 0, fragmentDrivers: 0,
   systems: 0, compMaps: 0, systemComponents: 0, mindSystemMappings: 0, mindComponentScores: 0, mindPsychometrics: 0,
   tools: 0, toolRels: 0, toolAffinities: 0, mindTools: 0,
   mindObsessions: 0, mindValues: 0, mindProfiles: 0,
@@ -97,6 +98,7 @@ export function useOpsStats(): UseOpsStatsResult {
         supabase.from('drivers').select('*', { count: 'exact', head: true }),
         supabase.from('driver_relationships').select('*', { count: 'exact', head: true }),
         supabase.from('mind_drivers').select('*', { count: 'exact', head: true }),
+        supabase.from('miu_driver_evidence').select('*', { count: 'exact', head: true }),
         supabase.from('fragment_drivers').select('*', { count: 'exact', head: true }),
         // Mapping
         supabase.from('mapping_systems').select('*', { count: 'exact', head: true }),
@@ -136,7 +138,7 @@ export function useOpsStats(): UseOpsStatsResult {
       // Destructure results
       const [
         minds, tags, mindTags,
-        drivers, driverRels, mindDrivers, fragmentDrivers,
+        drivers, driverRels, mindDrivers, miuDriverEvidence, fragmentDrivers,
         systems, compMaps, systemComponents, mindSystemMappings, mindComponentScores, mindPsychometrics,
         tools, toolRels, toolAffinities, mindTools,
         mindObsessions, mindValues, mindProfiles,
@@ -155,6 +157,7 @@ export function useOpsStats(): UseOpsStatsResult {
         drivers: drivers.count ?? 0,
         driverRels: driverRels.count ?? 0,
         mindDrivers: mindDrivers.count ?? 0,
+        miuDriverEvidence: miuDriverEvidence.count ?? 0,
         fragmentDrivers: fragmentDrivers.count ?? 0,
         systems: systems.count ?? 0,
         compMaps: compMaps.count ?? 0,

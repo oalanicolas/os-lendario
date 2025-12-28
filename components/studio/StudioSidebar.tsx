@@ -2,7 +2,7 @@ import React from 'react';
 import { Icon } from '../ui/icon';
 import { ScrollArea } from '../ui/scroll-area';
 import { cn } from '../../lib/utils';
-import { STUDIO_STATUS, STUDIO_PRIMARY, type PipelineStep } from '../creator/studio-tokens';
+import { STUDIO_STATUS, STUDIO_PRIMARY, type PipelineStep } from './studio-tokens';
 
 // =============================================================================
 // TYPES
@@ -110,9 +110,9 @@ export const StudioSidebar: React.FC<StudioSidebarProps> = ({
                 style={
                   isActive
                     ? {
-                        color: primaryColor,
-                        backgroundColor: `${primaryColor}20`,
-                      }
+                      color: primaryColor,
+                      backgroundColor: `${primaryColor}20`,
+                    }
                     : undefined
                 }
               >

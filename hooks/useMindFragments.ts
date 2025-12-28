@@ -262,7 +262,7 @@ export function useMindFragments(mindId: string | null): UseMindFragmentsResult 
 
     try {
       // Use RPC function with SECURITY DEFINER to bypass RLS
-      const { data: result, error: deleteError } = await supabase
+      const { data: result, error: deleteError } = await (supabase as any)
         .rpc('soft_delete_fragment', { fragment_id: id });
 
       if (deleteError) {
@@ -295,7 +295,7 @@ export function useMindFragments(mindId: string | null): UseMindFragmentsResult 
       const expectedCount = data?.fragments.filter(f => f.contentId === contentId).length || 0;
 
       // Use RPC function with SECURITY DEFINER to bypass RLS
-      const { data: deletedCount, error: deleteError } = await supabase
+      const { data: deletedCount, error: deleteError } = await (supabase as any)
         .rpc('soft_delete_fragments_by_content', { p_content_id: contentId });
 
       if (deleteError) {

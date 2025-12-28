@@ -133,7 +133,7 @@ import { Button } from '@/components/ui/button';
 
 ### Ícones (`Icon`)
 
-NÃO use bibliotecas externas diretamente. Use o wrapper proprietário que mapeia para _Flaticon UIcons_.
+NÃO use bibliotecas externas diretamente nos componentes. Use o wrapper proprietário que mapeia para a biblioteca **Iconoir**.
 
 ```tsx
 import { Icon } from '@/components/ui/icon';
@@ -141,8 +141,7 @@ import { Icon } from '@/components/ui/icon';
 // Correto
 <Icon name="home" size="size-5" />;
 
-// Errado
-import { Home } from 'lucide-react'; // X
+// O sistema gerencia o mapeamento interno para Iconoir SVG
 ```
 
 ### Cards (`Card`)

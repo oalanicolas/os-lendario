@@ -262,17 +262,13 @@ const DocsSection: React.FC = () => {
             <div className="space-y-6">
               <h3 className="text-lg font-bold">1. Importação de Ícones</h3>
               <p className="text-sm text-muted-foreground">
-                Não importamos ícones SVG individualmente. Usamos um componente wrapper que mapeia
-                para a fonte de ícones Flaticon.
+                Não importamos ícones SVG individualmente nos componentes. Usamos o componente
+                wrapper <code>&lt;Icon /&gt;</code> que centraliza todos os mapeamentos para a
+                biblioteca Iconoir.
               </p>
               <div className="space-y-2">
-                <div className="rounded-md border border-red-200 bg-red-50 p-3 font-mono text-xs text-red-600 dark:border-red-900 dark:bg-red-900/10 dark:text-red-400">
-                  <span className="font-bold">ERRADO:</span> import &#123; Home &#125; from
-                  'lucide-react';
-                </div>
                 <div className="rounded-md border border-green-200 bg-green-50 p-3 font-mono text-xs text-green-600 dark:border-green-900 dark:bg-green-900/10 dark:text-green-400">
-                  <span className="font-bold">CORRETO:</span> import &#123; Icon &#125; from
-                  './ui/icon';
+                  <span className="font-bold">USO:</span> &lt;Icon name="home" /&gt;
                 </div>
               </div>
             </div>

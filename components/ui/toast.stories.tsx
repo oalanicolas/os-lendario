@@ -22,6 +22,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  args: {
+    id: '1',
+    onClose: () => { },
+  },
   render: () => {
     const [toasts, setToasts] = useState([
       {
@@ -45,7 +49,7 @@ export const Default: Story = {
         }}>
           Show Toast
         </Button>
-        
+
         <div className="fixed bottom-4 right-4 space-y-2">
           {toasts.map((toast) => (
             <Toast
@@ -66,7 +70,7 @@ export const Success: Story = {
     title: 'Success!',
     description: 'Operation completed successfully.',
     variant: 'success',
-    onClose: () => {},
+    onClose: () => { },
   },
 };
 
@@ -76,7 +80,7 @@ export const Destructive: Story = {
     title: 'Error',
     description: 'Something went wrong. Please try again.',
     variant: 'destructive',
-    onClose: () => {},
+    onClose: () => { },
   },
 };
 
@@ -86,7 +90,7 @@ export const Warning: Story = {
     title: 'Warning',
     description: 'Please review before proceeding.',
     variant: 'warning',
-    onClose: () => {},
+    onClose: () => { },
   },
 };
 
@@ -97,6 +101,6 @@ export const WithAction: Story = {
     description: 'Your document has been updated.',
     action: <Button size="sm" variant="ghost">Undo</Button>,
     variant: 'default',
-    onClose: () => {},
+    onClose: () => { },
   },
 };

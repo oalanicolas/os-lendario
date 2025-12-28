@@ -11,8 +11,7 @@ import { Input } from '../ui/input';
 const IconSection: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Categorias de Ícones UI (Flaticon)
-  // Correções aplicadas: chart-line -> stats, server -> disk
+  // Categorias de Ícones UI (Iconoir)
   const uiIconCategories: Record<string, string[]> = {
     Navegação: [
       'home',
@@ -27,35 +26,48 @@ const IconSection: React.FC = () => {
       'sign-out-alt',
       'expand',
       'compress',
-      'arrow-small-up',
-      'arrow-small-down',
+      'enter',
+      'exit',
+      'chevron-right',
+      'chevron-down',
+      'chevron-up',
+      'chevron-left',
       'angle-double-right',
       'angle-double-left',
     ],
     'Ações & Edição': [
       'search',
       'plus',
+      'plus-circle',
       'minus',
+      'minus-circle',
       'cross',
+      'cross-circle',
       'check',
+      'check-circle',
       'pencil',
+      'edit',
       'trash',
       'copy',
-      'share',
+      'duplicate',
+      'save',
+      'redo',
+      'undo',
       'download',
       'upload',
       'refresh',
       'filter',
+      'filter-alt',
       'sort-alt',
       'settings-sliders',
       'clip',
-      'duplicate',
-      'edit',
       'eraser',
       'lock',
       'unlock',
       'eye',
       'eye-crossed',
+      'share',
+      'link',
     ],
     'Comunicação & Mídia': [
       'envelope',
@@ -64,19 +76,26 @@ const IconSection: React.FC = () => {
       'megaphone',
       'microphone',
       'picture',
+      'image',
       'play',
       'pause',
       'volume',
       'camera',
       'video-camera',
+      'photo-video',
       'music',
       'headset',
       'paper-plane',
+      'inbox',
+      'tag',
+      'tags',
     ],
     'Interface & Layout': [
       'layout-fluid',
       'grid',
       'list',
+      'list-ul',
+      'list-ol',
       'table',
       'browser',
       'layers',
@@ -91,13 +110,15 @@ const IconSection: React.FC = () => {
     ],
     'Negócios & Analytics': [
       'chart-histogram',
+      'chart-line',
+      'chart-line-down',
       'chart-pie',
       'stats',
       'briefcase',
       'building',
       'coins',
-      'credit-card',
       'dollar',
+      'credit-card',
       'shopping-cart',
       'receipt',
       'rocket',
@@ -108,17 +129,20 @@ const IconSection: React.FC = () => {
       'code-simple',
       'terminal',
       'bug',
-      'file-code',
       'database',
       'cloud',
       'disk',
       'laptop',
       'mobile',
       'network',
+      'sitemap',
       'wifi',
+      'cpu',
+      'microchip-ai',
     ],
     'Usuários & Pessoas': [
       'user',
+      'users',
       'users-alt',
       'user-add',
       'user-time',
@@ -126,13 +150,30 @@ const IconSection: React.FC = () => {
       'address-book',
       'portrait',
       'following',
+      'circle-user',
+    ],
+    'Conhecimento & Educação': [
+      'graduation-cap',
+      'book',
+      'book-stack',
+      'book-alt',
+      'book-open-cover',
+      'library',
+      'award',
+      'medal',
+      'trophy',
+      'brain',
+      'brain-circuit',
     ],
     'Geral & Objetos': [
       'calendar',
       'clock',
+      'sun',
+      'moon',
       'folder',
       'document',
       'shield-check',
+      'shield',
       'magic-wand',
       'star',
       'heart',
@@ -140,10 +181,19 @@ const IconSection: React.FC = () => {
       'crown',
       'key',
       'gift',
+      'route',
       'map-marker',
       'info',
       'exclamation',
+      'exclamation-triangle',
       'interrogation',
+      'circle-question',
+      'zap',
+      'bolt',
+      'bulb',
+      'lightbulb',
+      'pen-nib',
+      'robot',
     ],
   };
 
@@ -198,7 +248,7 @@ const IconSection: React.FC = () => {
         <Card className="border-l-4 border-l-primary bg-card">
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-lg">
-              <Icon name="apps" className="text-primary" /> UIcons (Interface)
+              <Icon name="apps" className="text-primary" /> Iconoir (Interface)
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 font-serif text-sm text-muted-foreground">
@@ -268,14 +318,14 @@ const IconSection: React.FC = () => {
 
       <Separator />
 
-      {/* --- 1. UICONS LIBRARY --- */}
+      {/* --- 1. ICONOIR LIBRARY --- */}
       <section className="space-y-8">
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div className="flex items-center gap-4">
             <h3 className="flex items-center gap-2 font-sans text-2xl font-semibold">
-              <Icon name="cube" /> Biblioteca UI (Flaticon)
+              <Icon name="cube" /> Biblioteca UI (Iconoir)
             </h3>
-            <Badge variant="secondary">fi-rr-*</Badge>
+            <Badge variant="secondary">SVG Based</Badge>
           </div>
 
           {/* Search Input */}
@@ -493,12 +543,12 @@ const IconSection: React.FC = () => {
               <div className="flex items-center gap-4 rounded-lg border border-destructive/20 bg-background p-3">
                 <div className="flex gap-2">
                   <Icon name="home" /> {/* Regular */}
-                  <Icon name="user" type="solid" /> {/* Solid */}
+                  <Icon name="user" /> {/* Iconoir doesn't have "solid" attribute in our component yet */}
                 </div>
                 <div className="text-sm">
                   <span className="block font-bold text-destructive">Mistura de Famílias</span>
                   <span className="text-xs text-muted-foreground">
-                    Não misture ícones Outline com Solid na mesma seção.
+                    Não misture ícones de diferentes bibliotecas na mesma seção.
                   </span>
                 </div>
               </div>

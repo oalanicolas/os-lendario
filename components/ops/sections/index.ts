@@ -15,3 +15,4 @@ export { ContentsSection } from './ContentsSection';
 export { JobsSection } from './JobsSection';
 export { RelationshipsSection } from './RelationshipsSection';
 export { InferenceBridgeSection } from './InferenceBridgeSection';
+export { default as MentalModelsSection } from './MentalModelsSection';

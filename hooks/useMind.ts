@@ -46,12 +46,8 @@ export interface MindProfile {
     level: number; // 1-10
   }>;
 
-  // Obsessions
-  obsessions: Array<{
-    name: string;
-    intensity: number; // 1-10
-    notes: string | null;
-  }>;
+  // Obsession (consolidated to single text field)
+  obsession: string | null;
 
   // Values
   values: Array<{
@@ -94,33 +90,33 @@ const deriveTier = (apexScore: number | null): 1 | 2 | 3 => {
 // Derive status from data completeness
 const deriveStatus = (
   proficiencies: number,
-  obsessions: number,
+  hasObsession: boolean,
   values: number
 ): MindProfile['status'] => {
-  const total = proficiencies + obsessions + values;
-  if (total >= 8) return 'production';
-  if (total >= 3) return 'progress';
+  const total = proficiencies + (hasObsession ? 1 : 0) + values;
+  if (total >= 5) return 'production';
+  if (total >= 2) return 'progress';
   return 'draft';
 };
 
-// Derive communication style from obsessions and values
+// Derive communication style from obsession and values
 const deriveCommunicationStyle = (
-  obsessions: MindProfile['obsessions'],
+  obsession: string | null,
   values: MindProfile['values']
 ): string[] => {
   const styles: string[] = [];
 
-  // Check for common patterns
-  const allNotes = [...obsessions.map((o) => o.notes || ''), ...values.map((v) => v.notes || '')]
+  // Check for common patterns in obsession and value notes
+  const allText = [obsession || '', ...values.map((v) => v.notes || '')]
     .join(' ')
     .toLowerCase();
 
-  if (allNotes.includes('direct') || allNotes.includes('pragmati')) styles.push('Direto');
-  if (allNotes.includes('honest') || allNotes.includes('truth')) styles.push('Honesto');
-  if (allNotes.includes('autoridade') || allNotes.includes('authority')) styles.push('Autoritário');
-  if (allNotes.includes('simple') || allNotes.includes('clear')) styles.push('Claro');
-  if (allNotes.includes('creative') || allNotes.includes('innov')) styles.push('Inovador');
-  if (allNotes.includes('analytic') || allNotes.includes('data')) styles.push('Analítico');
+  if (allText.includes('direct') || allText.includes('pragmati')) styles.push('Direto');
+  if (allText.includes('honest') || allText.includes('truth')) styles.push('Honesto');
+  if (allText.includes('autoridade') || allText.includes('authority')) styles.push('Autoritário');
+  if (allText.includes('simple') || allText.includes('clear')) styles.push('Claro');
+  if (allText.includes('creative') || allText.includes('innov')) styles.push('Inovador');
+  if (allText.includes('analytic') || allText.includes('data')) styles.push('Analítico');
 
   // Default if none found
   if (styles.length === 0) {
@@ -161,6 +157,7 @@ export function useMind(slug: string | null): UseMindResult {
     try {
       // Fetch mind with all related data
       // Filter out soft-deleted minds (deleted_at IS NULL)
+      // Note: obsession is now a direct text field on minds (consolidated from mind_obsessions)
       const { data: mindData, error: mindError } = (await supabase
         .from('minds')
         .select(
@@ -169,15 +166,10 @@ export function useMind(slug: string | null): UseMindResult {
           skills:mind_tags(
             tag:tags(name, tag_type)
           ),
-          obsessions:mind_obsessions(
-            name,
-            intensity_10,
-            notes
-          ),
-          values:mind_values(
-            name,
-            importance_10,
-            notes
+          values:mind_drivers(
+            driver:drivers(name),
+            strength,
+            evidence
           )
         `
         )
@@ -194,12 +186,13 @@ export function useMind(slug: string | null): UseMindResult {
       }
 
       // Get sources count from contents table (via mind_sources project)
+      // Use maybeSingle() to avoid 406 error when no project exists
       const { data: sourcesProject } = await supabase
         .from('content_projects')
         .select('id')
         .eq('persona_mind_id', mindData.id)
         .eq('project_type', 'mind_sources')
-        .single();
+        .maybeSingle();
 
       let sourcesCount = 0;
       if (sourcesProject) {
@@ -219,21 +212,15 @@ export function useMind(slug: string | null): UseMindResult {
           level: 5, // Default level since score was removed
         }));
 
-      // Transform obsessions
-      const obsessions = (mindData.obsessions || [])
-        .map((o: any) => ({
-          name: o.name,
-          intensity: o.intensity_10,
-          notes: o.notes,
-        }))
-        .sort((a: any, b: any) => b.intensity - a.intensity);
+      // Obsession is now a direct text field on minds (consolidated from mind_obsessions)
+      const obsession: string | null = mindData.obsession || null;
 
-      // Transform values
+      // Transform values (from mind_drivers with driver join)
       const values = (mindData.values || [])
         .map((v: any) => ({
-          name: v.name,
-          importance: v.importance_10,
-          notes: v.notes,
+          name: v.driver?.name || 'Unknown Driver',
+          importance: v.strength || 0,
+          notes: v.evidence,
         }))
         .sort((a: any, b: any) => b.importance - a.importance);
 
@@ -251,12 +238,12 @@ export function useMind(slug: string | null): UseMindResult {
         createdAt: mindData.created_at,
         updatedAt: mindData.updated_at,
         proficiencies,
-        obsessions,
+        obsession,
         values,
         sourcesCount: sourcesCount || 0,
         status:
           mindData.mmos_metadata?.overrides?.status ||
-          deriveStatus(proficiencies.length, obsessions.length, values.length),
+          deriveStatus(proficiencies.length, !!obsession, values.length),
         tier: mindData.mmos_metadata?.overrides?.tier
           ? (parseInt(mindData.mmos_metadata.overrides.tier) as 1 | 2 | 3)
           : deriveTier(mindData.apex_score),
@@ -266,7 +253,7 @@ export function useMind(slug: string | null): UseMindResult {
           proficiencies[0]?.skillName ||
           'Synthetic Mind',
         topExpertise: proficiencies.slice(0, 5).map((p: any) => p.skillName),
-        communicationStyle: deriveCommunicationStyle(obsessions, values),
+        communicationStyle: deriveCommunicationStyle(obsession, values),
         psychometrics,
         mmos_metadata: mindData.mmos_metadata,
       };

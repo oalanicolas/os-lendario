@@ -260,7 +260,7 @@ export const InferenceBridgeSection: React.FC = () => {
                                         <div key={i} className="p-2 rounded bg-muted/20">
                                             <div className="flex items-center justify-between mb-1">
                                                 <span className="text-xs font-bold">{cat.name}</span>
-                                                {cat.count && <OpsBadge className="text-[10px]">{cat.count}</OpsBadge>}
+                                                {(cat as any).count && <OpsBadge className="text-[10px]">{(cat as any).count}</OpsBadge>}
                                             </div>
                                             <p className="text-[10px] text-muted-foreground">{cat.desc}</p>
                                         </div>

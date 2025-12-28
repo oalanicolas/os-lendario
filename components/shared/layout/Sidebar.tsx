@@ -13,6 +13,7 @@ import {
     DropdownMenuTrigger
 } from '../../ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
+import { Button } from '../../ui/button';
 
 interface SidebarProps {
     currentSection: Section;
@@ -115,12 +116,11 @@ const Sidebar: React.FC<SidebarProps> = ({
             // Ops Studio Products
             'ops_llm': 'Gerenciador LLM',
             'ops_prd': 'PRD Studio',
-            'ops_db': 'Database Explorer',
-            'ops_schema': 'Schema',
             'ops_data': 'Data Lake',
             'ops_security': 'Segurança',
             'ops_integrations': 'Integrações',
             'ops_vault': 'Senhas e Acessos',
+            'ops_db': 'Database Explorer',
 
             // Design System Subgroups (under Brand)
             'ds_overview': 'Visão Geral',
@@ -219,12 +219,11 @@ const Sidebar: React.FC<SidebarProps> = ({
             'people_performance': 'Performance Hub',
             'ops_llm': 'LLM Manager',
             'ops_prd': 'PRD Studio',
-            'ops_db': 'Database Explorer',
-            'ops_schema': 'Schema',
             'ops_data': 'Data Lake',
             'ops_security': 'Security Hub',
             'ops_integrations': 'Integration Hub',
             'ops_vault': 'Access & Passwords',
+            'ops_db': 'Database Explorer',
 
             // Design System
             'ds_overview': 'Overview',
@@ -321,12 +320,11 @@ const Sidebar: React.FC<SidebarProps> = ({
             'people_performance': 'Performance Hub',
             'ops_llm': 'LLM Manager',
             'ops_prd': 'PRD Studio',
-            'ops_db': 'Database Explorer',
-            'ops_schema': 'Schema',
             'ops_data': 'Data Lake',
             'ops_security': 'Security Hub',
             'ops_integrations': 'Integration Hub',
             'ops_vault': 'Accesos y Contraseñas',
+            'ops_db': 'Database Explorer',
 
             // Design System
             'ds_overview': 'Visión General',
@@ -498,14 +496,17 @@ const Sidebar: React.FC<SidebarProps> = ({
             children: [
                 { key: 'ops_llm', icon: 'microchip-ai', section: Section.EXTERNAL_PROMPT_OPS, status: 'active' },
                 { key: 'ops_prd', icon: 'clipboard-list', section: Section.STUDIO_PRD_DASHBOARD, status: 'active' },
-                { key: 'ops_db', icon: 'database', section: Section.STUDIO_OPS_DB, status: 'active' },
-                { key: 'ops_schema', icon: 'sitemap', section: Section.STUDIO_OPS_SCHEMA, status: 'active' },
                 { key: 'ops_data', icon: 'chart-network', section: Section.STUDIO_OPS, status: 'soon' },
                 { key: 'ops_security', icon: 'shield', section: Section.STUDIO_OPS, status: 'soon' },
                 { key: 'ops_integrations', icon: 'link', section: Section.STUDIO_OPS, status: 'soon' },
                 { key: 'ops_vault', icon: 'lock', section: Section.EXTERNAL_VAULT, status: 'active' },
             ]
         },
+
+        // ═══════════════════════════════════════════════════════════════
+        // Main Menu: Database
+        // ═══════════════════════════════════════════════════════════════
+        { key: 'ops_db', icon: 'database', section: Section.STUDIO_OPS_DB, status: 'active' },
     ];
 
     // Logic to auto-expand parent menus based on current section
@@ -616,10 +617,11 @@ const Sidebar: React.FC<SidebarProps> = ({
         if (hasChildren) {
             return (
                 <li key={item.key} className="mb-1">
-                    <button
+                    <Button
+                        variant="ghost"
                         onClick={() => toggleSubmenu(item.key)}
                         className={cn(
-                            "w-full flex items-center py-2.5 rounded-lg text-sm transition-all duration-200 group relative",
+                            "w-full h-auto flex items-center py-2.5 rounded-lg text-sm transition-all duration-200 group relative font-normal hover:bg-transparent",
                             alignmentClass,
                             isRootItem ? "font-semibold text-foreground hover:bg-muted/50" : "text-sm text-muted-foreground hover:text-foreground",
                             isParentActive && !isExpanded && !isRootItem ? "text-primary font-medium" : "",
@@ -654,7 +656,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                                 )}
                             />
                         )}
-                    </button>
+                    </Button>
 
                     <div
                         className={cn(
@@ -678,11 +680,12 @@ const Sidebar: React.FC<SidebarProps> = ({
 
         return (
             <li key={item.key} className="mb-1">
-                <button
+                <Button
+                    variant="ghost"
                     onClick={() => item.section && !isSoon && handleSectionClick(item.section)}
                     disabled={isSoon}
                     className={cn(
-                        "w-full text-left py-2 rounded-lg text-sm transition-all duration-200 flex items-center",
+                        "w-full h-auto text-left py-2 rounded-lg text-sm transition-all duration-200 flex items-center font-normal hover:bg-transparent",
                         isCollapsed ? "justify-center px-2" : `gap-3 ${paddingLeftClass}`,
                         isRootItem && isActive
                             ? "bg-primary text-primary-foreground shadow-sm font-bold"
@@ -723,7 +726,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                         <span className="flex-1">{label}</span>
                     )}
                     {renderBadge(item, isRootItem)}
-                </button>
+                </Button>
             </li>
         );
     };
@@ -739,7 +742,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
             <aside
                 className={cn(
-                    "fixed left-0 top-0 h-full border-r border-border bg-card z-50 transition-all duration-300 flex flex-col shadow-2xl md:shadow-none overflow-visible",
+                    "fixed left-0 top-0 h-full md:h-screen border-r border-border bg-card z-50 transition-all duration-300 flex flex-col shadow-2xl md:shadow-none overflow-visible md:sticky md:top-0 shrink-0",
                     isCollapsed ? "md:w-20" : "md:w-64",
                     "w-64",
                     isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
@@ -757,14 +760,14 @@ const Sidebar: React.FC<SidebarProps> = ({
                             Lendár<span className="text-primary">[IA]</span>OS
                         </div>
                     </div>
-                    <button onClick={closeMobileMenu} className="md:hidden text-muted-foreground hover:text-foreground absolute right-4">
+                    <Button variant="ghost" size="icon" onClick={closeMobileMenu} className="md:hidden text-muted-foreground hover:text-foreground absolute right-4">
                         <Icon name="cross" size="size-4" />
-                    </button>
+                    </Button>
 
                     {!isCollapsed && (
-                        <button onClick={toggleCollapse} className="hidden md:block text-muted-foreground hover:text-foreground absolute right-4">
+                        <Button variant="ghost" size="icon" onClick={toggleCollapse} className="hidden md:flex text-muted-foreground hover:text-foreground absolute right-4">
                             <Icon name="angle-small-left" size="size-5" />
-                        </button>
+                        </Button>
                     )}
                 </div>
 
@@ -779,17 +782,17 @@ const Sidebar: React.FC<SidebarProps> = ({
                 <div className="flex-none p-4 border-t border-border bg-card">
                     {isCollapsed ? (
                         <div className="flex flex-col items-center gap-4">
-                            <button onClick={toggleCollapse} className="hidden md:block p-2 rounded-md hover:bg-muted text-muted-foreground">
+                            <Button variant="ghost" size="icon" onClick={toggleCollapse} className="hidden md:flex rounded-md hover:bg-muted text-muted-foreground bg-transparent h-8 w-8">
                                 <Icon name="angle-double-right" size="size-4" />
-                            </button>
+                            </Button>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <button className="relative group">
+                                    <Button variant="ghost" className="relative group p-0 h-auto rounded-full bg-transparent hover:bg-transparent">
                                         <Avatar className="h-10 w-10 border-2 border-border group-hover:border-primary transition-colors">
                                             <AvatarImage src={alanAvatar} />
                                             <AvatarFallback>AN</AvatarFallback>
                                         </Avatar>
-                                    </button>
+                                    </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent side="right" align="end" className="w-56 ml-2">
                                     <DropdownMenuLabel className="font-normal">
@@ -820,7 +823,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                         <div className="flex items-center gap-2 w-full">
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <button className="flex items-center gap-3 w-full p-2 rounded-xl hover:bg-muted/50 transition-colors group text-left outline-none">
+                                    <Button variant="ghost" className="flex items-center gap-3 w-full p-2 h-auto rounded-xl hover:bg-muted/50 transition-colors group text-left justify-start font-normal bg-transparent hover:text-foreground">
                                         <Avatar className="h-9 w-9 border border-border group-hover:border-primary/50 transition-colors">
                                             <AvatarImage src={alanAvatar} />
                                             <AvatarFallback>AN</AvatarFallback>
@@ -830,7 +833,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                                             <p className="text-xs text-muted-foreground truncate">Admin Workspace</p>
                                         </div>
                                         <Icon name="angle-small-up" className="text-muted-foreground opacity-50 group-hover:opacity-100 transition-opacity" size="size-4" />
-                                    </button>
+                                    </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="start" className="w-56 mb-2" side="top">
                                     <DropdownMenuLabel className="font-normal">
@@ -857,13 +860,15 @@ const Sidebar: React.FC<SidebarProps> = ({
                             </DropdownMenu>
 
                             {/* Quick Theme Toggle */}
-                            <button
+                            <Button
+                                variant="ghost"
+                                size="icon"
                                 onClick={toggleTheme}
-                                className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-primary transition-colors shrink-0"
+                                className="rounded-lg hover:bg-muted text-muted-foreground hover:text-primary transition-colors shrink-0 h-8 w-8"
                                 title={isDark ? 'Mudar para Claro' : 'Mudar para Escuro'}
                             >
                                 <Icon name={isDark ? "sun" : "moon"} size="size-4" />
-                            </button>
+                            </Button>
                         </div>
                     )}
                 </div>

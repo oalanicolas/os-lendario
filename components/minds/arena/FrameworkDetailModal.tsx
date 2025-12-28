@@ -1,6 +1,6 @@
 import React from 'react';
 import { DebateFramework } from '../../../services/frameworkService';
-import { X, Users, Clock, Target, Award, PlayCircle } from 'lucide-react';
+import { Icon } from '../../ui/icon';
 
 interface FrameworkDetailModalProps {
   framework: DebateFramework | null;
@@ -29,7 +29,7 @@ export const FrameworkDetailModal: React.FC<FrameworkDetailModalProps> = ({
             <p className="mt-1 text-sm text-muted-foreground">{framework.description}</p>
           </div>
           <button onClick={onClose} className="rounded-lg p-2 transition-colors hover:bg-accent">
-            <X className="h-5 w-5" />
+            <Icon name="cross" className="h-5 w-5" />
           </button>
         </div>
 
@@ -39,7 +39,7 @@ export const FrameworkDetailModal: React.FC<FrameworkDetailModalProps> = ({
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             <div className="rounded-lg border border-border bg-accent/50 p-4">
               <div className="mb-2 flex items-center gap-2">
-                <Users className="h-4 w-4 text-primary" />
+                <Icon name="users-alt" className="h-4 w-4 text-primary" />
                 <span className="text-xs font-medium text-muted-foreground">Participantes</span>
               </div>
               <p className="text-lg font-bold text-foreground">
@@ -51,7 +51,7 @@ export const FrameworkDetailModal: React.FC<FrameworkDetailModalProps> = ({
 
             <div className="rounded-lg border border-border bg-accent/50 p-4">
               <div className="mb-2 flex items-center gap-2">
-                <Clock className="h-4 w-4 text-primary" />
+                <Icon name="clock" className="h-4 w-4 text-primary" />
                 <span className="text-xs font-medium text-muted-foreground">Rounds</span>
               </div>
               <p className="text-lg font-bold text-foreground">{schema.rounds || 'N/A'}</p>
@@ -59,7 +59,7 @@ export const FrameworkDetailModal: React.FC<FrameworkDetailModalProps> = ({
 
             <div className="rounded-lg border border-border bg-accent/50 p-4">
               <div className="mb-2 flex items-center gap-2">
-                <Target className="h-4 w-4 text-primary" />
+                <Icon name="target" className="h-4 w-4 text-primary" />
                 <span className="text-xs font-medium text-muted-foreground">Complexidade</span>
               </div>
               <p className="text-lg font-bold text-foreground">{schema.complexity || 'Média'}</p>
@@ -67,7 +67,7 @@ export const FrameworkDetailModal: React.FC<FrameworkDetailModalProps> = ({
 
             <div className="rounded-lg border border-border bg-accent/50 p-4">
               <div className="mb-2 flex items-center gap-2">
-                <Award className="h-4 w-4 text-primary" />
+                <Icon name="award" className="h-4 w-4 text-primary" />
                 <span className="text-xs font-medium text-muted-foreground">Dimensões</span>
               </div>
               <p className="text-lg font-bold text-foreground">
@@ -80,7 +80,7 @@ export const FrameworkDetailModal: React.FC<FrameworkDetailModalProps> = ({
           {schema.roles && schema.roles.length > 0 && (
             <div>
               <h3 className="mb-3 flex items-center gap-2 text-lg font-semibold text-foreground">
-                <Users className="h-5 w-5 text-primary" />
+                <Icon name="users-alt" className="h-5 w-5 text-primary" />
                 Papéis no Debate
               </h3>
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -98,7 +98,7 @@ export const FrameworkDetailModal: React.FC<FrameworkDetailModalProps> = ({
           {schema.structure && schema.structure.length > 0 && (
             <div>
               <h3 className="mb-3 flex items-center gap-2 text-lg font-semibold text-foreground">
-                <PlayCircle className="h-5 w-5 text-primary" />
+                <Icon name="play-circle" className="h-5 w-5 text-primary" />
                 Estrutura do Debate
               </h3>
               <div className="space-y-2">
@@ -137,7 +137,7 @@ export const FrameworkDetailModal: React.FC<FrameworkDetailModalProps> = ({
           {schema.scoring_dimensions && schema.scoring_dimensions.length > 0 && (
             <div>
               <h3 className="mb-3 flex items-center gap-2 text-lg font-semibold text-foreground">
-                <Award className="h-5 w-5 text-primary" />
+                <Icon name="award" className="h-5 w-5 text-primary" />
                 Critérios de Avaliação
               </h3>
               <div className="space-y-2">

@@ -135,6 +135,7 @@ export interface Database {
           apex_score: number | null;
           created_by: string | null;
           mmos_metadata: Json | null;
+          deleted_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -148,6 +149,7 @@ export interface Database {
           apex_score?: number | null;
           created_by?: string | null;
           mmos_metadata?: Json | null;
+          deleted_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -161,6 +163,7 @@ export interface Database {
           apex_score?: number | null;
           created_by?: string | null;
           mmos_metadata?: Json | null;
+          deleted_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -256,12 +259,130 @@ export interface Database {
           deleted_at?: string | null;
         };
       };
+      fragments: {
+        Row: {
+          id: string;
+          mind_id: string | null;
+          content_id: string | null;
+          location: string;
+          type: string;
+          content: string;
+          context: string | null;
+          insight: string | null;
+          relevance: number;
+          confidence: number | null;
+          metadata: Json | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          mind_id?: string | null;
+          content_id?: string | null;
+          location: string;
+          type: string;
+          content: string;
+          context?: string | null;
+          insight?: string | null;
+          relevance?: number;
+          confidence?: number | null;
+          metadata?: Json | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          mind_id?: string | null;
+          content_id?: string | null;
+          location?: string;
+          type?: string;
+          content?: string;
+          context?: string | null;
+          insight?: string | null;
+          relevance?: number;
+          confidence?: number | null;
+          metadata?: Json | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      miu_driver_evidence: {
+        Row: {
+          id: string;
+          miu_id: string;
+          driver_id: string;
+          strength: number;
+          evidence: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          miu_id: string;
+          driver_id: string;
+          strength: number;
+          evidence?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          miu_id?: string;
+          driver_id?: string;
+          strength?: number;
+          evidence?: string | null;
+          created_at?: string;
+        };
+      };
+      inference_executions: {
+        Row: {
+          id: string;
+          status: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          status: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          status?: string;
+          created_at?: string;
+        };
+      };
+      schema_inspections: {
+        Row: {
+          id: string;
+          status: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          status: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          status?: string;
+          created_at?: string;
+        };
+      };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      soft_delete_fragment: {
+        Args: {
+          fragment_id: string;
+        };
+        Returns: void;
+      };
+      soft_delete_fragments_by_content: {
+        Args: {
+          p_content_id: string;
+        };
+        Returns: void;
+      };
     };
     Enums: {
       [_ in never]: never;

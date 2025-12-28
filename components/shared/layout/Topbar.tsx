@@ -2,6 +2,7 @@ import React from 'react';
 import { Page } from '../../../types';
 import { Icon } from '../../ui/icon';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
+import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
 import { cn } from '../../../lib/utils';
 
@@ -40,19 +41,20 @@ const Topbar: React.FC<TopbarProps> = ({ currentPage, setPage }) => {
           {navItems.map((item) => {
             const isActive = currentPage === item.page;
             return (
-              <button
+              <Button
                 key={item.page}
+                variant="ghost"
                 onClick={() => setPage(item.page)}
                 className={cn(
-                  'flex items-center gap-2 rounded-sm border border-transparent px-4 py-2 text-sm font-medium transition-all duration-200',
+                  'flex items-center gap-2 rounded-sm border border-transparent px-4 py-2 text-sm font-medium transition-all duration-200 h-auto',
                   isActive
-                    ? 'border-brand-red/20 bg-brand-red/10 text-brand-red shadow-[0_0_10px_rgba(255,59,48,0.1)]'
+                    ? 'border-brand-red/20 bg-brand-red/10 text-brand-red shadow-[0_0_10px_rgba(255,59,48,0.1)] hover:bg-brand-red/20 hover:text-brand-red'
                     : 'text-muted-foreground hover:bg-white/5 hover:text-foreground'
                 )}
               >
                 <Icon name={item.icon} size="size-4" />
                 <span className="font-display tracking-wide">{item.page}</span>
-              </button>
+              </Button>
             );
           })}
         </nav>
@@ -61,13 +63,13 @@ const Topbar: React.FC<TopbarProps> = ({ currentPage, setPage }) => {
       {/* Right: Actions */}
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
-          <button className="relative p-2 text-muted-foreground transition-colors hover:text-brand-red">
+          <Button variant="ghost" size="icon" className="relative p-2 text-muted-foreground transition-colors hover:text-brand-red h-auto w-auto">
             <Icon name="bell" size="size-5" />
             <span className="absolute right-1.5 top-1.5 h-2 w-2 animate-pulse rounded-full bg-brand-red"></span>
-          </button>
-          <button className="p-2 text-muted-foreground transition-colors hover:text-brand-red">
+          </Button>
+          <Button variant="ghost" size="icon" className="p-2 text-muted-foreground transition-colors hover:text-brand-red h-auto w-auto">
             <Icon name="search" size="size-5" />
-          </button>
+          </Button>
         </div>
       </div>
     </header>

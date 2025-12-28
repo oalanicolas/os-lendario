@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Icon } from '../ui/icon';
+import { Button } from '../ui/button';
 import { DropdownNav, type NavCategory } from '../shared/module';
 import { DS_PRIMARY, DS_ACCENT, DS_THEME } from './design-system-tokens';
 import { cn } from '../../lib/utils';
@@ -157,9 +158,11 @@ const DesignSystemTopbar: React.FC = () => {
 
         {/* Right: Actions */}
         <div className="flex items-center gap-4">
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => navigate('/design/concept')}
-            className="relative p-2 text-muted-foreground transition-colors hover:text-foreground"
+            className="relative text-muted-foreground hover:text-foreground"
             style={{
               color: 'currentColor',
             }}
@@ -169,7 +172,7 @@ const DesignSystemTopbar: React.FC = () => {
               className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full"
               style={{ backgroundColor: DS_PRIMARY }}
             ></span>
-          </button>
+          </Button>
         </div>
       </div>
     </div>

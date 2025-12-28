@@ -12,7 +12,7 @@ export default defineConfig({
       output: {
         // Manual chunk splitting strategy for better caching:
         // - vendor: Heavy dependencies (react, react-dom, react-router, utilities)
-        // - ui: UI libraries (lucide-react, recharts, styling)
+        // - ui: UI libraries (iconoir-react, recharts, styling)
         // - react-ecosystem: React-specific utilities (@tiptap, @dnd-kit, @uiw)
         // - main: App-specific code and entry point
         // This reduces cache invalidation when application code changes.
@@ -31,7 +31,7 @@ export default defineConfig({
             'file-saver',
           ],
           'ui': [
-            'lucide-react',
+            'iconoir-react',
             'recharts',
             'class-variance-authority',
             'clsx',

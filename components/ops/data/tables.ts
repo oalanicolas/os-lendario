@@ -326,6 +326,43 @@ export const PROPOSED_TABLES: ProposedTable[] = [
   }
 ];
 
+export const MENTAL_MODELS_TABLE: TableRecord[] = [
+  { table: 'tools (mental_models type)', records: '200+', status: 'ok', desc: 'Modelos mentais via tools com tool_type="mental_model"' },
+  { table: 'tool_driver_affinities', records: '83+', status: 'partial', desc: 'Ponte: Modelos Mentais ↔ Drivers' },
+  { table: 'tool_relations', records: '142', status: 'ok', desc: 'Genealogia: derived_from, influences, complements, etc.' },
+  { table: 'mind_tools', records: '0', status: 'empty', desc: 'Modelos que cada mind usa/pratica' }
+];
+
+// =============================================================================
+// DIAGRAMS (ER DIAGRAMS FOR MERMAID)
+// =============================================================================
+
+export const MENTAL_MODELS_DIAGRAM = `
+graph TB
+    T["🛠️ tools (type=mental_model)"]
+    TDA["⚡ tool_driver_affinities"]
+    TR["🔗 tool_relations"]
+    MT["🧠 mind_tools"]
+    D["drivers"]
+    M["minds"]
+
+    T -->|has many| TDA
+    T -->|has many| TR
+    T -->|has many| MT
+    TDA -->|references| T
+    TDA -->|references| D
+    TR -->|connects| T
+    MT -->|references| T
+    MT -->|references| M
+
+    style T fill:#e1f5ff,stroke:#0288d1
+    style TDA fill:#fff3e0,stroke:#f57f17
+    style TR fill:#f3e5f5,stroke:#7b1fa2
+    style MT fill:#e8f5e9,stroke:#388e3c
+    style D fill:#fce4ec,stroke:#c2185b
+    style M fill:#f1f8e9,stroke:#558b2f
+`;
+
 // =============================================================================
 // NOTE: Real-time data status is now fetched via useOpsStats hook
 // See: app/hooks/useOpsStats.ts
