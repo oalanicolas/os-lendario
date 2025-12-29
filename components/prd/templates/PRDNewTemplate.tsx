@@ -77,19 +77,11 @@ const TypeOption: React.FC<TypeOptionProps> = ({ type, selected, onSelect }) => 
     >
       <CardContent className="space-y-4 p-8">
         <div className="flex items-center justify-between">
-          <div
-            className="flex h-12 w-12 items-center justify-center rounded-full"
-            style={{ backgroundColor: PRD_ACCENT, color: PRD_PRIMARY }}
-          >
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-studio-accent text-studio-primary">
             <Icon name={config.icon} size="size-6" />
           </div>
           {selected && (
-            <Icon
-              name="check-circle"
-              className="size-6"
-              style={{ color: PRD_PRIMARY }}
-              type="solid"
-            />
+            <Icon name="check-circle" className="size-6 text-studio-primary" type="solid" />
           )}
         </div>
         <div>
@@ -226,7 +218,9 @@ export const PRDNewTemplate: React.FC<PRDNewTemplateProps> = ({ setSection }) =>
             <Button
               onClick={handleCreate}
               disabled={!isValid || isCreating}
-              style={{ backgroundColor: isValid && !isCreating ? PRD_PRIMARY : undefined }}
+              className={
+                isValid && !isCreating ? 'bg-studio-primary hover:bg-studio-primary/90' : ''
+              }
             >
               {isCreating ? (
                 <>

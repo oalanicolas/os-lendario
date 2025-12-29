@@ -280,6 +280,8 @@ export function usePRDProject(slug: string): UsePRDProjectResult {
   );
 
   // Advance to next phase
+  // Note: Database status uses 'planning' | 'in_progress' | 'completed'
+  // PRD phase is stored in project_metadata.prdPhase
   const advancePhase = useCallback(async (): Promise<boolean> => {
     if (!project) return false;
 
@@ -292,12 +294,23 @@ export function usePRDProject(slug: string): UsePRDProjectResult {
 
     const nextStatus = STATUS_ORDER[currentIndex + 1];
 
+    // Map PRD status to database status
+    const getDbStatus = (prdStatus: PRDStatus): string => {
+      if (prdStatus === 'exported') return 'completed';
+      if (prdStatus === 'upload') return 'planning';
+      return 'in_progress'; // brief, prd, epics, stories
+    };
+
     if (!isSupabaseConfigured()) {
       setProject((prev) =>
         prev
           ? {
               ...prev,
               status: nextStatus,
+              project_metadata: {
+                ...prev.project_metadata,
+                prdPhase: nextStatus,
+              },
               updated_at: new Date().toISOString(),
             }
           : null
@@ -306,8 +319,15 @@ export function usePRDProject(slug: string): UsePRDProjectResult {
     }
 
     try {
-      const statusUpdateData = {
-        status: nextStatus,
+      const dbStatus = getDbStatus(nextStatus);
+      const newMetadata = {
+        ...project.project_metadata,
+        prdPhase: nextStatus,
+      };
+
+      const updateData = {
+        status: dbStatus,
+        project_metadata: newMetadata,
         updated_at: new Date().toISOString(),
       };
 
@@ -315,7 +335,7 @@ export function usePRDProject(slug: string): UsePRDProjectResult {
       const { error: updateError } = await (
         supabase.from('content_projects') as ReturnType<typeof supabase.from>
       )
-        .update(statusUpdateData)
+        .update(updateData)
         .eq('id', project.id);
 
       if (updateError) throw new Error(updateError.message);

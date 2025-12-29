@@ -159,6 +159,7 @@ export interface PRDMetrics {
 
 export interface PRDProjectMetadata {
   prdType: PRDType;
+  prdPhase?: PRDStatus; // Current phase in PRD pipeline (upload, brief, prd, epics, stories, exported)
   upload?: UploadData;
   brief?: BriefData;
   prdDocument?: PRDDocumentData;
@@ -273,12 +274,49 @@ export interface CreateStoryInput {
 // TRANSFORM FUNCTIONS
 // ============================================
 
+/**
+ * Transform database ContentProject to PRDProject with correct status mapping.
+ *
+ * Database uses: 'planning' | 'in_progress' | 'completed'
+ * PRD uses: 'upload' | 'brief' | 'prd' | 'epics' | 'stories' | 'exported'
+ *
+ * The actual PRD phase is stored in project_metadata.prdPhase
+ */
 export function transformToProject(raw: ContentProject): PRDProject {
+  const metadata = (raw.project_metadata as unknown as PRDProjectMetadata) || {
+    prdType: 'project' as PRDType,
+  };
+
+  // Get PRD phase from metadata, or derive from database status
+  let prdStatus: PRDStatus;
+
+  if (metadata.prdPhase) {
+    // Use explicit prdPhase if set
+    prdStatus = metadata.prdPhase;
+  } else if (
+    metadata.upload?.completedAt &&
+    metadata.brief?.completedAt &&
+    metadata.prdDocument?.completedAt
+  ) {
+    prdStatus = 'epics';
+  } else if (metadata.upload?.completedAt && metadata.brief?.completedAt) {
+    prdStatus = 'prd';
+  } else if (metadata.upload?.completedAt) {
+    prdStatus = 'brief';
+  } else {
+    // Default to upload for new projects
+    prdStatus = 'upload';
+  }
+
+  // Map 'completed' database status to 'exported'
+  if (raw.status === 'completed') {
+    prdStatus = 'exported';
+  }
+
   return {
     ...raw,
-    project_metadata: (raw.project_metadata as unknown as PRDProjectMetadata) || {
-      prdType: 'project',
-    },
+    status: prdStatus, // Override with PRD status
+    project_metadata: metadata,
   };
 }
 

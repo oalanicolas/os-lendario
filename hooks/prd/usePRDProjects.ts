@@ -208,13 +208,14 @@ export function usePRDProjects(): UsePRDProjectsResult {
           name: input.name,
           description: null,
           project_type: 'prd',
-          status: 'upload',
+          status: 'upload', // PRD status (UI display)
           target_audience_id: null,
           creator_mind_id: null,
           persona_mind_id: null,
           default_frameworks: null,
           project_metadata: {
             prdType: input.prdType,
+            prdPhase: 'upload', // Explicit PRD phase
           },
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
@@ -233,7 +234,7 @@ export function usePRDProjects(): UsePRDProjectsResult {
           slug,
           name: input.name,
           project_type: 'prd',
-          status: 'draft', // Use 'draft' for DB constraint; PRD phase tracked in metadata
+          status: 'planning', // Valid values: planning, in_progress, completed
           project_metadata: { ...metadata, prdPhase: 'upload' },
         };
 

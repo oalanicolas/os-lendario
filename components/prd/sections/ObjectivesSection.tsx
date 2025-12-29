@@ -385,7 +385,7 @@ export const ObjectivesSection: React.FC<ObjectivesSectionProps> = ({
       <div className="flex items-center justify-between">
         <div>
           <h3 className="flex items-center gap-2 text-lg font-bold">
-            <Icon name="bullseye" style={{ color: PRD_PRIMARY }} />
+            <Icon name="bullseye" className="text-studio-primary" />
             Objetivos do Projeto
           </h3>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -403,17 +403,14 @@ export const ObjectivesSection: React.FC<ObjectivesSectionProps> = ({
       {/* Initial State */}
       {!hasContent && !isGenerating && (
         <Card className="p-8 text-center">
-          <div
-            className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl"
-            style={{ backgroundColor: `${PRD_PRIMARY}20` }}
-          >
-            <Icon name="bullseye" size="size-6" style={{ color: PRD_PRIMARY }} />
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-studio-primary/20">
+            <Icon name="bullseye" size="size-6" className="text-studio-primary" />
           </div>
           <h4 className="mb-2 font-bold">Gerar Objetivos</h4>
           <p className="mb-4 text-sm text-muted-foreground">
             A IA vai definir objetivos baseados no brief
           </p>
-          <Button onClick={handleGenerate} style={{ backgroundColor: PRD_PRIMARY }}>
+          <Button onClick={handleGenerate} className="bg-studio-primary hover:bg-studio-primary/90">
             <Icon name="sparkles" className="mr-2 size-4" />
             Gerar Objetivos
           </Button>
@@ -423,11 +420,7 @@ export const ObjectivesSection: React.FC<ObjectivesSectionProps> = ({
       {/* Loading */}
       {isGenerating && !hasContent && (
         <Card className="p-8 text-center">
-          <Icon
-            name="spinner"
-            className="mx-auto mb-3 size-8 animate-spin"
-            style={{ color: PRD_PRIMARY }}
-          />
+          <Icon name="spinner" className="mx-auto mb-3 size-8 animate-spin text-studio-primary" />
           <p className="text-sm text-muted-foreground">Gerando objetivos...</p>
         </Card>
       )}

@@ -208,7 +208,7 @@ export const ResearchView: React.FC<ResearchViewProps> = ({ project, onUpdate, o
       <div className="flex items-center justify-between">
         <div>
           <h2 className="flex items-center gap-2 text-xl font-bold">
-            <Icon name="search" style={{ color: PRD_PRIMARY }} />
+            <Icon name="search" className="text-studio-primary" />
             Pesquisa de Contexto
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -229,18 +229,15 @@ export const ResearchView: React.FC<ResearchViewProps> = ({ project, onUpdate, o
       {/* Initial State */}
       {topics.length === 0 && !isGenerating && (
         <Card className="p-12 text-center">
-          <div
-            className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl"
-            style={{ backgroundColor: `${PRD_PRIMARY}20` }}
-          >
-            <Icon name="search" size="size-8" style={{ color: PRD_PRIMARY }} />
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-studio-primary/20">
+            <Icon name="search" size="size-8" className="text-studio-primary" />
           </div>
           <h3 className="mb-2 text-lg font-bold">Pesquisa de Mercado</h3>
           <p className="mx-auto mb-6 max-w-md text-muted-foreground">
             A IA vai buscar informações relevantes sobre seu domínio para contextualizar melhor seu
             projeto
           </p>
-          <Button onClick={handleGenerate} style={{ backgroundColor: PRD_PRIMARY }}>
+          <Button onClick={handleGenerate} className="bg-studio-primary hover:bg-studio-primary/90">
             <Icon name="sparkles" className="mr-2 size-4" />
             Gerar Pesquisa
           </Button>
@@ -250,18 +247,14 @@ export const ResearchView: React.FC<ResearchViewProps> = ({ project, onUpdate, o
       {/* Loading State */}
       {isGenerating && (
         <Card className="p-12 text-center">
-          <Icon
-            name="spinner"
-            className="mx-auto mb-4 size-12 animate-spin"
-            style={{ color: PRD_PRIMARY }}
-          />
+          <Icon name="spinner" className="mx-auto mb-4 size-12 animate-spin text-studio-primary" />
           <h3 className="mb-2 text-lg font-bold">Pesquisando...</h3>
           <p className="text-muted-foreground">Buscando informações relevantes para seu projeto</p>
           {progress > 0 && (
             <div className="mx-auto mt-4 h-1.5 w-48 overflow-hidden rounded-full bg-muted">
               <div
-                className="h-full rounded-full transition-all duration-300"
-                style={{ width: `${progress}%`, backgroundColor: PRD_PRIMARY }}
+                className="h-full rounded-full bg-studio-primary transition-all duration-300"
+                style={{ width: `${progress}%` }}
               />
             </div>
           )}
@@ -329,7 +322,7 @@ export const ResearchView: React.FC<ResearchViewProps> = ({ project, onUpdate, o
           <Button
             onClick={onNext}
             disabled={!canAdvance}
-            style={{ backgroundColor: canAdvance ? PRD_PRIMARY : undefined }}
+            className={canAdvance ? 'bg-studio-primary hover:bg-studio-primary/90' : ''}
           >
             Continuar
             <Icon name="arrow-right" className="ml-2 size-4" />

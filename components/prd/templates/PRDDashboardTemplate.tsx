@@ -111,11 +111,8 @@ const LoadingSkeleton: React.FC = () => (
 // Empty State
 const EmptyState: React.FC<{ onCreateClick: () => void }> = ({ onCreateClick }) => (
   <div className="flex min-h-[50vh] animate-fade-in flex-col items-center justify-center space-y-6 text-center">
-    <div
-      className="flex h-24 w-24 items-center justify-center rounded-2xl"
-      style={{ backgroundColor: `${PRD_PRIMARY}20` }}
-    >
-      <Icon name="clipboard-list" size="size-12" style={{ color: PRD_PRIMARY }} />
+    <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-studio-primary/20">
+      <Icon name="clipboard-list" size="size-12" className="text-studio-primary" />
     </div>
     <div className="space-y-2">
       <h2 className="text-2xl font-bold text-foreground">Nenhum projeto PRD ainda</h2>
@@ -124,7 +121,10 @@ const EmptyState: React.FC<{ onCreateClick: () => void }> = ({ onCreateClick }) 
         etapa.
       </p>
     </div>
-    <Button onClick={onCreateClick} className="shadow-lg" style={{ backgroundColor: PRD_PRIMARY }}>
+    <Button
+      onClick={onCreateClick}
+      className="bg-studio-primary shadow-lg hover:bg-studio-primary/90"
+    >
       <Icon name="plus" className="mr-2 size-4" />
       Criar Primeiro Projeto
     </Button>
@@ -210,18 +210,9 @@ const PipelineVisual: React.FC<{ projectsByStatus: Record<PRDStatus, number> }> 
                 className={cn(
                   'flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all duration-300',
                   hasProjects
-                    ? 'scale-110 text-white shadow-lg'
+                    ? 'scale-110 border-studio-primary bg-studio-primary text-white shadow-lg shadow-studio-primary/40'
                     : 'border-border bg-card text-muted-foreground'
                 )}
-                style={
-                  hasProjects
-                    ? {
-                        backgroundColor: PRD_PRIMARY,
-                        borderColor: PRD_PRIMARY,
-                        boxShadow: `0 0 20px ${PRD_PRIMARY}40`,
-                      }
-                    : undefined
-                }
               >
                 <Icon name={stage.icon} size="size-4" />
               </div>
@@ -229,9 +220,8 @@ const PipelineVisual: React.FC<{ projectsByStatus: Record<PRDStatus, number> }> 
                 <p
                   className={cn(
                     'mb-0.5 text-xs font-bold uppercase tracking-wider',
-                    hasProjects ? '' : 'text-muted-foreground'
+                    hasProjects ? 'text-studio-primary' : 'text-muted-foreground'
                   )}
-                  style={hasProjects ? { color: PRD_PRIMARY } : undefined}
                 >
                   {stage.label}
                 </p>

@@ -191,7 +191,7 @@ export const BlindSpotsView: React.FC<BlindSpotsViewProps> = ({ project, onUpdat
       <div className="flex items-center justify-between">
         <div>
           <h2 className="flex items-center gap-2 text-xl font-bold">
-            <Icon name="lightbulb" style={{ color: PRD_PRIMARY }} />
+            <Icon name="lightbulb" className="text-studio-primary" />
             Pontos Cegos (QA)
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -209,17 +209,14 @@ export const BlindSpotsView: React.FC<BlindSpotsViewProps> = ({ project, onUpdat
       {/* Initial State */}
       {blindSpots.length === 0 && !isGenerating && (
         <Card className="p-12 text-center">
-          <div
-            className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl"
-            style={{ backgroundColor: `${PRD_PRIMARY}20` }}
-          >
-            <Icon name="lightbulb" size="size-8" style={{ color: PRD_PRIMARY }} />
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-studio-primary/20">
+            <Icon name="lightbulb" size="size-8" className="text-studio-primary" />
           </div>
           <h3 className="mb-2 text-lg font-bold">Vamos identificar pontos cegos</h3>
           <p className="mx-auto mb-6 max-w-md text-muted-foreground">
             A IA vai analisar sua ideia e sugerir aspectos que você pode ter esquecido de considerar
           </p>
-          <Button onClick={handleGenerate} style={{ backgroundColor: PRD_PRIMARY }}>
+          <Button onClick={handleGenerate} className="bg-studio-primary hover:bg-studio-primary/90">
             <Icon name="sparkles" className="mr-2 size-4" />
             Analisar Pontos Cegos
           </Button>
@@ -229,11 +226,7 @@ export const BlindSpotsView: React.FC<BlindSpotsViewProps> = ({ project, onUpdat
       {/* Loading State */}
       {isGenerating && (
         <Card className="p-12 text-center">
-          <Icon
-            name="spinner"
-            className="mx-auto mb-4 size-12 animate-spin"
-            style={{ color: PRD_PRIMARY }}
-          />
+          <Icon name="spinner" className="mx-auto mb-4 size-12 animate-spin text-studio-primary" />
           <h3 className="mb-2 text-lg font-bold">Analisando sua ideia...</h3>
           <p className="text-muted-foreground">
             Identificando pontos cegos e áreas não consideradas
@@ -241,8 +234,8 @@ export const BlindSpotsView: React.FC<BlindSpotsViewProps> = ({ project, onUpdat
           {progress > 0 && (
             <div className="mx-auto mt-4 h-1.5 w-48 overflow-hidden rounded-full bg-muted">
               <div
-                className="h-full rounded-full transition-all duration-300"
-                style={{ width: `${progress}%`, backgroundColor: PRD_PRIMARY }}
+                className="h-full rounded-full bg-studio-primary transition-all duration-300"
+                style={{ width: `${progress}%` }}
               />
             </div>
           )}
@@ -301,7 +294,7 @@ export const BlindSpotsView: React.FC<BlindSpotsViewProps> = ({ project, onUpdat
           <Button
             onClick={onNext}
             disabled={!canAdvance}
-            style={{ backgroundColor: canAdvance ? PRD_PRIMARY : undefined }}
+            className={canAdvance ? 'bg-studio-primary hover:bg-studio-primary/90' : ''}
           >
             Continuar
             <Icon name="arrow-right" className="ml-2 size-4" />

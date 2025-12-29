@@ -266,7 +266,7 @@ export const WOWsInputView: React.FC<WOWsInputViewProps> = ({ project, onUpdate,
       {/* Header */}
       <div>
         <h2 className="flex items-center gap-2 text-xl font-bold">
-          <Icon name="lightbulb" style={{ color: PRD_PRIMARY }} />
+          <Icon name="lightbulb" className="text-studio-primary" />
           WOWs - Suas Descobertas
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -292,7 +292,7 @@ export const WOWsInputView: React.FC<WOWsInputViewProps> = ({ project, onUpdate,
           <Button
             onClick={handleAdd}
             disabled={!canAdd}
-            style={{ backgroundColor: canAdd ? PRD_PRIMARY : undefined }}
+            className={canAdd ? 'bg-studio-primary hover:bg-studio-primary/90' : ''}
           >
             <Icon name="plus" className="mr-1.5 size-4" />
             Adicionar
@@ -359,7 +359,7 @@ export const WOWsInputView: React.FC<WOWsInputViewProps> = ({ project, onUpdate,
         <Button
           onClick={onNext}
           disabled={!canAdvance}
-          style={{ backgroundColor: canAdvance ? PRD_PRIMARY : undefined }}
+          className={canAdvance ? 'bg-studio-primary hover:bg-studio-primary/90' : ''}
         >
           Continuar
           <Icon name="arrow-right" className="ml-2 size-4" />
