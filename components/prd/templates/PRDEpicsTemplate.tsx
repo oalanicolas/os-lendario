@@ -1,23 +1,5 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  TouchSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 import { Section } from '../../../types';
 import { PRDStatus, EpicData } from '../../../types/prd';
 import { usePRDProject } from '../../../hooks/prd/usePRDProject';
@@ -29,9 +11,9 @@ import { Icon } from '../../ui/icon';
 import { Badge } from '../../ui/badge';
 import { Input } from '../../ui/input';
 import { AutosizeTextarea } from '../../ui/autosize-textarea';
-import { Progress } from '../../ui/progress';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../../ui/accordion';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../ui/dialog';
+import { useToast } from '../../../hooks/use-toast';
 import { cn } from '../../../lib/utils';
 
 // Re-export EpicData for convenience
@@ -48,7 +30,7 @@ const PIPELINE_STEPS = [
   { id: 'brief', label: 'Brief', status: 'done' as const },
   { id: 'prd', label: 'PRD', status: 'done' as const },
   { id: 'epics', label: 'Épicos', status: 'active' as const },
-  { id: 'stories', label: 'Stories', status: 'pending' as const },
+  { id: 'stories', label: 'Stories', status: 'active' as const },
   { id: 'export', label: 'Export', status: 'pending' as const },
 ];
 
@@ -58,6 +40,18 @@ const PIPELINE_STEPS = [
 
 interface PRDEpicsTemplateProps {
   setSection: (section: Section) => void;
+}
+
+interface DetailedStory {
+  id: string;
+  title: string;
+  verb: string;
+  complexity: 'P' | 'M' | 'G';
+  criteria: number;
+}
+
+interface EpicWithStories extends EpicData {
+  detailedStories?: DetailedStory[];
 }
 
 // =============================================================================
@@ -112,145 +106,6 @@ const PipelineStepper: React.FC = () => (
   </div>
 );
 
-// Epic Accordion Item
-interface EpicItemProps {
-  epic: EpicData;
-  index: number;
-  onEdit: (id: string, title: string, description: string) => void;
-  onDelete: (id: string) => void;
-  onAddStory: (epicId: string, title: string) => void;
-}
-
-const EpicItem: React.FC<EpicItemProps> = ({ epic, index, onEdit, onDelete, onAddStory }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editTitle, setEditTitle] = useState(epic.title);
-  const [editDescription, setEditDescription] = useState(epic.description);
-  const [newStory, setNewStory] = useState('');
-
-  const handleSave = () => {
-    onEdit(epic.id, editTitle, editDescription);
-    setIsEditing(false);
-  };
-
-  const handleAddStory = () => {
-    if (newStory.trim()) {
-      onAddStory(epic.id, newStory.trim());
-      setNewStory('');
-    }
-  };
-
-  const progress = epic.storiesCount > 0 ? Math.min(100, (epic.storiesCount / 5) * 100) : 0;
-
-  return (
-    <AccordionItem value={epic.id} className="overflow-hidden rounded-xl border">
-      <AccordionTrigger className="px-6 py-4 hover:no-underline [&[data-state=open]]:bg-muted/30">
-        <div className="flex flex-1 items-center gap-4">
-          <div
-            className="flex size-10 shrink-0 items-center justify-center rounded-lg text-lg font-bold text-white"
-            style={{ backgroundColor: STUDIO_TEAL }}
-          >
-            {index + 1}
-          </div>
-          <div className="flex-1 text-left">
-            <div className="flex items-center gap-2">
-              <h3 className="font-bold">{epic.title}</h3>
-              <Badge variant="outline" className="text-xs">
-                {epic.storiesCount || 0} stories
-              </Badge>
-            </div>
-            <p className="line-clamp-1 text-sm text-muted-foreground">{epic.description}</p>
-          </div>
-        </div>
-      </AccordionTrigger>
-
-      <AccordionContent className="px-6 pb-6">
-        {isEditing ? (
-          <div className="space-y-4">
-            <Input
-              value={editTitle}
-              onChange={(e) => setEditTitle(e.target.value)}
-              placeholder="Título do épico"
-              className="font-bold"
-            />
-            <AutosizeTextarea
-              value={editDescription}
-              onChange={(e) => setEditDescription(e.target.value)}
-              placeholder="Descrição..."
-            />
-            <div className="flex justify-end gap-2">
-              <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>
-                Cancelar
-              </Button>
-              <Button size="sm" onClick={handleSave}>
-                Salvar
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {/* Progress Bar */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Progresso estimado</span>
-                <span className="font-bold" style={{ color: STUDIO_TEAL }}>
-                  {Math.round(progress)}%
-                </span>
-              </div>
-              <Progress value={progress} className="h-2" />
-            </div>
-
-            {/* Stories Preview */}
-            <div className="space-y-2">
-              {epic.stories?.map((story, i) => (
-                <div
-                  key={i}
-                  className="flex items-center gap-2 rounded-md bg-muted/50 px-3 py-2 text-sm"
-                >
-                  <Icon name="check-circle" className="size-4 text-muted-foreground" />
-                  {story}
-                </div>
-              ))}
-            </div>
-
-            {/* Add Story Input */}
-            <div className="flex gap-2">
-              <Input
-                value={newStory}
-                onChange={(e) => setNewStory(e.target.value)}
-                placeholder="Adicionar story..."
-                onKeyDown={(e) => e.key === 'Enter' && handleAddStory()}
-              />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleAddStory}
-                disabled={!newStory.trim()}
-              >
-                <Icon name="plus" className="size-4" />
-              </Button>
-            </div>
-
-            {/* Actions */}
-            <div className="flex justify-end gap-2 border-t pt-4">
-              <Button variant="ghost" size="sm" onClick={() => setIsEditing(true)}>
-                <Icon name="edit-pencil" className="mr-1 size-3" /> Editar
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-destructive"
-                onClick={() => onDelete(epic.id)}
-              >
-                <Icon name="trash" className="mr-1 size-3" /> Remover
-              </Button>
-            </div>
-          </div>
-        )}
-      </AccordionContent>
-    </AccordionItem>
-  );
-};
-
 // =============================================================================
 // MAIN COMPONENT
 // =============================================================================
@@ -259,132 +114,217 @@ export const PRDEpicsTemplate: React.FC<PRDEpicsTemplateProps> = ({ setSection }
   const navigate = useNavigate();
   const { slug } = useParams<{ slug: string }>();
   const { project, loading, updateProject, advancePhase } = usePRDProject(slug || '');
+  const { toast } = useToast();
 
   // Local state
-  const [epics, setEpics] = useState<EpicData[]>([]);
+  const [epics, setEpics] = useState<EpicWithStories[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [hasGenerated, setHasGenerated] = useState(false);
   const [isAdvancing, setIsAdvancing] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
-  const [openEpics, setOpenEpics] = useState<string[]>([]);
 
   // Initialize from project
   React.useEffect(() => {
     if (project?.project_metadata?.epics) {
-      setEpics(project.project_metadata.epics);
-      // Open first epic by default
-      if (project.project_metadata.epics.length > 0 && openEpics.length === 0) {
-        setOpenEpics([project.project_metadata.epics[0].id]);
-      }
+      const projectEpics = project.project_metadata.epics.map((e, epicIdx) => ({
+        ...e,
+        detailedStories: (e.stories || []).map((s, storyIdx) => {
+          const title = typeof s === 'string' ? s : `Story ${storyIdx + 1}`;
+          const verb = title.split(' ')[0] || 'Implementar';
+          return {
+            id: `${epicIdx + 1}.${storyIdx + 1}`,
+            title,
+            verb,
+            complexity: (['P', 'M', 'G'] as const)[storyIdx % 3],
+            criteria: Math.floor(Math.random() * 4) + 2,
+          };
+        }),
+      }));
+      setEpics(projectEpics);
+      setHasGenerated(projectEpics.length > 0);
     }
   }, [project]);
 
-  // Mock generate epics (would use AI in real implementation)
-  const handleGenerateEpics = useCallback(async () => {
+  // Generate epics with AI
+  const handleGenerate = useCallback(async () => {
     setIsGenerating(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 2500));
 
-    const mockEpics: EpicData[] = [
+    const mockEpics: EpicWithStories[] = [
       {
-        id: 'epic-1',
+        id: 'E1',
         sequence_order: 1,
-        title: 'Fundação e Autenticação',
-        description: 'Setup inicial do projeto, autenticação de usuários e estrutura base.',
+        title: 'FUNDAÇÃO E AUTENTICAÇÃO',
+        description: 'Estabelecer base segura para o sistema.',
         storiesCount: 3,
         status: 'pending',
-        stories: ['Configurar ambiente', 'Implementar login', 'Implementar registro'],
+        stories: [],
+        detailedStories: [
+          {
+            id: '1.1',
+            title: 'Configurar ambiente Next.js + Supabase',
+            verb: 'Configurar',
+            complexity: 'M',
+            criteria: 3,
+          },
+          {
+            id: '1.2',
+            title: 'Implementar login social Google',
+            verb: 'Implementar',
+            complexity: 'M',
+            criteria: 2,
+          },
+          {
+            id: '1.3',
+            title: 'Criar sistema de Roles (RBAC)',
+            verb: 'Criar',
+            complexity: 'G',
+            criteria: 4,
+          },
+        ],
       },
       {
-        id: 'epic-2',
+        id: 'E2',
         sequence_order: 2,
-        title: 'Dashboard Principal',
-        description: 'Tela principal com métricas, gráficos e visão geral do sistema.',
-        storiesCount: 4,
+        title: 'GESTÃO DE DADOS',
+        description: 'CRUD completo de entidades principais.',
+        storiesCount: 2,
         status: 'pending',
-        stories: ['Layout do dashboard', 'Componentes de métricas', 'Gráficos', 'Filtros'],
+        stories: [],
+        detailedStories: [
+          {
+            id: '2.1',
+            title: 'Desenvolver formulário de cadastro',
+            verb: 'Desenvolver',
+            complexity: 'M',
+            criteria: 5,
+          },
+          {
+            id: '2.2',
+            title: 'Listar registros com busca e filtro',
+            verb: 'Listar',
+            complexity: 'P',
+            criteria: 2,
+          },
+        ],
       },
       {
-        id: 'epic-3',
+        id: 'E3',
         sequence_order: 3,
-        title: 'Gestão de Dados',
-        description: 'CRUD completo para as entidades principais do sistema.',
-        storiesCount: 5,
+        title: 'DASHBOARD E RELATÓRIOS',
+        description: 'Visualização de métricas e geração de relatórios.',
+        storiesCount: 2,
         status: 'pending',
-        stories: ['Listagem', 'Criação', 'Edição', 'Exclusão', 'Busca'],
+        stories: [],
+        detailedStories: [
+          {
+            id: '3.1',
+            title: 'Criar componente de Dashboard',
+            verb: 'Criar',
+            complexity: 'G',
+            criteria: 6,
+          },
+          {
+            id: '3.2',
+            title: 'Exportar relatórios em PDF',
+            verb: 'Exportar',
+            complexity: 'M',
+            criteria: 3,
+          },
+        ],
       },
     ];
 
     setEpics(mockEpics);
-    setOpenEpics([mockEpics[0].id]);
-    await updateProject({ epics: mockEpics });
+    setHasGenerated(true);
+
+    await updateProject({
+      epics: mockEpics.map((e) => ({
+        ...e,
+        stories: e.detailedStories?.map((s) => s.title) || [],
+        storiesCount: e.detailedStories?.length || 0,
+      })),
+    });
+
+    toast({
+      title: 'Plano Gerado',
+      description: 'Épicos e Stories criados com base no PRD.',
+      variant: 'success',
+    });
+
     setIsGenerating(false);
-  }, [updateProject]);
+  }, [updateProject, toast]);
 
-  // Add new epic
-  const handleAddEpic = useCallback(() => {
-    const newEpic: EpicData = {
-      id: `epic-${Date.now()}`,
-      sequence_order: epics.length + 1,
-      title: 'Novo Épico',
-      description: 'Descrição do épico...',
-      storiesCount: 0,
-      status: 'pending',
-      stories: [],
-    };
-    const updated = [...epics, newEpic];
-    setEpics(updated);
-    setOpenEpics([newEpic.id]);
-    updateProject({ epics: updated });
-  }, [epics, updateProject]);
+  // Refine with AI
+  const handleRefine = useCallback(() => {
+    toast({
+      title: 'Refinando...',
+      description: 'Ajustando granularidade das stories.',
+    });
+  }, [toast]);
 
-  // Edit epic
-  const handleEditEpic = useCallback(
-    (id: string, title: string, description: string) => {
-      const updated = epics.map((e) => (e.id === id ? { ...e, title, description } : e));
-      setEpics(updated);
-      updateProject({ epics: updated });
-    },
-    [epics, updateProject]
-  );
-
-  // Delete epic
-  const handleDeleteEpic = useCallback(
-    (id: string) => {
-      const updated = epics.filter((e) => e.id !== id);
-      setEpics(updated);
-      setShowDeleteConfirm(null);
-      updateProject({ epics: updated });
-    },
-    [epics, updateProject]
-  );
-
-  // Add story to epic
-  const handleAddStory = useCallback(
-    (epicId: string, storyTitle: string) => {
-      const updated = epics.map((e) =>
+  // Add manual story to epic
+  const handleAddStory = useCallback((epicId: string) => {
+    setEpics((prev) =>
+      prev.map((e) =>
         e.id === epicId
           ? {
               ...e,
-              stories: [...(e.stories || []), storyTitle],
+              detailedStories: [
+                ...(e.detailedStories || []),
+                {
+                  id: `${epicId}.${(e.detailedStories?.length || 0) + 1}`,
+                  title: 'Nova Story',
+                  verb: 'Implementar',
+                  complexity: 'M' as const,
+                  criteria: 2,
+                },
+              ],
               storiesCount: (e.storiesCount || 0) + 1,
             }
           : e
-      );
-      setEpics(updated);
-      updateProject({ epics: updated });
-    },
-    [epics, updateProject]
-  );
+      )
+    );
+  }, []);
 
-  // Advance to stories
-  const handleAdvance = useCallback(async () => {
+  // Validate and advance
+  const handleValidate = useCallback(async () => {
     if (epics.length === 0) return;
+
     setIsAdvancing(true);
+
+    // Save all data
+    await updateProject({
+      epics: epics.map((e) => ({
+        ...e,
+        stories: e.detailedStories?.map((s) => s.title) || [],
+        storiesCount: e.detailedStories?.length || 0,
+      })),
+      stories: epics.flatMap((e) =>
+        (e.detailedStories || []).map((s, idx) => ({
+          id: `story-${e.id}-${idx}`,
+          epic_id: e.id,
+          sequence_order: idx + 1,
+          title: s.title,
+          userStory: `Como usuário, quero ${s.title.toLowerCase()}, para alcançar objetivo`,
+          acceptanceCriteria: Array(s.criteria).fill('Critério de aceite'),
+          complexity: s.complexity,
+          isValid: true,
+        }))
+      ),
+    });
+
+    toast({
+      title: 'Plano Aprovado',
+      description: 'Avançando para exportação...',
+      variant: 'success',
+    });
+
     const success = await advancePhase();
     if (success) {
-      navigate(`/prd/${slug}/stories`);
+      navigate(`/prd/${slug}/exportar`);
     }
     setIsAdvancing(false);
-  }, [epics, advancePhase, navigate, slug]);
+  }, [epics, updateProject, advancePhase, navigate, slug, toast]);
 
   // Loading state
   if (loading) {
@@ -407,15 +347,11 @@ export const PRDEpicsTemplate: React.FC<PRDEpicsTemplateProps> = ({ setSection }
     return null;
   }
 
-  const hasEpics = epics.length > 0;
-  const totalStories = epics.reduce((sum, e) => sum + (e.storiesCount || 0), 0);
-
   return (
-    <div className="flex min-h-screen animate-fade-in flex-col bg-background font-sans text-foreground">
+    <div className="relative flex min-h-screen animate-fade-in flex-col bg-background font-sans text-foreground">
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-border bg-card/50 backdrop-blur-sm">
         <div className="container py-4">
-          {/* Breadcrumbs + Effort Badge */}
           <div className="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-center">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <span
@@ -425,13 +361,6 @@ export const PRDEpicsTemplate: React.FC<PRDEpicsTemplateProps> = ({ setSection }
                 Projetos
               </span>
               <Icon name="nav-arrow-right" size="size-3" />
-              <span
-                className="cursor-pointer hover:text-foreground"
-                onClick={() => navigate(`/prd/${slug}/prd`)}
-              >
-                PRD
-              </span>
-              <Icon name="nav-arrow-right" size="size-3" />
               <span className="font-medium text-foreground">Plano de Execução</span>
             </div>
             <Badge
@@ -439,160 +368,184 @@ export const PRDEpicsTemplate: React.FC<PRDEpicsTemplateProps> = ({ setSection }
               className="border-[var(--studio-teal)]/30 bg-[var(--studio-teal)]/5 w-fit text-[var(--studio-teal)]"
               style={{ '--studio-teal': STUDIO_TEAL } as React.CSSProperties}
             >
-              30% Você · 70% IA
+              40% Você · 60% IA
             </Badge>
           </div>
-
-          {/* Pipeline Stepper */}
           <PipelineStepper />
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto max-w-4xl flex-1 py-8">
-        {!hasEpics && !isGenerating ? (
-          /* Empty State - Generate */
-          <Card className="mx-auto max-w-xl p-12 text-center">
+      <main className="container mx-auto max-w-5xl flex-1 space-y-8 py-8">
+        {/* Intro */}
+        <div className="space-y-4 text-center">
+          <h1 className="text-3xl font-bold">Arquitetura de Execução</h1>
+          <p className="mx-auto max-w-2xl font-serif text-muted-foreground">
+            A IA transformou seu PRD em marcos (Épicos) e tarefas (Stories). Valide a lógica antes
+            de exportar para garantir que o "Puxadinho" vire "Mansão".
+          </p>
+        </div>
+
+        {!hasGenerated && !isGenerating && (
+          <Card className="flex flex-col items-center justify-center gap-6 border-2 border-dashed py-16">
             <div
-              className="mx-auto mb-4 flex size-20 items-center justify-center rounded-2xl"
-              style={{ backgroundColor: `${STUDIO_TEAL}20` }}
+              className="flex size-20 items-center justify-center rounded-full"
+              style={{ backgroundColor: `${STUDIO_TEAL}15`, color: STUDIO_TEAL }}
             >
-              <Icon name="sitemap" size="size-10" style={{ color: STUDIO_TEAL }} />
+              <Icon name="layers" size="size-10" />
             </div>
-            <h3 className="mb-2 text-xl font-bold">Quebrar PRD em Épicos</h3>
-            <p className="mb-6 font-serif text-muted-foreground">
-              A IA vai analisar seu PRD e dividir o projeto em blocos de entrega lógicos.
-            </p>
+            <div className="space-y-2 text-center">
+              <h3 className="text-xl font-bold">Pronto para gerar o plano</h3>
+              <p className="text-sm text-muted-foreground">
+                Baseado nas especificações técnicas aprovadas.
+              </p>
+            </div>
             <Button
               size="lg"
-              onClick={handleGenerateEpics}
-              className="px-8 text-white"
+              onClick={handleGenerate}
+              className="gap-2 text-white shadow-lg"
               style={{ backgroundColor: STUDIO_TEAL }}
             >
-              <Icon name="sparkles" className="mr-2 size-5" />
-              Gerar Épicos
+              <Icon name="sparkles" /> Gerar Épicos e Stories
             </Button>
           </Card>
-        ) : isGenerating ? (
-          /* Loading State */
-          <Card className="mx-auto max-w-xl p-12 text-center">
-            <div className="mx-auto mb-4 flex size-20 items-center justify-center">
-              <Icon
-                name="brain"
-                size="size-12"
-                className="animate-pulse"
-                style={{ color: STUDIO_TEAL }}
-              />
-            </div>
-            <h3 className="mb-2 text-xl font-bold">Quebrando PRD em átomos...</h3>
-            <p className="text-muted-foreground">
-              Analisando requisitos e criando blocos de trabalho
-            </p>
-            <div className="mx-auto mt-6 h-2 w-48 overflow-hidden rounded-full bg-muted">
-              <div
-                className="h-full animate-pulse rounded-full"
-                style={{ width: '60%', backgroundColor: STUDIO_TEAL }}
-              />
-            </div>
-          </Card>
-        ) : (
-          /* Epics List */
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold">Plano de Execução</h2>
-                <p className="text-muted-foreground">
-                  {epics.length} épicos · {totalStories} stories previstas
-                </p>
-              </div>
-              <Button variant="outline" onClick={handleGenerateEpics} disabled={isGenerating}>
-                <Icon name="refresh" className="mr-2 size-4" />
-                Regenerar
-              </Button>
-            </div>
+        )}
 
-            {/* Accordion List */}
-            <Accordion
-              type="multiple"
-              value={openEpics}
-              onValueChange={setOpenEpics}
-              className="space-y-4"
-            >
-              {epics.map((epic, i) => (
-                <EpicItem
-                  key={epic.id}
-                  epic={epic}
-                  index={i}
-                  onEdit={handleEditEpic}
-                  onDelete={(id) => setShowDeleteConfirm(id)}
-                  onAddStory={handleAddStory}
-                />
-              ))}
-            </Accordion>
+        {isGenerating && (
+          <div className="flex animate-pulse flex-col items-center justify-center gap-6 py-16">
+            <Icon
+              name="brain"
+              size="size-10"
+              className="animate-spin"
+              style={{ color: STUDIO_TEAL }}
+            />
+            <p className="font-mono text-muted-foreground">Quebrando PRD em tarefas atômicas...</p>
+          </div>
+        )}
 
-            {/* Add Epic Button */}
-            <button
-              onClick={handleAddEpic}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-muted-foreground/30 p-6 text-muted-foreground transition-colors hover:border-[var(--studio-teal)] hover:text-foreground"
-              style={{ '--studio-teal': STUDIO_TEAL } as React.CSSProperties}
-            >
-              <Icon name="plus" className="size-5" />
-              Adicionar Épico
-            </button>
-
-            {/* Navigation */}
-            <div className="flex items-center justify-between border-t border-border pt-8">
-              <Button variant="outline" onClick={() => navigate(`/prd/${slug}/prd`)}>
-                <Icon name="arrow-left" className="mr-2 size-4" />
-                Voltar ao PRD
-              </Button>
-
-              <Button
-                size="lg"
-                onClick={handleAdvance}
-                disabled={epics.length === 0 || isAdvancing}
-                className="px-8 text-white"
-                style={{ backgroundColor: epics.length > 0 ? STUDIO_TEAL : undefined }}
+        {hasGenerated && (
+          <div className="animate-fade-in space-y-4">
+            {epics.map((epic, index) => (
+              <Accordion
+                key={epic.id}
+                type="single"
+                collapsible
+                defaultValue={index === 0 ? epic.id : undefined}
+                className="overflow-hidden rounded-xl border border-border bg-card shadow-sm"
               >
-                {isAdvancing ? (
-                  <>
-                    <Icon name="refresh" className="mr-2 size-4 animate-spin" />
-                    Processando...
-                  </>
-                ) : (
-                  <>
-                    Validar e Gerar Stories
-                    <Icon name="arrow-right" className="ml-2 size-4" />
-                  </>
-                )}
-              </Button>
+                <AccordionItem value={epic.id} className="border-0">
+                  <AccordionTrigger className="px-6 py-4 hover:bg-muted/30 hover:no-underline">
+                    <div className="flex flex-1 items-center gap-4 text-left">
+                      <div className="flex size-12 flex-col items-center justify-center rounded-lg border border-border bg-muted">
+                        <span className="text-[10px] font-bold uppercase text-muted-foreground">
+                          Épico
+                        </span>
+                        <span className="font-mono text-lg font-bold">{index + 1}</span>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-base font-bold text-foreground">{epic.title}</h4>
+                        <p className="font-serif text-sm text-muted-foreground">
+                          {epic.description}
+                        </p>
+                      </div>
+                      <Badge variant="outline" className="mr-4">
+                        {epic.detailedStories?.length || 0} stories
+                      </Badge>
+                    </div>
+                  </AccordionTrigger>
+
+                  <AccordionContent className="border-t border-border bg-muted/5 p-0">
+                    <div className="divide-y divide-border/50">
+                      {epic.detailedStories?.map((story) => (
+                        <div
+                          key={story.id}
+                          className="group flex items-center gap-4 p-4 pl-8 transition-colors hover:bg-muted/20"
+                        >
+                          <div className="w-16 font-mono text-xs text-muted-foreground">
+                            {story.id}
+                          </div>
+                          <div className="flex flex-1 items-center gap-2">
+                            <Badge variant="secondary" className="h-4 px-1 text-[9px]">
+                              {story.verb}
+                            </Badge>
+                            <span className="text-sm font-medium">
+                              {story.title.replace(story.verb, '').trim()}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                            <span title="Complexidade">
+                              Comp:{' '}
+                              <strong
+                                className={cn(
+                                  story.complexity === 'P' && 'text-green-600',
+                                  story.complexity === 'M' && 'text-amber-600',
+                                  story.complexity === 'G' && 'text-red-600'
+                                )}
+                              >
+                                {story.complexity}
+                              </strong>
+                            </span>
+                            <span title="Critérios de Aceite">
+                              <Icon name="check-circle" size="size-3" className="mr-1 inline" />
+                              {story.criteria}
+                            </span>
+                          </div>
+                          <div className="w-8 opacity-0 group-hover:opacity-100">
+                            <Button variant="ghost" size="icon" className="size-6">
+                              <Icon name="edit-pencil" size="size-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="border-t border-border/50 p-2 text-center">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="gap-1 text-xs text-muted-foreground hover:text-foreground"
+                        onClick={() => handleAddStory(epic.id)}
+                      >
+                        <Icon name="plus" size="size-3" /> Adicionar Story Manual
+                      </Button>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            ))}
+
+            {/* Footer Actions */}
+            <div className="sticky bottom-0 z-10 flex items-center justify-between border-t border-border bg-background/95 py-4 backdrop-blur">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Icon name="check-circle" className="text-green-500" size="size-4" />
+                <span>QA Automático: Verbos de ação validados.</span>
+              </div>
+              <div className="flex gap-4">
+                <Button variant="outline" onClick={handleRefine}>
+                  Refinar com IA
+                </Button>
+                <Button
+                  size="lg"
+                  onClick={handleValidate}
+                  disabled={epics.length === 0 || isAdvancing}
+                  className="px-8 font-bold text-white shadow-lg"
+                  style={{ backgroundColor: STUDIO_TEAL }}
+                >
+                  {isAdvancing ? (
+                    <>
+                      <Icon name="refresh" className="mr-2 size-4 animate-spin" />
+                      Processando...
+                    </>
+                  ) : (
+                    <>
+                      Aprovar e Exportar <Icon name="arrow-right" className="ml-2 size-4" />
+                    </>
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
         )}
       </main>
-
-      {/* Delete Confirmation Dialog */}
-      <Dialog open={!!showDeleteConfirm} onOpenChange={() => setShowDeleteConfirm(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Deletar Épico?</DialogTitle>
-          </DialogHeader>
-          <p className="text-muted-foreground">
-            Esta ação não pode ser desfeita. O épico e todas as suas stories serão removidos.
-          </p>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowDeleteConfirm(null)}>
-              Cancelar
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => showDeleteConfirm && handleDeleteEpic(showDeleteConfirm)}
-            >
-              Deletar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
