@@ -256,11 +256,11 @@ export default function LmsStudentTemplate() {
 
           {/* Show text content below video if available */}
           {lessonContent && (
-            <div className="mt-8 rounded-xl border border-border bg-card p-8 shadow-sm md:p-12">
+            <div className="mx-auto mt-8 max-w-3xl rounded-xl border border-border bg-card p-8 shadow-sm md:p-12">
               <span className="mb-4 block text-xs font-bold uppercase tracking-widest text-primary">
                 Transcrição / Notas da Aula
               </span>
-              <MarkdownRenderer content={lessonContent} variant="lesson" />
+              <MarkdownRenderer content={lessonContent} variant="lesson" skipFirstHeading />
             </div>
           )}
         </div>
@@ -270,13 +270,6 @@ export default function LmsStudentTemplate() {
     // Text content (default - when no video)
     return (
       <div className="mx-auto w-full max-w-3xl rounded-xl border border-border bg-card p-8 shadow-sm md:p-12">
-        <span className="mb-2 block text-xs font-bold uppercase tracking-widest text-primary">
-          {realLesson?.moduleTitle || activeLesson.moduleTitle}
-        </span>
-        <h1 className="mb-6 text-3xl font-bold leading-tight text-foreground md:text-4xl">
-          {realLesson?.title || activeLesson.title}
-        </h1>
-
         <MarkdownRenderer content={lessonContent} variant="lesson" />
       </div>
     );

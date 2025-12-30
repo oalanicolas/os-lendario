@@ -31,16 +31,31 @@ interface MarkdownRendererProps {
   content: string;
   className?: string;
   variant?: 'article' | 'compact' | 'lesson';
+  /** Remove the first H1 heading from content (useful when title is already displayed) */
+  skipFirstHeading?: boolean;
 }
+
+/**
+ * Remove the first H1 heading from markdown content
+ * Matches: # Title at the start of content or after initial whitespace
+ */
+const removeFirstH1 = (content: string): string => {
+  // Match first line that starts with single # (H1) and remove it
+  return content.replace(/^#\s+[^\n]+\n*/, '').trim();
+};
 
 export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   content,
   className,
   variant = 'article',
+  skipFirstHeading = false,
 }) => {
   if (!content) {
     return <p className="italic text-muted-foreground">Conteúdo não disponível.</p>;
   }
+
+  // Process content - optionally remove first H1
+  const processedContent = skipFirstHeading ? removeFirstH1(content) : content;
 
   const baseClasses = cn(
     'prose dark:prose-invert max-w-none',
@@ -285,7 +300,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
           ),
         }}
       >
-        {content}
+        {processedContent}
       </ReactMarkdown>
     </div>
   );
