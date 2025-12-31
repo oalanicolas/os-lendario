@@ -1,0 +1,129 @@
+import { useState, useEffect, useCallback } from 'react';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
+
+// Author data structure
+export interface AuthorData {
+  id: string;
+  slug: string;
+  name: string;
+  shortBio: string | null;
+  avatarUrl: string | null;
+  metadata: {
+    website?: string;
+    twitter?: string;
+    linkedin?: string;
+    wikipedia?: string;
+    nationality?: string;
+    birthYear?: number;
+    deathYear?: number;
+    occupation?: string[];
+  } | null;
+}
+
+// Database response type
+interface DbMind {
+  id: string;
+  slug: string;
+  name: string;
+  short_bio: string | null;
+  avatar_url: string | null;
+  metadata: Record<string, unknown> | null;
+}
+
+interface UseAuthorResult {
+  author: AuthorData | null;
+  loading: boolean;
+  error: Error | null;
+  refetch: () => Promise<void>;
+}
+
+export function useAuthor(slug: string | null): UseAuthorResult {
+  const [author, setAuthor] = useState<AuthorData | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  const fetchAuthor = useCallback(async () => {
+    if (!slug) {
+      setAuthor(null);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    if (!isSupabaseConfigured()) {
+      console.warn('Supabase not configured');
+      setAuthor(null);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const { data, error: fetchError } = await supabase
+        .from('minds')
+        .select(
+          `
+          id,
+          slug,
+          name,
+          short_bio,
+          avatar_url,
+          metadata
+        `
+        )
+        .eq('slug', slug)
+        .is('deleted_at', null)
+        .single();
+
+      if (fetchError) {
+        if (fetchError.code === 'PGRST116') {
+          // Not found
+          setAuthor(null);
+        } else {
+          throw fetchError;
+        }
+      } else {
+        const mind = data as DbMind;
+        const metadata = mind.metadata || {};
+
+        setAuthor({
+          id: mind.id,
+          slug: mind.slug,
+          name: mind.name,
+          shortBio: mind.short_bio,
+          avatarUrl: mind.avatar_url,
+          metadata: {
+            website: metadata.website as string | undefined,
+            twitter: metadata.twitter as string | undefined,
+            linkedin: metadata.linkedin as string | undefined,
+            wikipedia: metadata.wikipedia as string | undefined,
+            nationality: metadata.nationality as string | undefined,
+            birthYear: metadata.birth_year as number | undefined,
+            deathYear: metadata.death_year as number | undefined,
+            occupation: metadata.occupation as string[] | undefined,
+          },
+        });
+      }
+    } catch (err) {
+      console.error('Error fetching author:', err);
+      setError(err as Error);
+      setAuthor(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [slug]);
+
+  useEffect(() => {
+    fetchAuthor();
+  }, [fetchAuthor]);
+
+  return {
+    author,
+    loading,
+    error,
+    refetch: fetchAuthor,
+  };
+}
+
+export default useAuthor;

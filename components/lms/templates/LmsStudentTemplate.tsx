@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '../../ui/button';
 import { Icon } from '../../ui/icon';
 import { ScrollArea } from '../../ui/scroll-area';
-import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
+import { Avatar, AvatarFallback } from '../../ui/avatar';
 import { Progress } from '../../ui/progress';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../ui/tabs';
 import { cn } from '../../../lib/utils';
@@ -11,7 +11,12 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '..
 import { Textarea } from '../../ui/textarea';
 import { Skeleton } from '../../ui/skeleton';
 import { MediaCover, StarRating, FavoriteButton } from '../../shared';
-import { useLmsCourse, useLmsLesson, useLessonInteractions, useCourseProgress } from '../../../hooks/lms';
+import {
+  useLmsCourse,
+  useLmsLesson,
+  useLessonInteractions,
+  useCourseProgress,
+} from '../../../hooks/lms';
 import { MarkdownRenderer } from '../../shared/MarkdownRenderer';
 import { VideoPlayer, isSupportedVideoUrl, type VideoProgress } from '../ui/VideoPlayer';
 
@@ -62,18 +67,14 @@ interface Lesson {
   type: LessonType;
 }
 
-interface Module {
-  id: string;
-  title: string;
-  lessons: Lesson[];
-}
+// Module interface inlined in courseData type
 
 export default function LmsStudentTemplate() {
   const navigate = useNavigate();
   const { slug, lessonId } = useParams();
 
   // Fetch real data
-  const { course: realCourse, loading: courseLoading } = useLmsCourse(slug);
+  const { course: realCourse } = useLmsCourse(slug);
   const { lesson: realLesson, loading: lessonLoading } = useLmsLesson(slug, lessonId);
 
   // Lesson interactions (complete, favorite, rating, watch progress)
@@ -88,7 +89,9 @@ export default function LmsStudentTemplate() {
   } = useLessonInteractions(realLesson?.id || '');
 
   // Course progress
-  const { progress: courseProgress, refetch: refetchProgress } = useCourseProgress(realCourse?.id || '');
+  const { progress: courseProgress, refetch: refetchProgress } = useCourseProgress(
+    realCourse?.id || ''
+  );
 
   // State for Active Lesson
   const [activeLessonId, setActiveLessonId] = useState(lessonId || '');
@@ -98,6 +101,36 @@ export default function LmsStudentTemplate() {
   // Loading states for UI feedback
   const [isMarkingComplete, setIsMarkingComplete] = useState(false);
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
+
+  // Resume playback state
+  const [resumeTime, setResumeTime] = useState<number>(0);
+  const [showResumeBanner, setShowResumeBanner] = useState(false);
+
+  // Check for saved progress when interactions load
+  useEffect(() => {
+    if (lessonInteractions?.watchProgress && !lessonInteractions.isCompleted) {
+      const savedTime = lessonInteractions.watchProgress.currentTime;
+      const percentage = lessonInteractions.watchProgress.percentage;
+      // Only show resume if watched between 5% and 90%
+      if (savedTime > 10 && percentage < 90 && percentage > 5) {
+        setResumeTime(savedTime);
+        setShowResumeBanner(true);
+      }
+    }
+  }, [lessonInteractions]);
+
+  // Reset resume state when lesson changes
+  useEffect(() => {
+    setResumeTime(0);
+    setShowResumeBanner(false);
+  }, [realLesson?.id]);
+
+  // Helper to format seconds as MM:SS
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   // Video progress tracking handlers
   const handleVideoProgress = useCallback(
@@ -301,14 +334,45 @@ export default function LmsStudentTemplate() {
         <div className="w-full">
           {/* Video Container */}
           {isEmbeddable ? (
-            <VideoPlayer
-              url={videoUrl}
-              title={realLesson?.title || activeLesson.title}
-              className="shadow-2xl"
-              estimatedDuration={realLesson?.duration ? parseDurationToSeconds(realLesson.duration) : 600}
-              onProgress={handleVideoProgress}
-              onEnded={handleVideoEnded}
-            />
+            <>
+              {/* Resume Banner */}
+              {showResumeBanner && (
+                <div className="mb-4 flex items-center justify-between rounded-lg border border-primary/20 bg-primary/5 px-4 py-3">
+                  <div className="flex items-center gap-3">
+                    <Icon name="play-circle" className="text-xl text-primary" />
+                    <span className="text-sm">
+                      Continuar de <strong>{formatTime(resumeTime)}</strong>?
+                    </span>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        setShowResumeBanner(false);
+                        setResumeTime(0);
+                      }}
+                    >
+                      Começar do início
+                    </Button>
+                    <Button size="sm" onClick={() => setShowResumeBanner(false)}>
+                      Continuar
+                    </Button>
+                  </div>
+                </div>
+              )}
+              <VideoPlayer
+                url={videoUrl}
+                title={realLesson?.title || activeLesson.title}
+                className="shadow-2xl"
+                estimatedDuration={
+                  realLesson?.duration ? parseDurationToSeconds(realLesson.duration) : 600
+                }
+                initialTime={showResumeBanner ? 0 : resumeTime}
+                onProgress={handleVideoProgress}
+                onEnded={handleVideoEnded}
+              />
+            </>
           ) : (
             // Fallback for unsupported video URLs - show placeholder
             <div className="group relative aspect-video w-full overflow-hidden rounded-xl border border-border/20 bg-black shadow-2xl">

@@ -7,19 +7,26 @@ import { Skeleton } from '../../ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../ui/tabs';
 import { Separator } from '../../ui/separator';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '../../ui/dropdown-menu';
 import { cn } from '../../../lib/utils';
 import { FavoriteButton } from '../../shared';
 import { Section } from '../../../types';
 import { useBook, useBooks } from '../../../hooks/useBooks';
 import { usePageTitle } from '../../../hooks/usePageTitle';
 import { useBookInteractions, ReadingStatus } from '../../../hooks/useMyBooks';
-import BookCard from '../ui/BookCard';
+import { useAuthor } from '../../../hooks/useAuthor';
+// BookCard import removed - using inline related books cards
 
 interface BookDetailProps {
   setSection: (s: Section) => void;
 }
 
-const BookDetailTemplate: React.FC<BookDetailProps> = ({ setSection }) => {
+const BookDetailTemplate: React.FC<BookDetailProps> = ({ setSection: _setSection }) => {
   const { bookSlug } = useParams<{ bookSlug: string }>();
   const navigate = useNavigate();
   const { book, loading, error } = useBook(bookSlug || '');
@@ -33,13 +40,39 @@ const BookDetailTemplate: React.FC<BookDetailProps> = ({ setSection }) => {
     setReadingStatus,
   } = useBookInteractions(book?.id || '');
 
+  // Author data (lazy loaded)
+  const { author, loading: authorLoading } = useAuthor(book?.authorSlug || null);
+
   // Local state
   const [activeTab, setActiveTab] = useState('overview');
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
+  const [isChangingStatus, setIsChangingStatus] = useState(false);
+
+  // Reading status labels and icons
+  const statusConfig: Record<ReadingStatus, { label: string; icon: string }> = {
+    none: { label: 'Adicionar à Lista', icon: 'plus' },
+    want_to_read: { label: 'Quero Ler', icon: 'bookmark' },
+    reading: { label: 'Lendo', icon: 'book-open' },
+    read: { label: 'Lido', icon: 'check-circle' },
+  };
+
+  const currentStatus = interactions?.readingStatus || 'none';
 
   usePageTitle(book?.title || 'Carregando...');
 
   // Handlers
+  const handleChangeStatus = async (status: ReadingStatus) => {
+    if (!book?.id || isChangingStatus) return;
+    setIsChangingStatus(true);
+    try {
+      await setReadingStatus(status);
+    } catch (err) {
+      console.error('Failed to change reading status:', err);
+    } finally {
+      setIsChangingStatus(false);
+    }
+  };
+
   const handleToggleFavorite = async () => {
     if (!book?.id || isTogglingFavorite) return;
     setIsTogglingFavorite(true);
@@ -150,6 +183,76 @@ const BookDetailTemplate: React.FC<BookDetailProps> = ({ setSection }) => {
                 >
                   <Icon name="book-open-cover" className="mr-2" /> Ler Resumo
                 </Button>
+
+                {/* Reading Status Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      size="lg"
+                      variant={currentStatus === 'none' ? 'outline' : 'secondary'}
+                      className={cn(
+                        'h-12 w-full font-bold',
+                        currentStatus === 'read' &&
+                          'border-brand-green/30 bg-brand-green/10 text-brand-green',
+                        currentStatus === 'reading' &&
+                          'border-blue-500/30 bg-blue-500/10 text-blue-400',
+                        currentStatus === 'want_to_read' &&
+                          'border-brand-gold/30 bg-brand-gold/10 text-brand-gold'
+                      )}
+                      disabled={isChangingStatus || interactionsLoading}
+                    >
+                      {isChangingStatus ? (
+                        <Icon name="refresh" className="mr-2 animate-spin" />
+                      ) : (
+                        <Icon name={statusConfig[currentStatus].icon} className="mr-2" />
+                      )}
+                      {statusConfig[currentStatus].label}
+                      <Icon name="chevron-down" className="ml-auto" size="size-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="center" className="w-56">
+                    <DropdownMenuItem
+                      onClick={() => handleChangeStatus('want_to_read')}
+                      className={cn(currentStatus === 'want_to_read' && 'bg-brand-gold/10')}
+                    >
+                      <Icon name="bookmark" className="mr-2" size="size-4" />
+                      Quero Ler
+                      {currentStatus === 'want_to_read' && (
+                        <Icon name="check" className="ml-auto text-brand-gold" size="size-4" />
+                      )}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleChangeStatus('reading')}
+                      className={cn(currentStatus === 'reading' && 'bg-blue-500/10')}
+                    >
+                      <Icon name="book-open" className="mr-2" size="size-4" />
+                      Lendo
+                      {currentStatus === 'reading' && (
+                        <Icon name="check" className="ml-auto text-blue-400" size="size-4" />
+                      )}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleChangeStatus('read')}
+                      className={cn(currentStatus === 'read' && 'bg-brand-green/10')}
+                    >
+                      <Icon name="check-circle" className="mr-2" size="size-4" />
+                      Lido
+                      {currentStatus === 'read' && (
+                        <Icon name="check" className="ml-auto text-brand-green" size="size-4" />
+                      )}
+                    </DropdownMenuItem>
+                    {currentStatus !== 'none' && (
+                      <DropdownMenuItem
+                        onClick={() => handleChangeStatus('none')}
+                        className="text-muted-foreground"
+                      >
+                        <Icon name="xmark" className="mr-2" size="size-4" />
+                        Remover da Lista
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
                 {book.hasAudio && (
                   <Button
                     size="lg"
@@ -222,12 +325,21 @@ const BookDetailTemplate: React.FC<BookDetailProps> = ({ setSection }) => {
                   </p>
                 )}
 
-                <div className="flex items-center gap-4 pt-2">
-                  <Avatar className="h-10 w-10 border border-border">
+                <div
+                  className={cn(
+                    'flex items-center gap-4 pt-2',
+                    book.authorSlug && 'group cursor-pointer'
+                  )}
+                  onClick={() => book.authorSlug && navigate(`/books/author/${book.authorSlug}`)}
+                >
+                  <Avatar className="h-10 w-10 border border-border transition-colors group-hover:border-brand-gold">
+                    {author?.avatarUrl && <AvatarImage src={author.avatarUrl} alt={author.name} />}
                     <AvatarFallback>{book.author.substring(0, 2).toUpperCase()}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="text-sm font-bold text-foreground">{book.author}</p>
+                    <p className="text-sm font-bold text-foreground transition-colors group-hover:text-brand-gold">
+                      {book.author}
+                    </p>
                     <p className="text-xs text-muted-foreground">Autor</p>
                   </div>
                 </div>
@@ -243,12 +355,6 @@ const BookDetailTemplate: React.FC<BookDetailProps> = ({ setSection }) => {
                     className="rounded-none border-b-2 border-transparent bg-transparent px-0 pb-3 text-base font-bold text-muted-foreground transition-all hover:text-foreground data-[state=active]:border-brand-gold data-[state=active]:text-foreground"
                   >
                     Visão Geral
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="learning"
-                    className="rounded-none border-b-2 border-transparent bg-transparent px-0 pb-3 text-base font-bold text-muted-foreground transition-all hover:text-foreground data-[state=active]:border-brand-gold data-[state=active]:text-foreground"
-                  >
-                    O que você vai aprender
                   </TabsTrigger>
                   <TabsTrigger
                     value="author"
@@ -291,57 +397,110 @@ const BookDetailTemplate: React.FC<BookDetailProps> = ({ setSection }) => {
                   )}
                 </TabsContent>
 
-                {/* TAB 2: O que você vai aprender */}
-                <TabsContent value="learning" className="animate-fade-in space-y-8">
-                  <div className="grid gap-4">
-                    {/* Mock learning points - TODO: get from book metadata */}
-                    {[
-                      'Os conceitos fundamentais apresentados pelo autor.',
-                      'Como aplicar os ensinamentos no seu dia a dia.',
-                      'Estratégias práticas para implementação imediata.',
-                      'Insights sobre os temas centrais do livro.',
-                    ].map((item, i) => (
-                      <div
-                        key={i}
-                        className="group flex items-start gap-4 rounded-xl border border-border bg-card p-4 transition-colors hover:border-brand-gold/30"
-                      >
-                        <div className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-brand-green/20 bg-brand-green/10 text-brand-green transition-colors group-hover:bg-brand-green group-hover:text-white">
-                          <Icon name="check" size="size-3" />
-                        </div>
-                        <span className="font-serif text-lg font-medium leading-relaxed text-foreground/90">
-                          {item}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </TabsContent>
-
-                {/* TAB 3: Sobre o Autor */}
+                {/* TAB 2: Sobre o Autor */}
                 <TabsContent value="author" className="animate-fade-in space-y-8">
                   <div className="rounded-xl border border-border bg-card p-8">
-                    <div className="flex flex-col gap-6">
-                      <div className="flex items-center gap-4">
-                        <Avatar className="h-20 w-20 border-2 border-background shadow-lg">
-                          <AvatarFallback className="text-2xl">
-                            {book.author.substring(0, 2).toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <h2 className="text-2xl font-bold text-foreground">{book.author}</h2>
-                          <p className="text-sm font-bold uppercase tracking-wider text-primary">
-                            Autor
-                          </p>
+                    {authorLoading ? (
+                      <div className="flex flex-col gap-6">
+                        <div className="flex items-center gap-4">
+                          <Skeleton className="h-20 w-20 rounded-full" />
+                          <div className="space-y-2">
+                            <Skeleton className="h-6 w-48" />
+                            <Skeleton className="h-4 w-24" />
+                          </div>
                         </div>
+                        <Skeleton className="h-24 w-full" />
                       </div>
-                      <p className="font-serif text-base leading-relaxed text-muted-foreground">
-                        Informações detalhadas sobre o autor serão exibidas aqui quando disponíveis
-                        no banco de dados.
-                      </p>
-                    </div>
+                    ) : (
+                      <div className="flex flex-col gap-6">
+                        <div className="flex items-center gap-4">
+                          <Avatar className="h-20 w-20 border-2 border-background shadow-lg">
+                            {author?.avatarUrl && (
+                              <AvatarImage src={author.avatarUrl} alt={author.name} />
+                            )}
+                            <AvatarFallback className="text-2xl">
+                              {book.author.substring(0, 2).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <h2 className="text-2xl font-bold text-foreground">
+                              {author?.name || book.author}
+                            </h2>
+                            <p className="text-sm font-bold uppercase tracking-wider text-primary">
+                              Autor
+                            </p>
+                            {author?.metadata?.occupation &&
+                              author.metadata.occupation.length > 0 && (
+                                <p className="mt-1 text-sm text-muted-foreground">
+                                  {author.metadata.occupation.join(' • ')}
+                                </p>
+                              )}
+                          </div>
+                        </div>
+
+                        {author?.shortBio ? (
+                          <p className="font-serif text-base leading-relaxed text-muted-foreground">
+                            {author.shortBio}
+                          </p>
+                        ) : (
+                          <p className="font-serif text-base italic leading-relaxed text-muted-foreground/60">
+                            Biografia não disponível.
+                          </p>
+                        )}
+
+                        {/* Author Links */}
+                        {author?.metadata && (
+                          <div className="flex flex-wrap gap-3 pt-2">
+                            {author.metadata.wikipedia && (
+                              <a
+                                href={author.metadata.wikipedia}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 rounded-full border border-border bg-muted/50 px-4 py-2 text-sm text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground"
+                              >
+                                <Icon name="globe" size="size-4" /> Wikipedia
+                              </a>
+                            )}
+                            {author.metadata.website && (
+                              <a
+                                href={author.metadata.website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 rounded-full border border-border bg-muted/50 px-4 py-2 text-sm text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground"
+                              >
+                                <Icon name="globe" size="size-4" /> Website
+                              </a>
+                            )}
+                            {author.metadata.twitter && (
+                              <a
+                                href={`https://twitter.com/${author.metadata.twitter}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 rounded-full border border-border bg-muted/50 px-4 py-2 text-sm text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground"
+                              >
+                                <Icon name="x" size="size-4" /> @{author.metadata.twitter}
+                              </a>
+                            )}
+                          </div>
+                        )}
+
+                        {/* View Author Books Link */}
+                        {book.authorSlug && (
+                          <Button
+                            variant="outline"
+                            className="mt-2 w-fit"
+                            onClick={() => navigate(`/books/author/${book.authorSlug}`)}
+                          >
+                            <Icon name="book-stack" className="mr-2" size="size-4" />
+                            Ver Todos os Livros
+                          </Button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </TabsContent>
 
-                {/* TAB 4: Informações */}
+                {/* TAB 3: Informações */}
                 <TabsContent value="info" className="animate-fade-in space-y-8">
                   <div className="rounded-xl border border-border bg-card p-6">
                     <dl className="space-y-4">

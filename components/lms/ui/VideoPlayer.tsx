@@ -10,7 +10,7 @@
  * Auto-detects provider from URL and renders appropriate embed with event callbacks.
  */
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { cn } from '../../../lib/utils';
 
 // ============================================================================
@@ -20,9 +20,9 @@ import { cn } from '../../../lib/utils';
 export type VideoProvider = 'youtube' | 'vimeo' | 'loom' | 'smartplayer' | 'unknown';
 
 export interface VideoProgress {
-  currentTime: number;      // seconds watched
-  duration: number;         // total duration
-  percentage: number;       // 0-100
+  currentTime: number; // seconds watched
+  duration: number; // total duration
+  percentage: number; // 0-100
   provider: VideoProvider;
 }
 
@@ -44,6 +44,8 @@ export interface VideoPlayerProps extends VideoPlayerCallbacks {
   enableVisibilityTracking?: boolean;
   /** Estimated duration in seconds (used when provider doesn't report it) */
   estimatedDuration?: number;
+  /** Initial time in seconds to seek to when player is ready (resume playback) */
+  initialTime?: number;
 }
 
 interface ParsedVideo {
@@ -173,12 +175,12 @@ declare global {
         elementId: string | HTMLElement,
         options: {
           events?: {
-            onReady?: (event: { target: YouTubePlayer }) => void;
-            onStateChange?: (event: { data: number; target: YouTubePlayer }) => void;
+            onReady?: (event: { target: IYouTubePlayer }) => void;
+            onStateChange?: (event: { data: number; target: IYouTubePlayer }) => void;
             onError?: (event: { data: number }) => void;
           };
         }
-      ) => YouTubePlayer;
+      ) => IYouTubePlayer;
       PlayerState: {
         UNSTARTED: -1;
         ENDED: 0;
@@ -192,10 +194,11 @@ declare global {
   }
 }
 
-interface YouTubePlayer {
+interface IYouTubePlayer {
   getCurrentTime: () => number;
   getDuration: () => number;
   getPlayerState: () => number;
+  seekTo: (seconds: number, allowSeekAhead: boolean) => void;
   destroy: () => void;
 }
 
@@ -238,19 +241,21 @@ interface ProviderPlayerProps {
   callbacks: VideoPlayerCallbacks;
   enableVisibilityTracking: boolean;
   estimatedDuration: number;
+  initialTime: number;
 }
 
 /**
  * YouTube Player with full IFrame API integration
  */
-const YouTubePlayer: React.FC<ProviderPlayerProps> = ({
+const YouTubePlayerComponent: React.FC<ProviderPlayerProps> = ({
   parsed,
   title,
   callbacks,
+  initialTime,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const playerRef = useRef<YouTubePlayer | null>(null);
-  const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const playerRef = useRef<IYouTubePlayer | null>(null);
+  const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const iframeId = useRef(`yt-player-${Date.now()}`);
 
   useEffect(() => {
@@ -267,7 +272,8 @@ const YouTubePlayer: React.FC<ProviderPlayerProps> = ({
       iframe.id = iframeId.current;
       iframe.src = parsed.embedUrl!;
       iframe.className = 'absolute inset-0 h-full w-full';
-      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.allow =
+        'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
       iframe.allowFullscreen = true;
       iframe.title = title;
       containerRef.current.appendChild(iframe);
@@ -278,6 +284,10 @@ const YouTubePlayer: React.FC<ProviderPlayerProps> = ({
           onReady: (event) => {
             const duration = event.target.getDuration();
             callbacks.onReady?.(duration);
+            // Seek to initial time if provided (resume playback)
+            if (initialTime && initialTime > 0) {
+              event.target.seekTo(initialTime, true);
+            }
           },
           onStateChange: (event) => {
             const state = event.data;
@@ -350,12 +360,11 @@ const GenericIframePlayer: React.FC<ProviderPlayerProps> = ({
   enableVisibilityTracking,
   estimatedDuration,
 }) => {
-  const iframeRef = useRef<HTMLIFrameElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [watchedTime, setWatchedTime] = useState(0);
+  const [, setWatchedTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasEnded, setHasEnded] = useState(false);
-  const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startTimeRef = useRef<number | null>(null);
 
   // Listen for postMessage events from iframe
@@ -470,9 +479,8 @@ const GenericIframePlayer: React.FC<ProviderPlayerProps> = ({
               progressIntervalRef.current = setInterval(() => {
                 setWatchedTime((prev) => {
                   const newTime = prev + 1;
-                  const percentage = estimatedDuration > 0
-                    ? Math.min((newTime / estimatedDuration) * 100, 100)
-                    : 0;
+                  const percentage =
+                    estimatedDuration > 0 ? Math.min((newTime / estimatedDuration) * 100, 100) : 0;
 
                   callbacks.onProgress?.({
                     currentTime: newTime,
@@ -513,7 +521,14 @@ const GenericIframePlayer: React.FC<ProviderPlayerProps> = ({
         clearInterval(progressIntervalRef.current);
       }
     };
-  }, [enableVisibilityTracking, estimatedDuration, callbacks, parsed.provider, isPlaying, hasEnded]);
+  }, [
+    enableVisibilityTracking,
+    estimatedDuration,
+    callbacks,
+    parsed.provider,
+    isPlaying,
+    hasEnded,
+  ]);
 
   // Notify ready on mount
   useEffect(() => {
@@ -578,6 +593,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   autoplay = false,
   enableVisibilityTracking = true,
   estimatedDuration = 600, // 10 min default
+  initialTime = 0,
   onReady,
   onPlay,
   onPause,
@@ -621,6 +637,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     callbacks,
     enableVisibilityTracking,
     estimatedDuration,
+    initialTime,
   };
 
   return (
@@ -631,7 +648,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       )}
     >
       {parsed.provider === 'youtube' ? (
-        <YouTubePlayer {...providerProps} />
+        <YouTubePlayerComponent {...providerProps} />
       ) : (
         <GenericIframePlayer {...providerProps} />
       )}

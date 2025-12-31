@@ -1,11 +1,10 @@
-
 export enum Page {
   DASHBOARD = 'Dashboard',
   CALLS = 'Calls',
   OBJECTIONS = 'Objeções',
   MARKETING = 'Marketing',
   PRODUCT = 'Produto',
-  SETTINGS = 'Configurações'
+  SETTINGS = 'Configurações',
 }
 
 export type Language = 'pt' | 'en' | 'es';
@@ -114,7 +113,9 @@ export enum Section {
   APP_BOOKS_LIBRARY = 'app_books_library',
   APP_BOOKS_DETAIL = 'app_books_detail',
   APP_BOOKS_READER = 'app_books_reader',
-  APP_BOOKS_COLLECTION = 'app_books_collection'
+  APP_BOOKS_COLLECTION = 'app_books_collection',
+  APP_BOOKS_AUTHOR = 'app_books_author',
+  APP_BOOKS_CATEGORY = 'app_books_category',
 }
 
 export interface TypeScale {

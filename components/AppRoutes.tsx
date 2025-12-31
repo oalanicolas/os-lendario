@@ -3,8 +3,12 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import { Section } from '../types';
 
 // Lazy load all templates for better performance
-const DesignSystemRouter = React.lazy(() => import('./design-system/DesignSystemRouter').then(m => ({ default: m.default })));
-const DocsRouter = React.lazy(() => import('./design-system/DesignSystemRouter').then(m => ({ default: m.DocsRouter })));
+const DesignSystemRouter = React.lazy(() =>
+  import('./design-system/DesignSystemRouter').then((m) => ({ default: m.default }))
+);
+const DocsRouter = React.lazy(() =>
+  import('./design-system/DesignSystemRouter').then((m) => ({ default: m.DocsRouter }))
+);
 const PRDRouter = React.lazy(() => import('./prd/PRDRouter'));
 const CoursesRouter = React.lazy(() => import('./creator/CoursesRouter'));
 const LmsRouter = React.lazy(() => import('./lms/LmsRouter'));
@@ -19,11 +23,15 @@ const SaasSettingsTemplate = React.lazy(() => import('./shared/templates/SaasSet
 // Sales Templates
 const SalesDashboardTemplate = React.lazy(() => import('./sales/templates/SalesDashboardTemplate'));
 const SalesCallsTemplate = React.lazy(() => import('./sales/templates/SalesCallsTemplate'));
-const SalesCallDetailsTemplate = React.lazy(() => import('./sales/templates/SalesCallDetailsTemplate'));
+const SalesCallDetailsTemplate = React.lazy(
+  () => import('./sales/templates/SalesCallDetailsTemplate')
+);
 const SalesMarketingTemplate = React.lazy(() => import('./sales/templates/SalesMarketingTemplate'));
 const SalesProductTemplate = React.lazy(() => import('./sales/templates/SalesProductTemplate'));
 const SalesSettingsTemplate = React.lazy(() => import('./sales/templates/SalesSettingsTemplate'));
-const SalesObjectionsTemplate = React.lazy(() => import('./sales/templates/SalesObjectionsTemplate'));
+const SalesObjectionsTemplate = React.lazy(
+  () => import('./sales/templates/SalesObjectionsTemplate')
+);
 
 // Minds Templates
 const MindsGalleryTemplate = React.lazy(() => import('./minds/templates/MindsGalleryTemplate'));
@@ -33,7 +41,9 @@ const ArtifactEditorTemplate = React.lazy(() => import('./minds/templates/Artifa
 const ArenaTemplate = React.lazy(() => import('./minds/templates/ArenaTemplate'));
 
 // Marketing Templates
-const MarketingTemplatesPage = React.lazy(() => import('./marketing/templates/MarketingTemplatesPage'));
+const MarketingTemplatesPage = React.lazy(
+  () => import('./marketing/templates/MarketingTemplatesPage')
+);
 const LandingPageTemplate = React.lazy(() => import('./marketing/templates/LandingPageTemplate'));
 const AdvertorialTemplate = React.lazy(() => import('./marketing/templates/AdvertorialTemplate'));
 const EbookTemplate = React.lazy(() => import('./marketing/templates/EbookTemplate'));
@@ -43,10 +53,18 @@ const ThankYouTemplate = React.lazy(() => import('./marketing/templates/ThankYou
 const SalesPageTemplate = React.lazy(() => import('./sales/templates/SalesPageTemplate'));
 
 // Community Templates
-const CommunityTemplatesPage = React.lazy(() => import('./marketing/templates/CommunityTemplatesPage'));
-const CommunityCaptureTemplate = React.lazy(() => import('./marketing/templates/CommunityCaptureTemplate'));
-const CommunityAdvertorialTemplate = React.lazy(() => import('./marketing/templates/CommunityAdvertorialTemplate'));
-const CommunitySalesTemplate = React.lazy(() => import('./marketing/templates/CommunitySalesTemplate'));
+const CommunityTemplatesPage = React.lazy(
+  () => import('./marketing/templates/CommunityTemplatesPage')
+);
+const CommunityCaptureTemplate = React.lazy(
+  () => import('./marketing/templates/CommunityCaptureTemplate')
+);
+const CommunityAdvertorialTemplate = React.lazy(
+  () => import('./marketing/templates/CommunityAdvertorialTemplate')
+);
+const CommunitySalesTemplate = React.lazy(
+  () => import('./marketing/templates/CommunitySalesTemplate')
+);
 const CommunityVSLTemplate = React.lazy(() => import('./marketing/templates/CommunityVSLTemplate'));
 
 // Ops Templates
@@ -60,17 +78,19 @@ const BooksLibraryTemplate = React.lazy(() => import('./books/templates/BooksLib
 const BookDetailTemplate = React.lazy(() => import('./books/templates/BookDetailTemplate'));
 const BookReaderTemplate = React.lazy(() => import('./books/templates/BookReaderTemplate'));
 const BookCollectionTemplate = React.lazy(() => import('./books/templates/BookCollectionTemplate'));
+const BooksByAuthorTemplate = React.lazy(() => import('./books/templates/BooksByAuthorTemplate'));
+const BooksCategoryTemplate = React.lazy(() => import('./books/templates/BooksCategoryTemplate'));
 
 // Loading fallback
 const RouteLoader: React.FC = () => (
-  <div className="flex items-center justify-center h-full min-h-[200px]">
-    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+  <div className="flex h-full min-h-[200px] items-center justify-center">
+    <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary" />
   </div>
 );
 
 // External iframe wrapper
 const ExternalFrame: React.FC<{ src: string; title: string }> = ({ src, title }) => (
-  <iframe src={src} className="w-full h-full border-0" title={title} />
+  <iframe src={src} className="h-full w-full border-0" title={title} />
 );
 
 // Creator layout wrapper
@@ -79,7 +99,7 @@ const CreatorLayout: React.FC<{
   setSection: (s: Section) => void;
   children: React.ReactNode;
 }> = ({ section, setSection, children }) => (
-  <div className="flex flex-col min-h-screen bg-background font-sans">
+  <div className="flex min-h-screen flex-col bg-background font-sans">
     <Suspense fallback={<RouteLoader />}>
       <CreatorTopbar currentSection={section} setSection={setSection} />
     </Suspense>
@@ -95,7 +115,13 @@ interface AppRoutesProps {
   setSidebarHidden?: (hidden: boolean) => void;
 }
 
-const AppRoutes: React.FC<AppRoutesProps> = ({ setSection, currentTheme, language, setSidebarCollapsed, setSidebarHidden }) => {
+const AppRoutes: React.FC<AppRoutesProps> = ({
+  setSection,
+  currentTheme,
+  language,
+  setSidebarCollapsed,
+  setSidebarHidden,
+}) => {
   const navigate = useNavigate();
 
   const handleSelectMind = (slug: string) => {
@@ -106,13 +132,16 @@ const AppRoutes: React.FC<AppRoutesProps> = ({ setSection, currentTheme, languag
     <Suspense fallback={<RouteLoader />}>
       <Routes>
         {/* Design System */}
-        <Route path="/design/*" element={
-          <DesignSystemRouter
-            setSection={setSection}
-            currentTheme={currentTheme}
-            language={language}
-          />
-        } />
+        <Route
+          path="/design/*"
+          element={
+            <DesignSystemRouter
+              setSection={setSection}
+              currentTheme={currentTheme}
+              language={language}
+            />
+          }
+        />
 
         {/* Docs */}
         <Route path="/docs/*" element={<DocsRouter />} />
@@ -121,48 +150,93 @@ const AppRoutes: React.FC<AppRoutesProps> = ({ setSection, currentTheme, languag
         <Route path="/prd/*" element={<PRDRouter setSection={setSection} />} />
 
         {/* Minds App */}
-        <Route path="/minds" element={<MindsGalleryTemplate setSection={setSection} onSelectMind={handleSelectMind} />} />
-        <Route path="/minds/gallery" element={<MindsGalleryTemplate setSection={setSection} onSelectMind={handleSelectMind} />} />
+        <Route
+          path="/minds"
+          element={<MindsGalleryTemplate setSection={setSection} onSelectMind={handleSelectMind} />}
+        />
+        <Route
+          path="/minds/gallery"
+          element={<MindsGalleryTemplate setSection={setSection} onSelectMind={handleSelectMind} />}
+        />
         <Route path="/minds/matrix" element={<MindComparisonTemplate setSection={setSection} />} />
         <Route path="/minds/arena" element={<ArenaTemplate setSection={setSection} />} />
-        <Route path="/minds/wizard" element={<div className="p-12 text-center text-muted-foreground">Wizard de Criação (Em Desenvolvimento)</div>} />
-        <Route path="/minds/:mindSlug/artifacts/new" element={<ArtifactEditorTemplate setSection={setSection} />} />
-        <Route path="/minds/:mindSlug/artifacts/:artifactId" element={<ArtifactEditorTemplate setSection={setSection} />} />
+        <Route
+          path="/minds/wizard"
+          element={
+            <div className="p-12 text-center text-muted-foreground">
+              Wizard de Criação (Em Desenvolvimento)
+            </div>
+          }
+        />
+        <Route
+          path="/minds/:mindSlug/artifacts/new"
+          element={<ArtifactEditorTemplate setSection={setSection} />}
+        />
+        <Route
+          path="/minds/:mindSlug/artifacts/:artifactId"
+          element={<ArtifactEditorTemplate setSection={setSection} />}
+        />
         <Route path="/minds/:mindSlug" element={<MindProfileTemplate setSection={setSection} />} />
 
         {/* Creator App */}
         <Route path="/creator/courses/*" element={<CoursesRouter setSection={setSection} />} />
         <Route path="/creator/cursos/*" element={<CoursesRouter setSection={setSection} />} />
-        <Route path="/creator/content" element={
-          <CreatorLayout section={Section.APP_CREATOR_CONTENT} setSection={setSection}>
-            <div className="p-6">
-              <CmsTemplate />
-            </div>
-          </CreatorLayout>
-        } />
+        <Route
+          path="/creator/content"
+          element={
+            <CreatorLayout section={Section.APP_CREATOR_CONTENT} setSection={setSection}>
+              <div className="p-6">
+                <CmsTemplate />
+              </div>
+            </CreatorLayout>
+          }
+        />
         <Route path="/creator/personas" element={<PersonasTemplate setSection={setSection} />} />
-        <Route path="/creator/frameworks" element={<FrameworksTemplate setSection={setSection} />} />
-        <Route path="/creator/performance" element={
-          <CreatorLayout section={Section.APP_CREATOR_PERFORMANCE} setSection={setSection}>
-            <div className="p-12 text-center text-muted-foreground">Analytics & Performance (Em Desenvolvimento)</div>
-          </CreatorLayout>
-        } />
-        <Route path="/creator/settings" element={
-          <CreatorLayout section={Section.APP_CREATOR_SETTINGS} setSection={setSection}>
-            <div className="p-6 max-w-4xl mx-auto w-full">
-              <SaasSettingsTemplate />
-            </div>
-          </CreatorLayout>
-        } />
+        <Route
+          path="/creator/frameworks"
+          element={<FrameworksTemplate setSection={setSection} />}
+        />
+        <Route
+          path="/creator/performance"
+          element={
+            <CreatorLayout section={Section.APP_CREATOR_PERFORMANCE} setSection={setSection}>
+              <div className="p-12 text-center text-muted-foreground">
+                Analytics & Performance (Em Desenvolvimento)
+              </div>
+            </CreatorLayout>
+          }
+        />
+        <Route
+          path="/creator/settings"
+          element={
+            <CreatorLayout section={Section.APP_CREATOR_SETTINGS} setSection={setSection}>
+              <div className="mx-auto w-full max-w-4xl p-6">
+                <SaasSettingsTemplate />
+              </div>
+            </CreatorLayout>
+          }
+        />
 
         {/* Sales App */}
-        <Route path="/sales/dashboard" element={<SalesDashboardTemplate setSection={setSection} />} />
+        <Route
+          path="/sales/dashboard"
+          element={<SalesDashboardTemplate setSection={setSection} />}
+        />
         <Route path="/sales/calls" element={<SalesCallsTemplate setSection={setSection} />} />
-        <Route path="/sales/calls/details" element={<SalesCallDetailsTemplate setSection={setSection} />} />
-        <Route path="/sales/marketing" element={<SalesMarketingTemplate setSection={setSection} />} />
+        <Route
+          path="/sales/calls/details"
+          element={<SalesCallDetailsTemplate setSection={setSection} />}
+        />
+        <Route
+          path="/sales/marketing"
+          element={<SalesMarketingTemplate setSection={setSection} />}
+        />
         <Route path="/sales/product" element={<SalesProductTemplate setSection={setSection} />} />
         <Route path="/sales/settings" element={<SalesSettingsTemplate setSection={setSection} />} />
-        <Route path="/sales/objections" element={<SalesObjectionsTemplate setSection={setSection} />} />
+        <Route
+          path="/sales/objections"
+          element={<SalesObjectionsTemplate setSection={setSection} />}
+        />
 
         {/* Learn App */}
         <Route path="/learn/groups" element={<GroupsTemplate setSection={setSection} />} />
@@ -188,9 +262,18 @@ const AppRoutes: React.FC<AppRoutesProps> = ({ setSection, currentTheme, languag
         <Route path="/community/emails" element={<CommunityTemplatesPage />} />
 
         {/* External Iframes */}
-        <Route path="/external/challenges" element={<ExternalFrame src="https://halloween.lendario.ai/" title="Desafios" />} />
-        <Route path="/external/prompt-ops" element={<ExternalFrame src="https://prompts.academialendaria.ai/" title="Prompt Ops" />} />
-        <Route path="/external/vault" element={<ExternalFrame src="https://vault.academialendaria.com.br/" title="Vault" />} />
+        <Route
+          path="/external/challenges"
+          element={<ExternalFrame src="https://halloween.lendario.ai/" title="Desafios" />}
+        />
+        <Route
+          path="/external/prompt-ops"
+          element={<ExternalFrame src="https://prompts.academialendaria.ai/" title="Prompt Ops" />}
+        />
+        <Route
+          path="/external/vault"
+          element={<ExternalFrame src="https://vault.academialendaria.com.br/" title="Vault" />}
+        />
 
         {/* Ops Studio */}
         <Route path="/studio/ops/db" element={<OpsDBTemplate setSection={setSection} />} />
@@ -198,18 +281,47 @@ const AppRoutes: React.FC<AppRoutesProps> = ({ setSection, currentTheme, languag
         <Route path="/studio/ops/schema" element={<OpsSchemaTemplate setSection={setSection} />} />
 
         {/* Books Library */}
-        <Route path="/books" element={<BooksLibraryTemplate setSection={setSection} onSelectBook={(slug) => navigate(`/books/${slug}`)} />} />
-        <Route path="/books/collections/:collectionSlug" element={<BookCollectionTemplate setSection={setSection} />} />
+        <Route
+          path="/books"
+          element={
+            <BooksLibraryTemplate
+              setSection={setSection}
+              onSelectBook={(slug) => navigate(`/books/${slug}`)}
+            />
+          }
+        />
+        <Route
+          path="/books/collections/:collectionSlug"
+          element={<BookCollectionTemplate setSection={setSection} />}
+        />
+        <Route
+          path="/books/author/:authorSlug"
+          element={<BooksByAuthorTemplate setSection={setSection} />}
+        />
+        <Route
+          path="/books/category/:categorySlug"
+          element={<BooksCategoryTemplate setSection={setSection} />}
+        />
         <Route path="/books/:bookSlug" element={<BookDetailTemplate setSection={setSection} />} />
-        <Route path="/books/:bookSlug/read" element={<BookReaderTemplate setSection={setSection} setSidebarCollapsed={setSidebarCollapsed} setSidebarHidden={setSidebarHidden} />} />
+        <Route
+          path="/books/:bookSlug/read"
+          element={
+            <BookReaderTemplate
+              setSection={setSection}
+              setSidebarCollapsed={setSidebarCollapsed}
+              setSidebarHidden={setSidebarHidden}
+            />
+          }
+        />
 
         {/* Default / 404 */}
         <Route path="/" element={<SalesDashboardTemplate setSection={setSection} />} />
-        <Route path="*" element={
-          <div className="p-12 text-center text-muted-foreground">
-            Página não encontrada
-          </div>
-        } />
+        <Route
+          path="*"
+          element={
+            <div className="p-12 text-center text-muted-foreground">Página não encontrada</div>
+          }
+        />
       </Routes>
     </Suspense>
   );

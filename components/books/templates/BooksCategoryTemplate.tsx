@@ -12,48 +12,46 @@ import {
 } from '../../ui/dropdown-menu';
 import { cn } from '../../../lib/utils';
 import { Section } from '../../../types';
-import { useBookCollection, useBookCollections } from '../../../hooks/useBookCollections';
+import { useBooksByCategory } from '../../../hooks/useBooksByCategory';
+import { useBooks } from '../../../hooks/useBooks';
 import { usePageTitle } from '../../../hooks/usePageTitle';
 import BookCard from '../ui/BookCard';
 import SectionHeader from '../ui/SectionHeader';
 
-interface BookCollectionProps {
+interface BooksCategoryProps {
   setSection: (s: Section) => void;
 }
 
-// Map collection slugs to icons and colors
-const COLLECTION_STYLES: Record<string, { icon: IconName; color: string }> = {
-  mente_alta_performance: { icon: 'brain', color: 'bg-purple-500' },
-  visoes_do_futuro: { icon: 'rocket', color: 'bg-blue-500' },
-  mentes_brilhantes: { icon: 'bulb', color: 'bg-yellow-500' },
-  // Fallback for unknown collections
-  default: { icon: 'book-stack', color: 'bg-brand-gold' },
+// Map category slugs to icons and colors
+const CATEGORY_STYLES: Record<string, { icon: IconName; color: string }> = {
+  negocios: { icon: 'stats-up', color: 'bg-emerald-500' },
+  psicologia: { icon: 'brain', color: 'bg-purple-500' },
+  filosofia: { icon: 'bulb', color: 'bg-amber-500' },
+  tecnologia: { icon: 'code', color: 'bg-blue-500' },
+  biografias: { icon: 'user', color: 'bg-rose-500' },
+  autoajuda: { icon: 'heart', color: 'bg-pink-500' },
+  default: { icon: 'book', color: 'bg-brand-gold' },
 };
 
-const getCollectionStyle = (slug: string) => {
-  return COLLECTION_STYLES[slug] || COLLECTION_STYLES.default;
-};
+const getCategoryStyle = (slug: string) => CATEGORY_STYLES[slug] || CATEGORY_STYLES.default;
 
-type SortOption = 'recommended' | 'title' | 'rating';
+type SortOption = 'recent' | 'title' | 'rating';
 
 const SORT_OPTIONS: Record<SortOption, string> = {
-  recommended: 'Recomendados',
+  recent: 'Mais Recentes',
   title: 'Título (A-Z)',
   rating: 'Melhor Avaliados',
 };
 
-const BookCollectionTemplate: React.FC<BookCollectionProps> = ({ setSection: _setSection }) => {
-  const { collectionSlug } = useParams<{ collectionSlug: string }>();
+const BooksCategoryTemplate: React.FC<BooksCategoryProps> = ({ setSection: _setSection }) => {
+  const { categorySlug } = useParams<{ categorySlug: string }>();
   const navigate = useNavigate();
-  const [sortBy, setSortBy] = useState<SortOption>('recommended');
+  const [sortBy, setSortBy] = useState<SortOption>('recent');
 
-  // Fetch this collection and its books
-  const { collection, books, loading, error } = useBookCollection(collectionSlug || '');
+  const { books, category, loading, error } = useBooksByCategory(categorySlug || '');
+  const { books: allBooks } = useBooks();
 
-  // Fetch all collections for "Other Collections" section
-  const { collections: allCollections } = useBookCollections();
-
-  usePageTitle(collection?.name || 'Coleção');
+  usePageTitle(category?.name || 'Categoria');
 
   // Sort books
   const sortedBooks = useMemo(() => {
@@ -63,24 +61,33 @@ const BookCollectionTemplate: React.FC<BookCollectionProps> = ({ setSection: _se
         return sorted.sort((a, b) => a.title.localeCompare(b.title));
       case 'rating':
         return sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-      case 'recommended':
+      case 'recent':
       default:
-        return sorted; // Keep original order (recommended by curator)
+        return sorted.sort(
+          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
     }
   }, [books, sortBy]);
 
-  // Get style for this collection
-  const style = getCollectionStyle(collectionSlug || '');
+  // Get related books from other categories
+  const categoryBookIds = new Set(books.map((b) => b.id));
+  const relatedBooks = allBooks
+    .filter((b) => !categoryBookIds.has(b.id))
+    .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+    .slice(0, 4);
 
-  // Filter out current collection from "Other Collections"
-  const otherCollections = allCollections.filter((c) => c.slug !== collectionSlug);
+  // Calculate total reading time
+  const totalReadingTime = books.reduce((acc, b) => acc + (b.readingTime || 0), 0);
+
+  // Get category style
+  const style = getCategoryStyle(categorySlug || '');
 
   if (error) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background p-6">
         <div className="space-y-4 text-center">
           <Icon name="exclamation" className="mx-auto text-destructive" size="size-12" />
-          <h2 className="text-xl font-bold">Coleção não encontrada</h2>
+          <h2 className="text-xl font-bold">Categoria não encontrada</h2>
           <p className="text-muted-foreground">{error.message}</p>
           <Button onClick={() => navigate('/books')}>Voltar à Biblioteca</Button>
         </div>
@@ -112,7 +119,7 @@ const BookCollectionTemplate: React.FC<BookCollectionProps> = ({ setSection: _se
       <main className="mx-auto max-w-7xl px-6 py-12">
         {/* Hero Section */}
         <div className="mb-12 flex flex-col items-start gap-8 md:flex-row md:items-center">
-          {/* Collection Icon */}
+          {/* Category Icon */}
           {loading ? (
             <Skeleton className="h-32 w-28 rounded-xl" />
           ) : (
@@ -132,7 +139,7 @@ const BookCollectionTemplate: React.FC<BookCollectionProps> = ({ setSection: _se
             </div>
           )}
 
-          {/* Collection Info */}
+          {/* Category Info */}
           <div className="flex-1 space-y-4">
             {loading ? (
               <>
@@ -140,52 +147,48 @@ const BookCollectionTemplate: React.FC<BookCollectionProps> = ({ setSection: _se
                 <Skeleton className="h-12 w-3/4" />
                 <Skeleton className="h-16 w-full" />
               </>
-            ) : collection ? (
+            ) : (
               <>
                 <Badge
                   variant="outline"
                   className="border-brand-gold/30 bg-brand-gold/10 text-[10px] uppercase tracking-wider text-brand-gold"
                 >
-                  Coleção
+                  Categoria
                 </Badge>
                 <h1 className="font-serif text-4xl font-bold leading-tight text-foreground md:text-5xl">
-                  {collection.name}
+                  {category?.name || categorySlug}
                 </h1>
-                {collection.description && (
+                {category?.description && (
                   <p className="max-w-2xl text-lg leading-relaxed text-muted-foreground">
-                    {collection.description}
+                    {category.description}
                   </p>
                 )}
-                <div className="flex items-center gap-6 pt-2 text-sm">
+                <div className="flex flex-wrap items-center gap-6 pt-2 text-sm">
                   <div className="flex items-center gap-2">
-                    <Icon name="book" className="text-muted-foreground" size="size-4" />
+                    <Icon name="book" className="text-brand-gold" size="size-4" />
                     <span className="font-medium">{books.length} livros</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Icon name="clock" className="text-muted-foreground" size="size-4" />
-                    <span className="font-medium">
-                      ~{books.reduce((acc, b) => acc + (b.readingTime || 0), 0)} min de leitura
-                    </span>
-                  </div>
+                  {totalReadingTime > 0 && (
+                    <div className="flex items-center gap-2">
+                      <Icon name="clock" className="text-muted-foreground" size="size-4" />
+                      <span className="font-medium">~{totalReadingTime} min de leitura</span>
+                    </div>
+                  )}
                 </div>
               </>
-            ) : null}
+            )}
           </div>
         </div>
 
         {/* Action Bar */}
-        {!loading && collection && (
+        {!loading && books.length > 0 && (
           <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-border pb-6">
             <div className="flex items-center gap-4">
               <Button
                 className="bg-brand-gold font-bold text-black hover:bg-brand-gold/90"
                 onClick={() => books[0] && navigate(`/books/${books[0].slug}`)}
-                disabled={books.length === 0}
               >
-                <Icon name="play" className="mr-2" size="size-4" /> Começar a Ler
-              </Button>
-              <Button variant="outline" className="font-bold">
-                <Icon name="plus" className="mr-2" size="size-4" /> Adicionar à Lista
+                <Icon name="book-open-cover" className="mr-2" size="size-4" /> Começar a Ler
               </Button>
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -216,7 +219,7 @@ const BookCollectionTemplate: React.FC<BookCollectionProps> = ({ setSection: _se
 
         {/* Books Grid */}
         <div className="space-y-8">
-          <SectionHeader title="Livros nesta Coleção" />
+          <SectionHeader title={`Livros de ${category?.name || 'esta categoria'}`} />
 
           {loading ? (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -242,51 +245,28 @@ const BookCollectionTemplate: React.FC<BookCollectionProps> = ({ setSection: _se
           ) : (
             <div className="py-12 text-center">
               <Icon name="book" className="mx-auto mb-4 text-muted-foreground" size="size-12" />
-              <h3 className="text-lg font-bold">Nenhum livro nesta coleção</h3>
-              <p className="text-muted-foreground">Em breve adicionaremos livros a esta coleção.</p>
+              <h3 className="text-lg font-bold">Nenhum livro encontrado</h3>
+              <p className="text-muted-foreground">
+                Esta categoria ainda não tem livros cadastrados na biblioteca.
+              </p>
             </div>
           )}
         </div>
 
-        {/* Related Collections */}
-        {otherCollections.length > 0 && (
+        {/* Related Books Section */}
+        {!loading && relatedBooks.length > 0 && (
           <div className="mt-16 border-t border-border pt-12">
-            <SectionHeader title="Outras Coleções" onViewAll={() => navigate('/books')} />
+            <SectionHeader title="Você também pode gostar" onViewAll={() => navigate('/books')} />
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-              {otherCollections.slice(0, 3).map((otherCollection) => {
-                const otherStyle = getCollectionStyle(otherCollection.slug);
-                return (
-                  <div
-                    key={otherCollection.id}
-                    className="group flex cursor-pointer items-center gap-6 rounded-xl border border-border/50 bg-card p-6 transition-colors hover:bg-muted/10"
-                    onClick={() => navigate(`/books/collections/${otherCollection.slug}`)}
-                  >
-                    {/* Stack Effect */}
-                    <div className="relative">
-                      <div className="absolute right-0 top-0 h-24 w-20 translate-x-2 rotate-6 rounded border border-border bg-card shadow-sm"></div>
-                      <div className="absolute right-0 top-0 h-24 w-20 translate-x-1 -rotate-3 rounded border border-border bg-card shadow-sm"></div>
-                      <div
-                        className={cn(
-                          'relative flex h-24 w-20 items-center justify-center rounded text-black shadow-lg',
-                          otherStyle.color
-                        )}
-                      >
-                        <Icon name={otherStyle.icon} size="size-8" />
-                      </div>
-                    </div>
-
-                    <div>
-                      <h4 className="text-lg font-bold leading-tight transition-colors group-hover:text-primary">
-                        {otherCollection.name}
-                      </h4>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {otherCollection.bookCount} livros
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
+              {relatedBooks.map((book) => (
+                <BookCard
+                  key={book.id}
+                  book={book}
+                  variant="grid"
+                  onClick={() => navigate(`/books/${book.slug}`)}
+                />
+              ))}
             </div>
           </div>
         )}
@@ -295,4 +275,4 @@ const BookCollectionTemplate: React.FC<BookCollectionProps> = ({ setSection: _se
   );
 };
 
-export default BookCollectionTemplate;
+export default BooksCategoryTemplate;

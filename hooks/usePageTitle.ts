@@ -115,6 +115,8 @@ const SECTION_TITLES: Record<Section, string> = {
   [Section.APP_BOOKS_DETAIL]: 'Detalhes do Livro',
   [Section.APP_BOOKS_READER]: 'Leitor',
   [Section.APP_BOOKS_COLLECTION]: 'Coleção',
+  [Section.APP_BOOKS_AUTHOR]: 'Livros do Autor',
+  [Section.APP_BOOKS_CATEGORY]: 'Categoria',
 };
 
 /**
@@ -139,9 +141,7 @@ export function usePageTitle(title: string | Section | null | undefined): void {
 
     // Check if it's a Section enum value
     const isSection = Object.values(Section).includes(title as Section);
-    const displayTitle = isSection
-      ? SECTION_TITLES[title as Section] || title
-      : title;
+    const displayTitle = isSection ? SECTION_TITLES[title as Section] || title : title;
 
     document.title = `${displayTitle} | ${APP_NAME}`;
   }, [title]);

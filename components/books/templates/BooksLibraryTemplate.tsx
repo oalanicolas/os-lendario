@@ -11,7 +11,7 @@ import { useBookCollections } from '../../../hooks/useBookCollections';
 import { usePageTitle } from '../../../hooks/usePageTitle';
 import BookCard from '../ui/BookCard';
 import BookCardHorizontal from '../ui/BookCardHorizontal';
-import CollectionCard, { type Collection } from '../ui/CollectionCard';
+import CollectionCard from '../ui/CollectionCard';
 import SectionHeader from '../ui/SectionHeader';
 import { BookCardSkeleton, HeroSkeleton, CategorySkeleton } from '../ui/BookSkeletons';
 import BooksTopbar from '../BooksTopbar';
@@ -68,10 +68,7 @@ const BooksLibraryTemplate: React.FC<BooksLibraryProps> = ({ setSection, onSelec
   );
 
   const popularBooks = useMemo(
-    () =>
-      [...books]
-        .sort((a, b) => (b.rating || 0) - (a.rating || 0))
-        .slice(0, 5),
+    () => [...books].sort((a, b) => (b.rating || 0) - (a.rating || 0)).slice(0, 5),
     [books]
   );
 
@@ -190,11 +187,7 @@ const BooksLibraryTemplate: React.FC<BooksLibraryProps> = ({ setSection, onSelec
         {/* Lançamentos Section - Horizontal Cards */}
         {!selectedCategory && !searchQuery && recentBooks.length > 0 && (
           <section>
-            <SectionHeader
-              title="Lançamentos"
-              onViewAll={() => {}}
-              viewAllVariant="primary"
-            />
+            <SectionHeader title="Lançamentos" onViewAll={() => {}} viewAllVariant="primary" />
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               {loading
@@ -206,7 +199,6 @@ const BooksLibraryTemplate: React.FC<BooksLibraryProps> = ({ setSection, onSelec
                       key={book.id}
                       book={book}
                       onClick={() => handleBookClick(book)}
-                      progress={Math.random() * 100} // TODO: replace with real progress
                       curator={book.author}
                       accentColor={index === 0 ? 'text-purple-400' : 'text-orange-400'}
                     />
@@ -218,10 +210,7 @@ const BooksLibraryTemplate: React.FC<BooksLibraryProps> = ({ setSection, onSelec
         {/* Mais Populares Section */}
         {!selectedCategory && !searchQuery && popularBooks.length > 0 && (
           <section>
-            <SectionHeader
-              title="Mais Populares"
-              onViewAll={() => {}}
-            />
+            <SectionHeader title="Mais Populares" onViewAll={() => {}} />
 
             <div className="scrollbar-hide -mx-6 flex snap-x gap-6 overflow-x-auto px-6 pb-8 md:mx-0 md:px-0">
               {loading
@@ -244,7 +233,9 @@ const BooksLibraryTemplate: React.FC<BooksLibraryProps> = ({ setSection, onSelec
           <section>
             <SectionHeader
               title="Coleções"
-              onViewAll={() => collections[0] && navigate(`/books/collections/${collections[0].slug}`)}
+              onViewAll={() =>
+                collections[0] && navigate(`/books/collections/${collections[0].slug}`)
+              }
             />
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -275,11 +266,7 @@ const BooksLibraryTemplate: React.FC<BooksLibraryProps> = ({ setSection, onSelec
         {/* Audiobooks Section */}
         {!selectedCategory && !searchQuery && booksWithAudio.length > 0 && (
           <section>
-            <SectionHeader
-              title="Com Audiobook"
-              icon="headset"
-              onViewAll={() => {}}
-            />
+            <SectionHeader title="Com Audiobook" icon="headset" onViewAll={() => {}} />
 
             <div className="scrollbar-hide -mx-6 flex snap-x gap-6 overflow-x-auto px-6 pb-8 md:mx-0 md:px-0">
               {booksWithAudio.map((book) => (
