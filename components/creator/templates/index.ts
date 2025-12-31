@@ -10,7 +10,7 @@ export { default as CourseCurriculumTemplate } from './CourseCurriculumTemplate'
 export { default as CourseLessonsTemplate } from './CourseLessonsTemplate';
 export { default as CourseValidationTemplate } from './CourseValidationTemplate';
 export { default as LessonEditor } from './LessonEditor';
-export { default as PersonasTemplate } from './PersonasTemplate';
+// PersonasTemplate moved to ./creator/personas/PersonasTemplate
 export { default as FrameworksTemplate } from './FrameworksTemplate';
 
 // Types

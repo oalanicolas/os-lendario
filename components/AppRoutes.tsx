@@ -1,6 +1,12 @@
 import React, { Suspense } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Outlet } from 'react-router-dom';
 import { Section } from '../types';
+import { AuthGuard } from './auth/AuthGuard';
+
+// Auth Pages (public routes)
+const LoginPage = React.lazy(() => import('../pages/auth/LoginPage'));
+const SignupPage = React.lazy(() => import('../pages/auth/SignupPage'));
+const CallbackPage = React.lazy(() => import('../pages/auth/CallbackPage'));
 
 // Lazy load all templates for better performance
 const DesignSystemRouter = React.lazy(() =>
@@ -14,7 +20,7 @@ const CoursesRouter = React.lazy(() => import('./creator/CoursesRouter'));
 const LmsRouter = React.lazy(() => import('./lms/LmsRouter'));
 
 // Creator Templates
-const PersonasTemplate = React.lazy(() => import('./creator/templates/PersonasTemplate'));
+const PersonasTemplate = React.lazy(() => import('./creator/personas/PersonasTemplate'));
 const FrameworksTemplate = React.lazy(() => import('./creator/templates/FrameworksTemplate'));
 const CreatorTopbar = React.lazy(() => import('./creator/CreatorTopbar'));
 const CmsTemplate = React.lazy(() => import('./shared/templates/CmsTemplate'));
@@ -131,195 +137,240 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
   return (
     <Suspense fallback={<RouteLoader />}>
       <Routes>
-        {/* Design System */}
+        {/* ============================================= */}
+        {/* PUBLIC ROUTES (No auth required) */}
+        {/* ============================================= */}
+        <Route path="/auth/login" element={<LoginPage />} />
+        <Route path="/auth/signup" element={<SignupPage />} />
+        <Route path="/auth/callback" element={<CallbackPage />} />
+
+        {/* ============================================= */}
+        {/* PROTECTED ROUTES (Auth required) */}
+        {/* ============================================= */}
         <Route
-          path="/design/*"
           element={
-            <DesignSystemRouter
-              setSection={setSection}
-              currentTheme={currentTheme}
-              language={language}
-            />
+            <AuthGuard>
+              <Outlet />
+            </AuthGuard>
           }
-        />
+        >
+          {/* Design System */}
+          <Route
+            path="/design/*"
+            element={
+              <DesignSystemRouter
+                setSection={setSection}
+                currentTheme={currentTheme}
+                language={language}
+              />
+            }
+          />
 
-        {/* Docs */}
-        <Route path="/docs/*" element={<DocsRouter />} />
+          {/* Docs */}
+          <Route path="/docs/*" element={<DocsRouter />} />
 
-        {/* PRD Studio */}
-        <Route path="/prd/*" element={<PRDRouter setSection={setSection} />} />
+          {/* PRD Studio */}
+          <Route path="/prd/*" element={<PRDRouter setSection={setSection} />} />
 
-        {/* Minds App */}
-        <Route
-          path="/minds"
-          element={<MindsGalleryTemplate setSection={setSection} onSelectMind={handleSelectMind} />}
-        />
-        <Route
-          path="/minds/gallery"
-          element={<MindsGalleryTemplate setSection={setSection} onSelectMind={handleSelectMind} />}
-        />
-        <Route path="/minds/matrix" element={<MindComparisonTemplate setSection={setSection} />} />
-        <Route path="/minds/arena" element={<ArenaTemplate setSection={setSection} />} />
-        <Route
-          path="/minds/wizard"
-          element={
-            <div className="p-12 text-center text-muted-foreground">
-              Wizard de Criação (Em Desenvolvimento)
-            </div>
-          }
-        />
-        <Route
-          path="/minds/:mindSlug/artifacts/new"
-          element={<ArtifactEditorTemplate setSection={setSection} />}
-        />
-        <Route
-          path="/minds/:mindSlug/artifacts/:artifactId"
-          element={<ArtifactEditorTemplate setSection={setSection} />}
-        />
-        <Route path="/minds/:mindSlug" element={<MindProfileTemplate setSection={setSection} />} />
-
-        {/* Creator App */}
-        <Route path="/creator/courses/*" element={<CoursesRouter setSection={setSection} />} />
-        <Route path="/creator/cursos/*" element={<CoursesRouter setSection={setSection} />} />
-        <Route
-          path="/creator/content"
-          element={
-            <CreatorLayout section={Section.APP_CREATOR_CONTENT} setSection={setSection}>
-              <div className="p-6">
-                <CmsTemplate />
-              </div>
-            </CreatorLayout>
-          }
-        />
-        <Route path="/creator/personas" element={<PersonasTemplate setSection={setSection} />} />
-        <Route
-          path="/creator/frameworks"
-          element={<FrameworksTemplate setSection={setSection} />}
-        />
-        <Route
-          path="/creator/performance"
-          element={
-            <CreatorLayout section={Section.APP_CREATOR_PERFORMANCE} setSection={setSection}>
+          {/* Minds App */}
+          <Route
+            path="/minds"
+            element={
+              <MindsGalleryTemplate setSection={setSection} onSelectMind={handleSelectMind} />
+            }
+          />
+          <Route
+            path="/minds/gallery"
+            element={
+              <MindsGalleryTemplate setSection={setSection} onSelectMind={handleSelectMind} />
+            }
+          />
+          <Route
+            path="/minds/matrix"
+            element={<MindComparisonTemplate setSection={setSection} />}
+          />
+          <Route path="/minds/arena" element={<ArenaTemplate setSection={setSection} />} />
+          <Route
+            path="/minds/wizard"
+            element={
               <div className="p-12 text-center text-muted-foreground">
-                Analytics & Performance (Em Desenvolvimento)
+                Wizard de Criação (Em Desenvolvimento)
               </div>
-            </CreatorLayout>
-          }
-        />
-        <Route
-          path="/creator/settings"
-          element={
-            <CreatorLayout section={Section.APP_CREATOR_SETTINGS} setSection={setSection}>
-              <div className="mx-auto w-full max-w-4xl p-6">
-                <SaasSettingsTemplate />
-              </div>
-            </CreatorLayout>
-          }
-        />
+            }
+          />
+          <Route
+            path="/minds/:mindSlug/artifacts/new"
+            element={<ArtifactEditorTemplate setSection={setSection} />}
+          />
+          <Route
+            path="/minds/:mindSlug/artifacts/:artifactId"
+            element={<ArtifactEditorTemplate setSection={setSection} />}
+          />
+          <Route
+            path="/minds/:mindSlug"
+            element={<MindProfileTemplate setSection={setSection} />}
+          />
 
-        {/* Sales App */}
-        <Route
-          path="/sales/dashboard"
-          element={<SalesDashboardTemplate setSection={setSection} />}
-        />
-        <Route path="/sales/calls" element={<SalesCallsTemplate setSection={setSection} />} />
-        <Route
-          path="/sales/calls/details"
-          element={<SalesCallDetailsTemplate setSection={setSection} />}
-        />
-        <Route
-          path="/sales/marketing"
-          element={<SalesMarketingTemplate setSection={setSection} />}
-        />
-        <Route path="/sales/product" element={<SalesProductTemplate setSection={setSection} />} />
-        <Route path="/sales/settings" element={<SalesSettingsTemplate setSection={setSection} />} />
-        <Route
-          path="/sales/objections"
-          element={<SalesObjectionsTemplate setSection={setSection} />}
-        />
+          {/* Creator App */}
+          <Route path="/creator/courses/*" element={<CoursesRouter setSection={setSection} />} />
+          <Route path="/creator/cursos/*" element={<CoursesRouter setSection={setSection} />} />
+          <Route
+            path="/creator/content"
+            element={
+              <CreatorLayout section={Section.APP_CREATOR_CONTENT} setSection={setSection}>
+                <div className="p-6">
+                  <CmsTemplate />
+                </div>
+              </CreatorLayout>
+            }
+          />
+          <Route path="/creator/personas" element={<PersonasTemplate setSection={setSection} />} />
+          <Route
+            path="/creator/frameworks"
+            element={<FrameworksTemplate setSection={setSection} />}
+          />
+          <Route
+            path="/creator/performance"
+            element={
+              <CreatorLayout section={Section.APP_CREATOR_PERFORMANCE} setSection={setSection}>
+                <div className="p-12 text-center text-muted-foreground">
+                  Analytics & Performance (Em Desenvolvimento)
+                </div>
+              </CreatorLayout>
+            }
+          />
+          <Route
+            path="/creator/settings"
+            element={
+              <CreatorLayout section={Section.APP_CREATOR_SETTINGS} setSection={setSection}>
+                <div className="mx-auto w-full max-w-4xl p-6">
+                  <SaasSettingsTemplate />
+                </div>
+              </CreatorLayout>
+            }
+          />
 
-        {/* Learn App */}
-        <Route path="/learn/groups" element={<GroupsTemplate setSection={setSection} />} />
+          {/* Sales App */}
+          <Route
+            path="/sales/dashboard"
+            element={<SalesDashboardTemplate setSection={setSection} />}
+          />
+          <Route path="/sales/calls" element={<SalesCallsTemplate setSection={setSection} />} />
+          <Route
+            path="/sales/calls/details"
+            element={<SalesCallDetailsTemplate setSection={setSection} />}
+          />
+          <Route
+            path="/sales/marketing"
+            element={<SalesMarketingTemplate setSection={setSection} />}
+          />
+          <Route path="/sales/product" element={<SalesProductTemplate setSection={setSection} />} />
+          <Route
+            path="/sales/settings"
+            element={<SalesSettingsTemplate setSection={setSection} />}
+          />
+          <Route
+            path="/sales/objections"
+            element={<SalesObjectionsTemplate setSection={setSection} />}
+          />
 
-        {/* LMS (Student View) */}
-        <Route path="/lms/*" element={<LmsRouter />} />
+          {/* Learn App */}
+          <Route path="/learn/groups" element={<GroupsTemplate setSection={setSection} />} />
 
-        {/* Marketing Templates */}
-        <Route path="/marketing/guide" element={<MarketingTemplatesPage />} />
-        <Route path="/marketing/landing" element={<LandingPageTemplate />} />
-        <Route path="/marketing/advertorial" element={<AdvertorialTemplate />} />
-        <Route path="/marketing/sales-page" element={<SalesPageTemplate />} />
-        <Route path="/marketing/ebook" element={<EbookTemplate />} />
-        <Route path="/marketing/vsl" element={<VSLTemplate />} />
-        <Route path="/marketing/webinar" element={<WebinarTemplate />} />
-        <Route path="/marketing/thank-you" element={<ThankYouTemplate />} />
+          {/* LMS (Student View) */}
+          <Route path="/lms/*" element={<LmsRouter />} />
 
-        {/* Community Templates */}
-        <Route path="/community/capture" element={<CommunityCaptureTemplate />} />
-        <Route path="/community/advertorial" element={<CommunityAdvertorialTemplate />} />
-        <Route path="/community/sales" element={<CommunitySalesTemplate />} />
-        <Route path="/community/vsl" element={<CommunityVSLTemplate />} />
-        <Route path="/community/emails" element={<CommunityTemplatesPage />} />
+          {/* Marketing Templates */}
+          <Route path="/marketing/guide" element={<MarketingTemplatesPage />} />
+          <Route path="/marketing/landing" element={<LandingPageTemplate />} />
+          <Route path="/marketing/advertorial" element={<AdvertorialTemplate />} />
+          <Route path="/marketing/sales-page" element={<SalesPageTemplate />} />
+          <Route path="/marketing/ebook" element={<EbookTemplate />} />
+          <Route path="/marketing/vsl" element={<VSLTemplate />} />
+          <Route path="/marketing/webinar" element={<WebinarTemplate />} />
+          <Route path="/marketing/thank-you" element={<ThankYouTemplate />} />
 
-        {/* External Iframes */}
-        <Route
-          path="/external/challenges"
-          element={<ExternalFrame src="https://halloween.lendario.ai/" title="Desafios" />}
-        />
-        <Route
-          path="/external/prompt-ops"
-          element={<ExternalFrame src="https://prompts.academialendaria.ai/" title="Prompt Ops" />}
-        />
-        <Route
-          path="/external/vault"
-          element={<ExternalFrame src="https://vault.academialendaria.com.br/" title="Vault" />}
-        />
+          {/* Community Templates */}
+          <Route path="/community/capture" element={<CommunityCaptureTemplate />} />
+          <Route path="/community/advertorial" element={<CommunityAdvertorialTemplate />} />
+          <Route path="/community/sales" element={<CommunitySalesTemplate />} />
+          <Route path="/community/vsl" element={<CommunityVSLTemplate />} />
+          <Route path="/community/emails" element={<CommunityTemplatesPage />} />
 
-        {/* Ops Studio */}
-        <Route path="/studio/ops/db" element={<OpsDBTemplate setSection={setSection} />} />
-        <Route path="/studio/ops/views" element={<OpsViewsTemplate setSection={setSection} />} />
-        <Route path="/studio/ops/schema" element={<OpsSchemaTemplate setSection={setSection} />} />
+          {/* External Iframes */}
+          <Route
+            path="/external/challenges"
+            element={<ExternalFrame src="https://halloween.lendario.ai/" title="Desafios" />}
+          />
+          <Route
+            path="/external/prompt-ops"
+            element={
+              <ExternalFrame src="https://prompts.academialendaria.ai/" title="Prompt Ops" />
+            }
+          />
+          <Route
+            path="/external/vault"
+            element={<ExternalFrame src="https://vault.academialendaria.com.br/" title="Vault" />}
+          />
 
-        {/* Books Library */}
-        <Route
-          path="/books"
-          element={
-            <BooksLibraryTemplate
-              setSection={setSection}
-              onSelectBook={(slug) => navigate(`/books/${slug}`)}
-            />
-          }
-        />
-        <Route
-          path="/books/collections/:collectionSlug"
-          element={<BookCollectionTemplate setSection={setSection} />}
-        />
-        <Route
-          path="/books/author/:authorSlug"
-          element={<BooksByAuthorTemplate setSection={setSection} />}
-        />
-        <Route
-          path="/books/category/:categorySlug"
-          element={<BooksCategoryTemplate setSection={setSection} />}
-        />
-        <Route path="/books/:bookSlug" element={<BookDetailTemplate setSection={setSection} />} />
-        <Route
-          path="/books/:bookSlug/read"
-          element={
-            <BookReaderTemplate
-              setSection={setSection}
-              setSidebarCollapsed={setSidebarCollapsed}
-              setSidebarHidden={setSidebarHidden}
-            />
-          }
-        />
+          {/* Ops Studio */}
+          <Route path="/studio/ops/db" element={<OpsDBTemplate setSection={setSection} />} />
+          <Route path="/studio/ops/views" element={<OpsViewsTemplate setSection={setSection} />} />
+          <Route
+            path="/studio/ops/schema"
+            element={<OpsSchemaTemplate setSection={setSection} />}
+          />
 
-        {/* Default / 404 */}
-        <Route path="/" element={<SalesDashboardTemplate setSection={setSection} />} />
+          {/* Books Library */}
+          <Route
+            path="/books"
+            element={
+              <BooksLibraryTemplate
+                setSection={setSection}
+                onSelectBook={(slug) => navigate(`/books/${slug}`)}
+              />
+            }
+          />
+          <Route
+            path="/books/collections/:collectionSlug"
+            element={<BookCollectionTemplate setSection={setSection} />}
+          />
+          <Route
+            path="/books/author/:authorSlug"
+            element={<BooksByAuthorTemplate setSection={setSection} />}
+          />
+          <Route
+            path="/books/category/:categorySlug"
+            element={<BooksCategoryTemplate setSection={setSection} />}
+          />
+          <Route path="/books/:bookSlug" element={<BookDetailTemplate setSection={setSection} />} />
+          <Route
+            path="/books/:bookSlug/read"
+            element={
+              <BookReaderTemplate
+                setSection={setSection}
+                setSidebarCollapsed={setSidebarCollapsed}
+                setSidebarHidden={setSidebarHidden}
+              />
+            }
+          />
+
+          {/* Default */}
+          <Route path="/" element={<SalesDashboardTemplate setSection={setSection} />} />
+        </Route>
+        {/* End of AuthGuard protected routes */}
+
+        {/* 404 (public - show login link) */}
         <Route
           path="*"
           element={
-            <div className="p-12 text-center text-muted-foreground">Página não encontrada</div>
+            <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-12 text-center">
+              <h1 className="text-2xl font-bold text-foreground">Página não encontrada</h1>
+              <p className="text-muted-foreground">A página que você procura não existe.</p>
+              <a href="/auth/login" className="text-primary hover:underline">
+                Ir para login
+              </a>
+            </div>
           }
         />
       </Routes>
