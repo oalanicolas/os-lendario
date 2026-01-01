@@ -210,7 +210,7 @@ const BookDetailTemplate: React.FC<BookDetailProps> = ({ setSection: _setSection
                       <Icon name="chevron-down" className="ml-auto" size="size-4" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="center" className="w-56">
+                  <DropdownMenuContent align="start" className="w-56">
                     <DropdownMenuItem
                       onClick={() => handleChangeStatus('want_to_read')}
                       className={cn(currentStatus === 'want_to_read' && 'bg-brand-gold/10')}

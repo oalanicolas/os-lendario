@@ -361,6 +361,7 @@ const GenericIframePlayer: React.FC<ProviderPlayerProps> = ({
   estimatedDuration,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const [, setWatchedTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasEnded, setHasEnded] = useState(false);

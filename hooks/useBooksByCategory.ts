@@ -81,17 +81,12 @@ export function useBooksByCategory(categorySlug: string): UseBooksByCategoryResu
         .select('id, slug, name, description')
         .eq('slug', categorySlug)
         .eq('tag_type', 'category')
-        .single();
+        .single<CategoryInfo>();
 
       if (tagError && tagError.code !== 'PGRST116') throw tagError;
 
       if (tagData) {
-        setCategory({
-          id: tagData.id,
-          slug: tagData.slug,
-          name: tagData.name,
-          description: tagData.description,
-        });
+        setCategory(tagData);
       }
 
       // Fetch books with this category tag
