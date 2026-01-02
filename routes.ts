@@ -106,14 +106,18 @@ export const SECTION_ROUTES: Record<Section, string> = {
   [Section.STUDIO_OPS_VIEWS]: '/studio/ops/views',
   [Section.STUDIO_OPS_SCHEMA]: '/studio/ops/schema',
   [Section.STUDIO_OPS_TOOL_STACKS]: '/studio/ops/tool-stacks',
+  [Section.STUDIO_OPS_USERS]: '/studio/ops/users',
 
   // Books Library
   [Section.APP_BOOKS_LIBRARY]: '/books',
   [Section.APP_BOOKS_DETAIL]: '/books/:slug',
   [Section.APP_BOOKS_READER]: '/books/:slug/read',
-  [Section.APP_BOOKS_COLLECTION]: '/books/collections/:slug',
+  [Section.APP_BOOKS_COLLECTIONS]: '/books/collections',
+  [Section.APP_BOOKS_COLLECTION]: '/books/collections/:collectionSlug',
   [Section.APP_BOOKS_AUTHOR]: '/books/author/:slug',
+  [Section.APP_BOOKS_AUTHORS]: '/books/authors',
   [Section.APP_BOOKS_CATEGORY]: '/books/category/:slug',
+  [Section.APP_BOOKS_ADMIN]: '/books/admin',
 };
 
 export const getSectionFromPath = (path: string): Section | null => {
@@ -147,6 +151,9 @@ export const getSectionFromPath = (path: string): Section | null => {
   // Handle Books routes
   if (path.startsWith('/books/')) {
     const subPath = path.replace('/books/', '');
+    if (subPath === 'admin') return Section.APP_BOOKS_ADMIN;
+    if (subPath === 'authors') return Section.APP_BOOKS_AUTHORS;
+    if (subPath === 'collections') return Section.APP_BOOKS_COLLECTIONS;
     if (subPath.startsWith('collections/')) return Section.APP_BOOKS_COLLECTION;
     if (subPath.startsWith('author/')) return Section.APP_BOOKS_AUTHOR;
     if (subPath.startsWith('category/')) return Section.APP_BOOKS_CATEGORY;

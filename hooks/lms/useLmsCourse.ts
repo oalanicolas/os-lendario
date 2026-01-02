@@ -180,7 +180,7 @@ export function useLmsCourse(slug: string | undefined): UseLmsCourseResult {
             title: content.title,
             duration: metadata?.duration || '10:00',
             type: metadata?.lesson_type || 'video',
-            status: 'locked', // TODO: Calculate from user progress
+            status: 'current', // All lessons unlocked - no progression lock
             sequenceOrder: content.sequence_order || 0,
             parentId: content.parent_content_id,
           });

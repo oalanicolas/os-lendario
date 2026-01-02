@@ -78,14 +78,18 @@ const OpsDBTemplate = React.lazy(() => import('./ops/templates/OpsDBTemplate'));
 const GroupsTemplate = React.lazy(() => import('./ops/templates/GroupsTemplate'));
 const OpsViewsTemplate = React.lazy(() => import('./ops/templates/OpsViewsTemplate'));
 const OpsSchemaTemplate = React.lazy(() => import('./ops/templates/OpsSchemaTemplate'));
+const OpsUsersTemplate = React.lazy(() => import('./ops/templates/OpsUsersTemplate'));
 
 // Books Templates
 const BooksLibraryTemplate = React.lazy(() => import('./books/templates/BooksLibraryTemplate'));
 const BookDetailTemplate = React.lazy(() => import('./books/templates/BookDetailTemplate'));
 const BookReaderTemplate = React.lazy(() => import('./books/templates/BookReaderTemplate'));
 const BookCollectionTemplate = React.lazy(() => import('./books/templates/BookCollectionTemplate'));
+const AllCollectionsTemplate = React.lazy(() => import('./books/templates/AllCollectionsTemplate'));
 const BooksByAuthorTemplate = React.lazy(() => import('./books/templates/BooksByAuthorTemplate'));
 const BooksCategoryTemplate = React.lazy(() => import('./books/templates/BooksCategoryTemplate'));
+const BooksAuthorsTemplate = React.lazy(() => import('./books/templates/BooksAuthorsTemplate'));
+const BooksAdminTemplate = React.lazy(() => import('./books/templates/BooksAdminTemplate'));
 
 // Loading fallback
 const RouteLoader: React.FC = () => (
@@ -320,6 +324,7 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
             path="/studio/ops/schema"
             element={<OpsSchemaTemplate setSection={setSection} />}
           />
+          <Route path="/studio/ops/users" element={<OpsUsersTemplate setSection={setSection} />} />
 
           {/* Books Library */}
           <Route
@@ -332,6 +337,10 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
             }
           />
           <Route
+            path="/books/collections"
+            element={<AllCollectionsTemplate setSection={setSection} />}
+          />
+          <Route
             path="/books/collections/:collectionSlug"
             element={<BookCollectionTemplate setSection={setSection} />}
           />
@@ -342,6 +351,11 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
           <Route
             path="/books/category/:categorySlug"
             element={<BooksCategoryTemplate setSection={setSection} />}
+          />
+          <Route path="/books/authors" element={<BooksAuthorsTemplate setSection={setSection} />} />
+          <Route
+            path="/books/admin"
+            element={<BooksAdminTemplate onBack={() => navigate('/books')} />}
           />
           <Route path="/books/:bookSlug" element={<BookDetailTemplate setSection={setSection} />} />
           <Route

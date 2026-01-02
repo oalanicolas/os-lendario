@@ -20,7 +20,7 @@ import { useBook, useBooks } from '../../../hooks/useBooks';
 import { usePageTitle } from '../../../hooks/usePageTitle';
 import { useBookInteractions, ReadingStatus } from '../../../hooks/useMyBooks';
 import { useAuthor } from '../../../hooks/useAuthor';
-// BookCard import removed - using inline related books cards
+import { toast } from '../../../hooks/use-toast';
 
 interface BookDetailProps {
   setSection: (s: Section) => void;
@@ -185,7 +185,7 @@ const BookDetailTemplate: React.FC<BookDetailProps> = ({ setSection: _setSection
                 </Button>
 
                 {/* Reading Status Dropdown */}
-                <DropdownMenu>
+                <DropdownMenu className="w-full">
                   <DropdownMenuTrigger asChild>
                     <Button
                       size="lg"
@@ -262,11 +262,38 @@ const BookDetailTemplate: React.FC<BookDetailProps> = ({ setSection: _setSection
                     <Icon name="play" className="mr-2" /> Ouvir Áudio
                   </Button>
                 )}
+
+                {/* Share & Buy Links */}
+                <div className="flex items-center justify-between gap-4 pt-2">
+                  <button
+                    className="flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+                    onClick={() => {
+                      navigator.clipboard.writeText(window.location.href);
+                      toast({
+                        title: 'Link copiado!',
+                        description: 'Compartilhe com seus amigos.',
+                        variant: 'success',
+                      });
+                    }}
+                  >
+                    <Icon name="share" size="size-5" />
+                    Compartilhar
+                  </button>
+                  <a
+                    href={`https://www.amazon.com.br/s?k=${encodeURIComponent(book.title + ' ' + book.author)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+                  >
+                    <Icon name="shopping-cart" size="size-5" />
+                    Comprar na Amazon
+                  </a>
+                </div>
               </div>
             )}
 
-            {/* Info Card */}
-            {!loading && book && (
+            {/* Info Card - only render if has content */}
+            {!loading && book && (book.duration || book.pageCount || book.rating) && (
               <div className="space-y-4 rounded-xl border border-border bg-card p-6">
                 {book.duration && (
                   <div className="flex items-center justify-between border-b border-border/50 pb-3 text-sm">

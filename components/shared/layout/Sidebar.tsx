@@ -145,6 +145,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       ops_integrations: 'Integrações',
       ops_vault: 'Senhas e Acessos',
       ops_db: 'Database Explorer',
+      ops_users: 'Usuários',
 
       // Design System Subgroups (under Brand)
       ds_overview: 'Visão Geral',
@@ -251,6 +252,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       ops_integrations: 'Integration Hub',
       ops_vault: 'Access & Passwords',
       ops_db: 'Database Explorer',
+      ops_users: 'Users',
 
       // Design System
       ds_overview: 'Overview',
@@ -356,6 +358,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       ops_vault: 'Accesos y Contraseñas',
       ops_db: 'Database Explorer',
       ops_views: 'Vistas de Tablas',
+      ops_users: 'Usuarios',
 
       // Design System
       ds_overview: 'Visión General',
@@ -624,6 +627,12 @@ const Sidebar: React.FC<SidebarProps> = ({
         { key: 'ops_security', icon: 'shield', section: Section.STUDIO_OPS, status: 'soon' },
         { key: 'ops_integrations', icon: 'link', section: Section.STUDIO_OPS, status: 'soon' },
         { key: 'ops_vault', icon: 'lock', section: Section.EXTERNAL_VAULT, status: 'active' },
+        {
+          key: 'ops_users',
+          icon: 'users',
+          section: Section.STUDIO_OPS_USERS,
+          status: 'active',
+        },
       ],
     },
 

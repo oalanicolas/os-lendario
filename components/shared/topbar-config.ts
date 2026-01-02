@@ -193,16 +193,16 @@ export const TOPBAR_CONFIGS = {
         path: '/books',
       },
       {
+        label: 'Autores',
+        icon: 'user',
+        section: Section.APP_BOOKS_AUTHORS,
+        path: '/books/authors',
+      },
+      {
         label: 'Meus Livros',
         icon: 'star',
         section: Section.APP_BOOKS_LIBRARY,
         path: '/books?filter=saved',
-      },
-      {
-        label: 'Audiobooks',
-        icon: 'headset',
-        section: Section.APP_BOOKS_LIBRARY,
-        path: '/books?filter=audio',
       },
     ] as ModuleTopbarNavItem[],
   } as const,
@@ -238,4 +238,4 @@ export type ModuleKey = keyof typeof TOPBAR_CONFIGS;
 
 export const getTopbarConfig = (module: ModuleKey) => TOPBAR_CONFIGS[module];
 
-export type TopbarConfig = typeof TOPBAR_CONFIGS[ModuleKey];
+export type TopbarConfig = (typeof TOPBAR_CONFIGS)[ModuleKey];

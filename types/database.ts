@@ -1,13 +1,7 @@
 // Database types for Supabase
 // Based on mmos-schema.md
 
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[];
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export interface Database {
   public: {
@@ -79,6 +73,7 @@ export interface Database {
           published_at: string | null;
           published_url: string | null;
           file_path: string | null;
+          image_url: string | null;
           metadata: Json;
           deleted_at: string | null;
           created_at: string;
@@ -100,6 +95,7 @@ export interface Database {
           published_at?: string | null;
           published_url?: string | null;
           file_path?: string | null;
+          image_url?: string | null;
           metadata?: Json;
           deleted_at?: string | null;
           created_at?: string;
@@ -121,6 +117,7 @@ export interface Database {
           published_at?: string | null;
           published_url?: string | null;
           file_path?: string | null;
+          image_url?: string | null;
           metadata?: Json;
           deleted_at?: string | null;
           created_at?: string;
@@ -134,6 +131,7 @@ export interface Database {
           name: string;
           primary_language: string | null;
           short_bio: string | null;
+          avatar_url: string | null;
           privacy_level: string;
           apex_score: number | null;
           created_by: string | null;
@@ -148,6 +146,7 @@ export interface Database {
           name: string;
           primary_language?: string | null;
           short_bio?: string | null;
+          avatar_url?: string | null;
           privacy_level?: string;
           apex_score?: number | null;
           created_by?: string | null;
@@ -162,6 +161,7 @@ export interface Database {
           name?: string;
           primary_language?: string | null;
           short_bio?: string | null;
+          avatar_url?: string | null;
           privacy_level?: string;
           apex_score?: number | null;
           created_by?: string | null;
@@ -367,6 +367,81 @@ export interface Database {
           id?: string;
           status?: string;
           created_at?: string;
+        };
+      };
+      content_minds: {
+        Row: {
+          id: string;
+          content_id: string;
+          mind_id: string;
+          role: string;
+          contribution_notes: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          content_id: string;
+          mind_id: string;
+          role: string;
+          contribution_notes?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          content_id?: string;
+          mind_id?: string;
+          role?: string;
+          contribution_notes?: string | null;
+          created_at?: string;
+        };
+      };
+      content_tags: {
+        Row: {
+          id: string;
+          content_id: string;
+          tag_id: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          content_id: string;
+          tag_id: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          content_id?: string;
+          tag_id?: string;
+          created_at?: string;
+        };
+      };
+      tags: {
+        Row: {
+          id: string;
+          slug: string;
+          name: string;
+          description: string | null;
+          tag_type: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          name: string;
+          description?: string | null;
+          tag_type: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          slug?: string;
+          name?: string;
+          description?: string | null;
+          tag_type?: string;
+          created_at?: string;
+          updated_at?: string;
         };
       };
     };

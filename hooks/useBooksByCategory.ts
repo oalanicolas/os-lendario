@@ -2,6 +2,15 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import type { BookData } from './useBooks';
 
+// Normalize title for deduplication
+const normalizeTitle = (title: string): string => {
+  return title
+    .toLowerCase()
+    .replace(/[_\-,.:;!?'"()]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+};
+
 // Database response type
 interface DbBookContent {
   id: string;
@@ -23,6 +32,8 @@ interface DbBookContent {
     hasAudio?: boolean;
     word_count?: number;
     reading_time_minutes?: number;
+    language?: string;
+    original_title?: string;
   } | null;
   created_at: string;
   content_tags: Array<{
@@ -33,6 +44,41 @@ interface DbBookContent {
     minds: { id: string; slug: string; name: string } | null;
   }>;
 }
+
+// Deduplicate books by original_title or normalized title, prioritizing PT
+const deduplicateBooks = (books: DbBookContent[]): DbBookContent[] => {
+  const groups = new Map<string, DbBookContent[]>();
+
+  for (const book of books) {
+    const metadata = book.metadata || {};
+    const originalTitle = metadata.original_title;
+    const key = normalizeTitle(originalTitle || book.title);
+
+    if (!groups.has(key)) {
+      groups.set(key, []);
+    }
+    groups.get(key)!.push(book);
+  }
+
+  const deduplicated: DbBookContent[] = [];
+  for (const [, versions] of groups) {
+    if (versions.length === 1) {
+      deduplicated.push(versions[0]);
+    } else {
+      versions.sort((a, b) => {
+        const langA = a.metadata?.language || 'en';
+        const langB = b.metadata?.language || 'en';
+        const priorityA = langA === 'pt' ? 1 : langA === 'en' ? 2 : 3;
+        const priorityB = langB === 'pt' ? 1 : langB === 'en' ? 2 : 3;
+        if (priorityA !== priorityB) return priorityA - priorityB;
+        return (b.content || '').length - (a.content || '').length;
+      });
+      deduplicated.push(versions[0]);
+    }
+  }
+
+  return deduplicated;
+};
 
 // Category info from tags table
 interface CategoryInfo {
@@ -76,17 +122,23 @@ export function useBooksByCategory(categorySlug: string): UseBooksByCategoryResu
 
     try {
       // First, fetch the category tag info
-      const { data: tagData, error: tagError } = await supabase
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: tagData, error: tagError } = await (supabase as any)
         .from('tags')
         .select('id, slug, name, description')
         .eq('slug', categorySlug)
         .eq('tag_type', 'category')
-        .single<CategoryInfo>();
+        .single();
 
       if (tagError && tagError.code !== 'PGRST116') throw tagError;
 
       if (tagData) {
-        setCategory(tagData);
+        setCategory({
+          id: tagData.id,
+          slug: tagData.slug,
+          name: tagData.name,
+          description: tagData.description,
+        });
       }
 
       // Fetch books with this category tag
@@ -117,8 +169,11 @@ export function useBooksByCategory(categorySlug: string): UseBooksByCategoryResu
 
       if (fetchError) throw fetchError;
 
+      // Deduplicate books (prioritize PT over EN) then transform
+      const deduplicatedData = deduplicateBooks((data || []) as DbBookContent[]);
+
       // Transform to BookData format
-      const transformedBooks: BookData[] = ((data || []) as DbBookContent[]).map((book) => {
+      const transformedBooks: BookData[] = deduplicatedData.map((book) => {
         const metadata = book.metadata || {};
         const authorMind = book.content_minds?.find((cm) => cm.role === 'author')?.minds;
         const author = authorMind?.name || metadata.author || 'Autor Desconhecido';

@@ -24,7 +24,7 @@ interface BooksCategoryProps {
 
 // Map category slugs to icons and colors
 const CATEGORY_STYLES: Record<string, { icon: IconName; color: string }> = {
-  negocios: { icon: 'chart-line', color: 'bg-emerald-500' },
+  negocios: { icon: 'trend-up', color: 'bg-emerald-500' },
   psicologia: { icon: 'brain', color: 'bg-purple-500' },
   filosofia: { icon: 'bulb', color: 'bg-amber-500' },
   tecnologia: { icon: 'code', color: 'bg-blue-500' },

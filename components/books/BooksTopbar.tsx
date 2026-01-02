@@ -20,12 +20,12 @@ const BooksTopbar: React.FC<BooksTopbarProps> = ({
   const config = TOPBAR_CONFIGS.books;
 
   return (
-    <div className="sticky top-0 z-40 h-16 w-full border-b border-border bg-background/90 backdrop-blur-xl font-sans">
+    <div className="sticky top-0 z-40 h-16 w-full border-b border-border bg-background/90 font-sans backdrop-blur-xl">
       <div className="mx-auto flex h-full w-full max-w-[1400px] items-center justify-between px-6">
         {/* Left: Brand & Nav */}
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md border border-brand-gold/50 bg-brand-gold/20 text-brand-gold font-bold shadow-[0_0_10px_rgba(255,255,255,0.1)]">
+            <div className="flex h-8 w-8 items-center justify-center rounded-md border border-brand-gold/50 bg-brand-gold/20 font-bold text-brand-gold shadow-[0_0_10px_rgba(255,255,255,0.1)]">
               <Icon name={config.icon} size="size-5" />
             </div>
             <div className="hidden md:block">
@@ -69,7 +69,7 @@ const BooksTopbar: React.FC<BooksTopbarProps> = ({
                 size="size-3"
               />
               <Input
-                placeholder="Título, autor ou ISBN..."
+                placeholder="Buscar livro..."
                 className="h-9 rounded-full border-border bg-muted/30 pl-9 text-xs focus:border-brand-gold/50"
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}

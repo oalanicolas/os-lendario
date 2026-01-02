@@ -231,12 +231,7 @@ const BooksLibraryTemplate: React.FC<BooksLibraryProps> = ({ setSection, onSelec
         {/* Coleções Section */}
         {!selectedCategory && !searchQuery && collections.length > 0 && (
           <section>
-            <SectionHeader
-              title="Coleções"
-              onViewAll={() =>
-                collections[0] && navigate(`/books/collections/${collections[0].slug}`)
-              }
-            />
+            <SectionHeader title="Coleções" onViewAll={() => navigate('/books/collections')} />
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               {collectionsLoading

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { stripMarkdown } from '../lib/utils';
 
 // Book data structure for UI
 export interface BookData {
@@ -48,6 +49,8 @@ interface DbBookContent {
     hasAudio?: boolean;
     word_count?: number;
     reading_time_minutes?: number;
+    language?: string;
+    original_title?: string;
   } | null;
   created_at: string;
   updated_at: string;
@@ -59,6 +62,57 @@ interface DbBookContent {
     minds: { id: string; slug: string; name: string } | null;
   }>;
 }
+
+// Normalize title for deduplication (remove punctuation, underscores, lowercase)
+const normalizeTitle = (title: string): string => {
+  return title
+    .toLowerCase()
+    .replace(/[_\-,.:;!?'"()]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+};
+
+// Deduplicate books by original_title or normalized title, prioritizing PT
+const deduplicateBooks = (books: DbBookContent[]): DbBookContent[] => {
+  const groups = new Map<string, DbBookContent[]>();
+
+  for (const book of books) {
+    const metadata = book.metadata || {};
+    const originalTitle = metadata.original_title as string | undefined;
+    const key = normalizeTitle(originalTitle || book.title);
+
+    if (!groups.has(key)) {
+      groups.set(key, []);
+    }
+    groups.get(key)!.push(book);
+  }
+
+  // Select best version per group: pt > es > en, then by content length
+  const deduplicated: DbBookContent[] = [];
+  for (const [, versions] of groups) {
+    if (versions.length === 1) {
+      deduplicated.push(versions[0]);
+    } else {
+      // Sort by language priority (pt=1, en=2, es=3) then by content length
+      versions.sort((a, b) => {
+        const langA = (a.metadata?.language as string) || 'en';
+        const langB = (b.metadata?.language as string) || 'en';
+        const priorityA = langA === 'pt' ? 1 : langA === 'en' ? 2 : 3;
+        const priorityB = langB === 'pt' ? 1 : langB === 'en' ? 2 : 3;
+
+        if (priorityA !== priorityB) return priorityA - priorityB;
+
+        // Tie-breaker: longer content
+        const lenA = (a.content || '').length;
+        const lenB = (b.content || '').length;
+        return lenB - lenA;
+      });
+      deduplicated.push(versions[0]);
+    }
+  }
+
+  return deduplicated;
+};
 
 // Transform database book to UI BookData
 const transformToBookData = (dbBook: DbBookContent): BookData => {
@@ -95,7 +149,11 @@ const transformToBookData = (dbBook: DbBookContent): BookData => {
     authorSlug,
     coverUrl: dbBook.image_url,
     content: dbBook.content || null,
-    summary: metadata.description || dbBook.content?.substring(0, 300) || null,
+    summary: metadata.description
+      ? stripMarkdown(metadata.description)
+      : dbBook.content
+        ? stripMarkdown(dbBook.content.substring(0, 300))
+        : null,
     category,
     categorySlug,
     tags,
@@ -167,7 +225,9 @@ export function useBooks(): UseBooksResult {
         throw booksError;
       }
 
-      const transformedBooks = (booksData || []).map(transformToBookData);
+      // Deduplicate books (prioritize PT over EN) then transform
+      const deduplicatedBooks = deduplicateBooks(booksData || []);
+      const transformedBooks = deduplicatedBooks.map(transformToBookData);
       setBooks(transformedBooks);
     } catch (err) {
       console.error('Error fetching books:', err);
