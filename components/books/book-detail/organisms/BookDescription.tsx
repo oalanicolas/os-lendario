@@ -37,7 +37,7 @@ export const BookDescription: React.FC<BookDescriptionProps> = ({
           rows={6}
           className={cn(
             'w-full resize-none bg-transparent font-serif text-lg leading-relaxed text-muted-foreground md:text-xl',
-            'rounded-lg border-0 px-3 py-2 -mx-3',
+            '-mx-3 rounded-lg border-0 px-3 py-2',
             'ring-2 ring-primary/20 focus:ring-primary/40',
             'bg-primary/5 focus:bg-primary/10',
             'outline-none transition-all duration-200'
@@ -57,7 +57,7 @@ export const BookDescription: React.FC<BookDescriptionProps> = ({
       {shouldTruncate && (
         <button
           onClick={onToggle}
-          className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-foreground transition-colors duration-300 hover:text-primary"
+          className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-foreground transition-colors duration-300 hover:text-primary active:scale-95"
         >
           {isExpanded ? 'Mostrar menos' : 'Mostrar mais'}
           <Icon

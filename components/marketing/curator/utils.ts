@@ -77,20 +77,25 @@ export const cleanUrl = (url: string): string => {
 };
 
 /**
- * Returns Tailwind classes for category styling
+ * Returns Tailwind classes for category styling (Lendário Luxe)
  */
 export const getCategoryStyles = (category: string): string => {
   const cat = category.toLowerCase();
   if (cat.includes('investimento') || cat.includes('finance') || cat.includes('dinheiro')) {
-    return 'bg-brand-green/10 text-brand-green border-brand-green/20';
+    return 'bg-green-500/10 text-green-500 border-green-500/20';
   }
-  if (cat.includes('tecnologia') || cat.includes('tech') || cat.includes('ia') || cat.includes('ai')) {
-    return 'bg-brand-cyan/10 text-brand-cyan border-brand-cyan/20';
+  if (
+    cat.includes('tecnologia') ||
+    cat.includes('tech') ||
+    cat.includes('ia') ||
+    cat.includes('ai')
+  ) {
+    return 'bg-cyan-500/10 text-cyan-500 border-cyan-500/20';
   }
   if (cat.includes('mercado') || cat.includes('negócio') || cat.includes('business')) {
-    return 'bg-brand-blue/10 text-brand-blue border-brand-blue/20';
+    return 'bg-primary/10 text-primary border-primary/20';
   }
-  return 'bg-muted text-muted-foreground border-border';
+  return 'bg-white/5 text-muted-foreground border-white/10';
 };
 
 /**
@@ -114,20 +119,22 @@ export const getPlatformIcon = (platform: Platform): string => {
 };
 
 /**
- * Returns Tailwind classes for platform styling
+ * Returns Tailwind classes for platform styling (Lendário Luxe)
  */
 export const getPlatformColor = (platform: Platform): string => {
   switch (platform) {
     case 'Instagram Reels':
-      return 'text-brand-pink border-brand-pink/20 bg-brand-pink/10';
+      return 'text-pink-500 border-pink-500/20 bg-pink-500/10';
     case 'LinkedIn':
-      return 'text-brand-blue border-brand-blue/20 bg-brand-blue/10';
+      return 'text-blue-500 border-blue-500/20 bg-blue-500/10';
     case 'YouTube':
       return 'text-red-500 border-red-500/20 bg-red-500/10';
     case 'TikTok':
-      return 'text-foreground border-foreground/20 bg-foreground/10';
+      return 'text-foreground border-white/20 bg-white/5';
+    case 'Twitter/X':
+      return 'text-foreground border-white/20 bg-white/5';
     default:
-      return 'text-muted-foreground';
+      return 'text-muted-foreground border-white/10 bg-white/5';
   }
 };
 

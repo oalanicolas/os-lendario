@@ -14,27 +14,27 @@ export const LoginCard: React.FC<LoginCardProps> = ({
   onViewChange,
 }) => {
   return (
-    <Card className="w-full bg-card/95 backdrop-blur-3xl border border-border shadow-2xl dark:shadow-[0_50px_100px_rgba(0,0,0,0.8)] rounded-[2rem] overflow-hidden">
+    <Card className="w-full overflow-hidden rounded-[2rem] border border-border bg-card/95 shadow-2xl backdrop-blur-3xl dark:shadow-[0_50px_100px_rgba(0,0,0,0.8)]">
       {/* Inner glow border */}
-      <div className="absolute inset-[1px] rounded-[2rem] border border-border/30 pointer-events-none" />
+      <div className="pointer-events-none absolute inset-[1px] rounded-[2rem] border border-border/30" />
 
-      <CardHeader className="pt-10 pb-4 px-8">
-        <p className="text-center text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground mb-2">
+      <CardHeader className="px-6 pb-4 pt-10 sm:px-8">
+        <p className="mb-2 text-center text-xs font-black uppercase tracking-[0.4em] text-muted-foreground sm:text-[10px]">
           Lendar[IA] OS
         </p>
       </CardHeader>
 
-      <CardContent className="px-8 pb-4">
+      <CardContent className="px-6 pb-4 sm:px-8">
         {/* Error Message */}
         {error && (
-          <div className="mb-8 rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-sm text-red-400/90 font-light tracking-wide animate-fade-in">
+          <div className="mb-8 animate-fade-in rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-sm font-light tracking-wide text-red-400/90">
             {error}
           </div>
         )}
 
         {/* Success Message */}
         {success && (
-          <div className="mb-8 rounded-xl border border-green-500/20 bg-green-500/5 p-4 text-sm text-green-400/90 font-light tracking-wide animate-fade-in">
+          <div className="mb-8 animate-fade-in rounded-xl border border-green-500/20 bg-green-500/5 p-4 text-sm font-light tracking-wide text-green-400/90">
             {success}
           </div>
         )}
@@ -42,14 +42,14 @@ export const LoginCard: React.FC<LoginCardProps> = ({
         {children}
       </CardContent>
 
-      <CardFooter className="flex flex-col gap-4 pb-10 pt-6 px-8">
-        <div className="flex items-center justify-center gap-3 text-[11px] font-bold uppercase tracking-[0.25em] text-muted-foreground">
+      <CardFooter className="flex flex-col gap-4 px-6 pb-10 pt-6 sm:px-8">
+        <div className="flex items-center justify-center gap-1 text-xs font-bold uppercase tracking-[0.25em] text-muted-foreground sm:gap-3 sm:text-[11px]">
           {view === 'login' ? (
             <>
               <span>Novo aqui?</span>
               <button
                 onClick={() => onViewChange('register')}
-                className="text-primary hover:text-primary/80 transition-colors duration-200"
+                className="-mx-1 flex min-h-[44px] items-center px-3 text-primary transition-colors duration-200 hover:text-primary/80 active:text-primary/70"
               >
                 Criar conta
               </button>
@@ -59,7 +59,7 @@ export const LoginCard: React.FC<LoginCardProps> = ({
               <span>Ja tem conta?</span>
               <button
                 onClick={() => onViewChange('login')}
-                className="text-primary hover:text-primary/80 transition-colors duration-200"
+                className="-mx-1 flex min-h-[44px] items-center px-3 text-primary transition-colors duration-200 hover:text-primary/80 active:text-primary/70"
               >
                 Fazer login
               </button>

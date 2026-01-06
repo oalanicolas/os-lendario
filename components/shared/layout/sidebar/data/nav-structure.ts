@@ -95,9 +95,21 @@ export const navStructure: NavItem[] = [
   {
     key: 'studio_content',
     icon: 'pen-nib',
-    status: 'soon',
+    status: 'active',
     group: 'team',
     children: [
+      {
+        key: 'content_curator',
+        icon: 'search-alt',
+        section: Section.CURATOR,
+        status: 'active',
+      },
+      {
+        key: 'content_guia_ebook',
+        icon: 'book-open-reader',
+        section: Section.APP_GUIA_EBOOK,
+        status: 'active',
+      },
       { key: 'content_ops', icon: 'edit', section: Section.STUDIO_CONTENT, status: 'soon' },
       { key: 'content_video', icon: 'video', section: Section.STUDIO_CONTENT, status: 'soon' },
       { key: 'content_social', icon: 'share', section: Section.STUDIO_CONTENT, status: 'soon' },
@@ -119,18 +131,6 @@ export const navStructure: NavItem[] = [
     status: 'soon',
     group: 'team',
     children: [
-      {
-        key: 'marketing_curator',
-        icon: 'search-alt',
-        section: Section.CURATOR,
-        status: 'active',
-      },
-      {
-        key: 'marketing_guia_ebook',
-        icon: 'book-open-reader',
-        section: Section.APP_GUIA_EBOOK,
-        status: 'active',
-      },
       {
         key: 'marketing_ads',
         icon: 'megaphone',
@@ -257,7 +257,13 @@ export const navStructure: NavItem[] = [
   // ═══════════════════════════════════════════════════════════════
   // Main Menu: Database
   // ═══════════════════════════════════════════════════════════════
-  { key: 'ops_db', icon: 'database', section: Section.STUDIO_OPS_DB, status: 'active', group: 'team' },
+  {
+    key: 'ops_db',
+    icon: 'database',
+    section: Section.STUDIO_OPS_DB,
+    status: 'active',
+    group: 'team',
+  },
 ];
 
 // Design system sections for checking if sidebar item is active

@@ -5,7 +5,7 @@ export { ArenaCreate } from './ArenaCreate';
 export type { ArenaCreateProps, DebateConfig, Framework, Mind } from './types';
 
 // Hooks (for custom compositions)
-export { useArenaSelection, useArenaConfig } from './hooks';
+export { useArenaSelection } from './hooks';
 
 // Organisms (for custom layouts)
 export { PlayerStage } from './organisms';

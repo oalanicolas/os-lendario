@@ -43,6 +43,11 @@ export const LMS_TOKENS = {
   accent: 'hsl(var(--accent-color))',
 } as const;
 
+export const MARKETING_TOKENS = {
+  primary: 'hsl(var(--primary-color))',
+  accent: 'hsl(var(--accent-color))',
+} as const;
+
 // ============================================================================
 // TOPBAR CONFIGS (Single source of truth)
 // ============================================================================
@@ -226,6 +231,41 @@ export const TOPBAR_CONFIGS = {
         icon: 'list',
         section: Section.APP_LMS_HOME,
         path: '/lms?filter=saved',
+      },
+    ] as ModuleTopbarNavItem[],
+  } as const,
+
+  marketing: {
+    title: 'Marketing',
+    subtitle: 'Criação & Conteúdo',
+    icon: 'megaphone',
+    primaryColor: MARKETING_TOKENS.primary,
+    accentColor: MARKETING_TOKENS.accent,
+    variant: 'left' as const,
+    navItems: [
+      {
+        label: 'Curador[IA]',
+        icon: 'globe',
+        section: Section.CURATOR,
+        path: '/marketing/curator',
+      },
+      {
+        label: 'Gu[IA] Ebook',
+        icon: 'book-open-cover',
+        section: Section.APP_GUIA_EBOOK,
+        path: '/marketing/guia-ebook',
+      },
+      {
+        label: 'Landing Page',
+        icon: 'layout',
+        section: Section.TEMPLATE_LANDING,
+        path: '/marketing/landing',
+      },
+      {
+        label: 'Sales Page',
+        icon: 'dollar',
+        section: Section.TEMPLATE_SALES,
+        path: '/marketing/sales-page',
       },
     ] as ModuleTopbarNavItem[],
   } as const,

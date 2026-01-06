@@ -70,16 +70,19 @@ export const AuthCallback: React.FC = () => {
           const state = location.state as { from?: Location } | undefined;
           const from = state?.from?.pathname || '/books';
 
-          // If password recovery, redirect to settings
+          // If password recovery, redirect to reset password page
           if (type === 'recovery') {
-            navigate('/settings', { replace: true });
+            navigate('/auth/reset-password', { replace: true });
             return;
           }
 
           // Small delay to show success message
-          setTimeout(() => {
-            navigate(from, { replace: true });
-          }, inviteToken ? 1000 : 0);
+          setTimeout(
+            () => {
+              navigate(from, { replace: true });
+            },
+            inviteToken ? 1000 : 0
+          );
         } else {
           // Wait a bit for the session to be established
           // (Supabase might still be processing)

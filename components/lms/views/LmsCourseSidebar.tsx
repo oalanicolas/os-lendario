@@ -90,7 +90,7 @@ const LmsCourseSidebar: React.FC<LmsCourseSidebarProps> = ({
                   <p className="text-sm font-bold text-muted-foreground transition-colors group-hover:text-foreground">
                     {module.title}
                   </p>
-                  <p className="mt-0.5 text-[10px] font-normal text-muted-foreground/70">
+                  <p className="mt-0.5 text-xs font-normal text-muted-foreground/70">
                     {module.lessons.length} aulas
                   </p>
                 </div>
@@ -126,7 +126,7 @@ const LmsCourseSidebar: React.FC<LmsCourseSidebarProps> = ({
                       <div className="mt-0.5 flex items-center gap-2 text-muted-foreground/60">
                         {lesson.type === 'video' && <Icon name="play-circle" size="size-3" />}
                         {lesson.type === 'text' && <Icon name="file-text" size="size-3" />}
-                        <span className="font-mono text-[10px]">{lesson.duration}</span>
+                        <span className="font-mono text-xs">{lesson.duration}</span>
                       </div>
                     </div>
                   </button>

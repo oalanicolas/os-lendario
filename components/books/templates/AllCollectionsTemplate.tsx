@@ -7,6 +7,7 @@ import { cn } from '../../../lib/utils';
 import { Section } from '../../../types';
 import { useBookCollections } from '../../../hooks/useBookCollections';
 import { usePageTitle } from '../../../hooks/usePageTitle';
+import { useMetaTags } from '../../../hooks/useMetaTags';
 import BooksTopbar from '../topbar';
 import { getCollectionStyle } from '../constants';
 
@@ -26,6 +27,12 @@ const AllCollectionsTemplate: React.FC<AllCollectionsProps> = ({ setSection }) =
   const { collections, loading, error } = useBookCollections();
 
   usePageTitle('Todas as Coleções');
+  useMetaTags({
+    title: 'Coleções',
+    description:
+      'Explore nossas coleções curadas de livros organizados por tema, autor ou objetivo de aprendizado. Descubra a coleção perfeita para você.',
+    type: 'website',
+  });
 
   if (error) {
     return (
@@ -35,12 +42,14 @@ const AllCollectionsTemplate: React.FC<AllCollectionsProps> = ({ setSection }) =
             <Icon name="exclamation" className="text-destructive" size="size-8" />
           </div>
           <div className="space-y-3">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">Erro ao carregar coleções</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">
+              Erro ao carregar coleções
+            </h2>
             <p className="font-serif text-base italic text-muted-foreground">{error.message}</p>
           </div>
-          <Button 
+          <Button
             onClick={() => window.location.reload()}
-            className="h-14 px-10 bg-foreground font-black uppercase tracking-[0.2em] text-sm text-background hover:bg-foreground/90 active:scale-[0.98] transition-all duration-300"
+            className="h-14 bg-foreground px-10 text-sm font-black uppercase tracking-[0.2em] text-background transition-all duration-300 hover:bg-foreground/90 active:scale-[0.98]"
           >
             Tentar novamente
           </Button>
@@ -54,10 +63,12 @@ const AllCollectionsTemplate: React.FC<AllCollectionsProps> = ({ setSection }) =
       {/* BooksTopbar FORA do container animado para não quebrar position:fixed */}
       <BooksTopbar currentSection={currentSection} setSection={handleSetSection} />
 
-      <main className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-20 animate-fade-in">
+      <main className="mx-auto max-w-7xl animate-fade-in px-6 py-16 md:px-8 md:py-20">
         {/* Hero Section */}
         <div className="mb-16">
-          <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary">Biblioteca</p>
+          <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary">
+            Biblioteca
+          </p>
           <h1 className="mt-3 text-5xl font-bold leading-[0.95] tracking-tighter text-foreground md:text-6xl lg:text-7xl">
             Coleções
           </h1>
@@ -74,8 +85,12 @@ const AllCollectionsTemplate: React.FC<AllCollectionsProps> = ({ setSection }) =
         {/* Collections Grid */}
         <div className="space-y-10">
           <div>
-            <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary">Explorar</p>
-            <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground md:text-3xl">Todas as Coleções</h2>
+            <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary">
+              Explorar
+            </p>
+            <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+              Todas as Coleções
+            </h2>
           </div>
 
           {loading ? (
@@ -105,8 +120,8 @@ const AllCollectionsTemplate: React.FC<AllCollectionsProps> = ({ setSection }) =
                   >
                     {/* Stack Effect */}
                     <div className="relative flex-shrink-0">
-                      <div className="absolute right-0 top-0 h-28 w-24 translate-x-3 rotate-6 rounded-xl border border-border bg-card shadow-md transition-transform duration-500 group-hover:translate-x-4 group-hover:rotate-8"></div>
-                      <div className="absolute right-0 top-0 h-28 w-24 translate-x-1.5 -rotate-3 rounded-xl border border-border bg-card shadow-md transition-transform duration-500 group-hover:translate-x-2 group-hover:-rotate-4"></div>
+                      <div className="group-hover:rotate-8 absolute right-0 top-0 h-28 w-24 translate-x-3 rotate-6 rounded-xl border border-border bg-card shadow-md transition-transform duration-500 group-hover:translate-x-4"></div>
+                      <div className="group-hover:-rotate-4 absolute right-0 top-0 h-28 w-24 translate-x-1.5 -rotate-3 rounded-xl border border-border bg-card shadow-md transition-transform duration-500 group-hover:translate-x-2"></div>
                       <div
                         className={cn(
                           'relative flex h-28 w-24 items-center justify-center rounded-xl text-black shadow-xl transition-all duration-500 group-hover:-translate-y-1 group-hover:shadow-2xl',
@@ -145,8 +160,12 @@ const AllCollectionsTemplate: React.FC<AllCollectionsProps> = ({ setSection }) =
               <div className="flex h-20 w-20 items-center justify-center rounded-full border border-dashed border-border bg-muted/30">
                 <Icon name="book-stack" className="text-muted-foreground/50" size="size-8" />
               </div>
-              <h3 className="mt-6 text-xl font-bold tracking-tight text-foreground">Nenhuma coleção disponível</h3>
-              <p className="mt-2 font-serif text-base italic text-muted-foreground">Em breve adicionaremos coleções curadas.</p>
+              <h3 className="mt-6 text-xl font-bold tracking-tight text-foreground">
+                Nenhuma coleção disponível
+              </h3>
+              <p className="mt-2 font-serif text-base italic text-muted-foreground">
+                Em breve adicionaremos coleções curadas.
+              </p>
             </div>
           )}
         </div>

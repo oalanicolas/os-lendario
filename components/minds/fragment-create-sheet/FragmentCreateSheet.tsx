@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Sheet,
   SheetContent,
@@ -23,7 +23,6 @@ import {
   percentToConfidence,
 } from '../../../lib/fragment-utils';
 import { FRAGMENT_TYPE_LABELS } from '../../../hooks/useMindFragments';
-import { useFragmentCreateForm, useTagsInput } from './hooks';
 import type { FragmentCreateSheetProps, FragmentCreate } from './types';
 
 // Build type options from FRAGMENT_TYPE_LABELS
@@ -33,13 +32,7 @@ const typeOptions = Object.entries(FRAGMENT_TYPE_LABELS).map(([value, label]) =>
 }));
 
 /**
- * FragmentCreateSheet - Orchestrator Component
- *
- * STATE MANAGEMENT (extracted to hooks):
- * - useFragmentCreateForm: type, content, context, insight, location, relevance, confidence, isCreating, error (9 useState -> 1 hook)
- * - useTagsInput: tags, newTag (2 useState -> 1 hook)
- *
- * TOTAL: 12 useState -> 2 custom hooks
+ * FragmentCreateSheet - Create fragment form in a side sheet
  */
 export const FragmentCreateSheet: React.FC<FragmentCreateSheetProps> = ({
   open,
@@ -47,44 +40,103 @@ export const FragmentCreateSheet: React.FC<FragmentCreateSheetProps> = ({
   mindId,
   onCreate,
 }) => {
-  // State management via custom hooks
-  const form = useFragmentCreateForm();
-  const tagsInput = useTagsInput();
+  // === FORM STATE ===
+  const [type, setType] = useState('belief');
+  const [content, setContent] = useState('');
+  const [context, setContext] = useState('');
+  const [insight, setInsight] = useState('');
+  const [location, setLocation] = useState('manual');
+  const [relevance, setRelevance] = useState(5);
+  const [confidence, setConfidence] = useState(50);
+  const [isCreating, setIsCreating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const resetAll = () => {
-    form.reset();
-    tagsInput.reset();
-  };
+  // === TAGS STATE ===
+  const [tags, setTags] = useState<string[]>([]);
+  const [newTag, setNewTag] = useState('');
+
+  // === FORM ACTIONS ===
+  const resetForm = useCallback(() => {
+    setType('belief');
+    setContent('');
+    setContext('');
+    setInsight('');
+    setLocation('manual');
+    setRelevance(5);
+    setConfidence(50);
+    setError(null);
+    setTags([]);
+    setNewTag('');
+  }, []);
+
+  const validateForm = useCallback((): boolean => {
+    if (!content.trim()) {
+      setError('O conteudo e obrigatorio');
+      return false;
+    }
+    if (!context.trim()) {
+      setError('O contexto e obrigatorio');
+      return false;
+    }
+    if (!insight.trim()) {
+      setError('O insight e obrigatorio');
+      return false;
+    }
+    return true;
+  }, [content, context, insight]);
+
+  // === TAGS ACTIONS ===
+  const addTag = useCallback(() => {
+    const trimmedTag = newTag.trim().toLowerCase();
+    if (trimmedTag && !tags.includes(trimmedTag)) {
+      setTags((prev) => [...prev, trimmedTag]);
+      setNewTag('');
+    }
+  }, [newTag, tags]);
+
+  const removeTag = useCallback((tagToRemove: string) => {
+    setTags((prev) => prev.filter((t) => t !== tagToRemove));
+  }, []);
+
+  const handleTagKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addTag();
+      }
+    },
+    [addTag]
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    form.setError(null);
+    setError(null);
 
-    if (!form.validate()) return;
+    if (!validateForm()) return;
 
-    form.setIsCreating(true);
+    setIsCreating(true);
 
     const fragmentData: FragmentCreate = {
       mindId,
-      location: form.location || 'manual',
-      type: form.type,
-      content: form.content.trim(),
-      context: form.context.trim(),
-      insight: form.insight.trim(),
-      relevance: form.relevance,
-      confidence: percentToConfidence(form.confidence),
-      metadata: { tags: tagsInput.tags, source: 'manual' },
+      location: location || 'manual',
+      type,
+      content: content.trim(),
+      context: context.trim(),
+      insight: insight.trim(),
+      relevance,
+      confidence: percentToConfidence(confidence),
+      metadata: { tags, source: 'manual' },
     };
 
     const result = await onCreate(fragmentData);
 
-    form.setIsCreating(false);
+    setIsCreating(false);
 
     if (result) {
-      resetAll();
+      resetForm();
       onOpenChange(false);
     } else {
-      form.setError('Erro ao criar fragmento. Tente novamente.');
+      setError('Erro ao criar fragmento. Tente novamente.');
     }
   };
 
@@ -101,14 +153,14 @@ export const FragmentCreateSheet: React.FC<FragmentCreateSheetProps> = ({
           </SheetDescription>
         </SheetHeader>
 
-        <ScrollArea className="flex-1 -mx-6 px-6">
+        <ScrollArea className="-mx-6 flex-1 px-6">
           <form onSubmit={handleSubmit} className="space-y-5 py-4">
             {/* Error message */}
-            {form.error && (
-              <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-400">
+            {error && (
+              <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-xs text-red-400">
                 <div className="flex items-center gap-2">
                   <Icon name="exclamation" size="size-4" />
-                  {form.error}
+                  {error}
                 </div>
               </div>
             )}
@@ -119,8 +171,8 @@ export const FragmentCreateSheet: React.FC<FragmentCreateSheetProps> = ({
                 Tipo do Fragmento *
               </label>
               <Select
-                value={form.type}
-                onValueChange={form.setType}
+                value={type}
+                onValueChange={setType}
                 options={typeOptions}
                 placeholder="Selecione um tipo"
               />
@@ -128,12 +180,10 @@ export const FragmentCreateSheet: React.FC<FragmentCreateSheetProps> = ({
 
             {/* Content */}
             <div className="space-y-2">
-              <label className="text-xs font-medium text-muted-foreground">
-                Conteudo *
-              </label>
+              <label className="text-xs font-medium text-muted-foreground">Conteudo *</label>
               <Textarea
-                value={form.content}
-                onChange={(e) => form.setContent(e.target.value)}
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
                 placeholder="A citacao ou declaracao exata extraida..."
                 className="min-h-[80px] text-sm"
               />
@@ -141,12 +191,10 @@ export const FragmentCreateSheet: React.FC<FragmentCreateSheetProps> = ({
 
             {/* Context */}
             <div className="space-y-2">
-              <label className="text-xs font-medium text-muted-foreground">
-                Contexto *
-              </label>
+              <label className="text-xs font-medium text-muted-foreground">Contexto *</label>
               <Textarea
-                value={form.context}
-                onChange={(e) => form.setContext(e.target.value)}
+                value={context}
+                onChange={(e) => setContext(e.target.value)}
                 placeholder="Em que situacao foi dito, quando, com quem..."
                 className="min-h-[60px] text-sm"
               />
@@ -154,12 +202,10 @@ export const FragmentCreateSheet: React.FC<FragmentCreateSheetProps> = ({
 
             {/* Insight */}
             <div className="space-y-2">
-              <label className="text-xs font-medium text-muted-foreground">
-                Insight *
-              </label>
+              <label className="text-xs font-medium text-muted-foreground">Insight *</label>
               <Textarea
-                value={form.insight}
-                onChange={(e) => form.setInsight(e.target.value)}
+                value={insight}
+                onChange={(e) => setInsight(e.target.value)}
                 placeholder="O que isso revela sobre a pessoa..."
                 className="min-h-[60px] text-sm"
               />
@@ -171,8 +217,8 @@ export const FragmentCreateSheet: React.FC<FragmentCreateSheetProps> = ({
                 Localizacao / Fonte
               </label>
               <Input
-                value={form.location}
-                onChange={(e) => form.setLocation(e.target.value)}
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
                 placeholder="manual, entrevista, etc."
                 className="text-sm"
               />
@@ -182,16 +228,18 @@ export const FragmentCreateSheet: React.FC<FragmentCreateSheetProps> = ({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-medium text-muted-foreground">Relevancia</label>
-                <span className={cn("text-sm font-mono font-bold", getRelevanceTextColor(form.relevance))}>
-                  {form.relevance}/10
+                <span
+                  className={cn('font-mono text-sm font-bold', getRelevanceTextColor(relevance))}
+                >
+                  {relevance}/10
                 </span>
               </div>
               <Slider
                 min={1}
                 max={10}
                 step={1}
-                value={form.relevance}
-                onChange={(e) => form.setRelevance(Number(e.target.value))}
+                value={relevance}
+                onChange={(e) => setRelevance(Number(e.target.value))}
                 className="accent-brand-gold"
               />
             </div>
@@ -200,16 +248,18 @@ export const FragmentCreateSheet: React.FC<FragmentCreateSheetProps> = ({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-medium text-muted-foreground">Confianca</label>
-                <span className={cn("text-sm font-mono font-bold", getConfidenceTextColor(form.confidence))}>
-                  {form.confidence}%
+                <span
+                  className={cn('font-mono text-sm font-bold', getConfidenceTextColor(confidence))}
+                >
+                  {confidence}%
                 </span>
               </div>
               <Slider
                 min={0}
                 max={100}
                 step={5}
-                value={form.confidence}
-                onChange={(e) => form.setConfidence(Number(e.target.value))}
+                value={confidence}
+                onChange={(e) => setConfidence(Number(e.target.value))}
                 className="accent-brand-gold"
               />
             </div>
@@ -217,17 +267,17 @@ export const FragmentCreateSheet: React.FC<FragmentCreateSheetProps> = ({
             {/* Tags */}
             <div className="space-y-2">
               <label className="text-xs font-medium text-muted-foreground">Tags (opcional)</label>
-              <div className="flex flex-wrap gap-1.5 mb-2">
-                {tagsInput.tags.map((tag) => (
+              <div className="mb-2 flex flex-wrap gap-1.5">
+                {tags.map((tag) => (
                   <Badge
                     key={tag}
                     variant="secondary"
-                    className="text-xs h-6 px-2 gap-1 bg-muted/20 hover:bg-muted/30"
+                    className="h-6 gap-1 bg-muted/20 px-2 text-xs hover:bg-muted/30"
                   >
                     {tag}
                     <button
                       type="button"
-                      onClick={() => tagsInput.removeTag(tag)}
+                      onClick={() => removeTag(tag)}
                       className="ml-1 hover:text-red-400"
                     >
                       <Icon name="times" size="size-2.5" />
@@ -237,9 +287,9 @@ export const FragmentCreateSheet: React.FC<FragmentCreateSheetProps> = ({
               </div>
               <div className="flex gap-2">
                 <Input
-                  value={tagsInput.newTag}
-                  onChange={(e) => tagsInput.setNewTag(e.target.value)}
-                  onKeyDown={tagsInput.handleKeyDown}
+                  value={newTag}
+                  onChange={(e) => setNewTag(e.target.value)}
+                  onKeyDown={handleTagKeyDown}
                   placeholder="Adicionar tag..."
                   className="h-8 text-xs"
                 />
@@ -247,8 +297,8 @@ export const FragmentCreateSheet: React.FC<FragmentCreateSheetProps> = ({
                   type="button"
                   variant="secondary"
                   size="sm"
-                  onClick={tagsInput.addTag}
-                  disabled={!tagsInput.newTag.trim()}
+                  onClick={addTag}
+                  disabled={!newTag.trim()}
                   className="h-8 px-3"
                 >
                   <Icon name="plus" size="size-3" />
@@ -259,19 +309,15 @@ export const FragmentCreateSheet: React.FC<FragmentCreateSheetProps> = ({
         </ScrollArea>
 
         <SheetFooter>
-          <Button
-            variant="ghost"
-            onClick={() => onOpenChange(false)}
-            disabled={form.isCreating}
-          >
+          <Button variant="ghost" onClick={() => onOpenChange(false)} disabled={isCreating}>
             Cancelar
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={form.isCreating || !form.content.trim() || !form.context.trim() || !form.insight.trim()}
-            className="bg-brand-gold hover:bg-brand-gold/90 text-black"
+            disabled={isCreating || !content.trim() || !context.trim() || !insight.trim()}
+            className="bg-brand-gold text-black hover:bg-brand-gold/90"
           >
-            {form.isCreating ? (
+            {isCreating ? (
               <>
                 <Spinner size="sm" variant="dark" className="mr-2" />
                 Criando...

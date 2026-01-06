@@ -37,7 +37,7 @@ export const ReaderContentArea: React.FC<ReaderContentAreaProps> = ({
       className="relative z-10 h-full flex-1 overflow-y-auto scroll-smooth"
       onScroll={onScroll}
     >
-      <div className="mx-auto max-w-[70ch] px-6 pb-32 pt-40 sm:px-12 md:pb-24 md:pt-48">
+      <div className="mx-auto max-w-[70ch] px-6 pb-28 pt-24 sm:px-12 md:pb-24 md:pt-32">
         {/* Chapter Splash - Luxury Title Section */}
         <ChapterSplash
           book={book}
@@ -49,11 +49,7 @@ export const ReaderContentArea: React.FC<ReaderContentAreaProps> = ({
 
         {/* TL;DR Summary Box */}
         {tldrSummary && showFullContent && (
-          <TldrBox
-            summary={tldrSummary}
-            readingMode={readingMode}
-            currentMode={currentMode}
-          />
+          <TldrBox summary={tldrSummary} readingMode={readingMode} currentMode={currentMode} />
         )}
 
         {/* Article Body */}

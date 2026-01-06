@@ -60,6 +60,62 @@ interface DbBookView {
 
 // V1: Only Portuguese books - no deduplication needed
 
+// Contents table result structure (for direct queries with joins)
+interface DbContentRow {
+  id: string;
+  slug: string;
+  title: string;
+  content_type: string;
+  status: string;
+  content: string | null;
+  image_url: string | null;
+  metadata: Record<string, unknown> | null;
+  created_at: string;
+  updated_at: string;
+  content_tags: Array<{ tags: { id: string; slug: string; name: string } | null }> | null;
+  content_minds: Array<{
+    role: string;
+    minds: { id: string; slug: string; name: string } | null;
+  }> | null;
+}
+
+// Transform contents table record to UI BookData
+const transformContentToBookData = (row: DbContentRow): BookData => {
+  const metadata = (row.metadata || {}) as Record<string, unknown>;
+  const authorMind = row.content_minds?.find((cm) => cm.role === 'author')?.minds;
+  const categoryTag = row.content_tags?.[0]?.tags;
+
+  return {
+    id: row.id,
+    slug: row.slug,
+    title: row.title,
+    author: authorMind?.name || (metadata.author as string) || 'Autor Desconhecido',
+    authorSlug: authorMind?.slug || null,
+    coverUrl: row.image_url,
+    content: row.content,
+    summary: (metadata.description as string)
+      ? stripMarkdown(metadata.description as string)
+      : row.content
+        ? stripMarkdown(row.content.substring(0, 300))
+        : null,
+    category: categoryTag?.name || null,
+    categorySlug: categoryTag?.slug || null,
+    tags: [],
+    hasAudio: (metadata.hasAudio as boolean) || false,
+    duration: (metadata.duration as string) || null,
+    pageCount: (metadata.pageCount as number) || null,
+    publishedYear: metadata.publishedDate
+      ? parseInt(String(metadata.publishedDate).split('-')[0], 10) || null
+      : null,
+    isbn: (metadata.isbn as string) || null,
+    rating: (metadata.averageRating as number) || null,
+    status: row.status === 'published' ? 'published' : 'draft',
+    createdAt: row.created_at,
+    readingTime: (metadata.reading_time_minutes as number) || null,
+    wordCount: (metadata.word_count as number) || null,
+  };
+};
+
 // Transform view record to UI BookData (simplified - data already joined)
 const transformViewToBookData = (row: DbBookView): BookData => {
   const metadata = (row.metadata || {}) as Record<string, unknown>;
@@ -126,71 +182,74 @@ export function useBooks(options: UseBooksOptions = {}): UseBooksResult {
   const [hasMore, setHasMore] = useState(true);
   const [offset, setOffset] = useState(0);
 
-  const fetchBooks = useCallback(async (isLoadMore = false) => {
-    if (isLoadMore) {
-      setLoadingMore(true);
-    } else {
-      setLoading(true);
-      setOffset(0);
-    }
-    setError(null);
-
-    if (!isSupabaseConfigured()) {
-      console.warn('Supabase not configured - no books available');
-      setBooks([]);
-      setLoading(false);
-      setLoadingMore(false);
-      return;
-    }
-
-    try {
-      const currentOffset = isLoadMore ? offset : 0;
-
-      // Use optimized view (v_books_pt already filters PT + published)
-      // For category filter, use v_books_by_category view
-      const viewName = categorySlug ? 'v_books_by_category' : 'v_books_pt';
-
-      let query = supabase
-        .from(viewName)
-        .select('*')
-        .order('created_at', { ascending: false })
-        .range(currentOffset, currentOffset + limit - 1);
-
-      // Add category filter if provided (single query now!)
-      if (categorySlug) {
-        query = query.eq('tag_slug', categorySlug);
-      }
-
-      const { data: booksData, error: booksError } = await query;
-
-      if (booksError) {
-        throw booksError;
-      }
-
-      // V1: No deduplication needed - only PT books, data already joined in view
-      const transformedBooks = (booksData || []).map(transformViewToBookData);
-
-      // Check if there are more books
-      setHasMore(transformedBooks.length === limit);
-
+  const fetchBooks = useCallback(
+    async (isLoadMore = false) => {
       if (isLoadMore) {
-        setBooks(prev => [...prev, ...transformedBooks]);
-        setOffset(currentOffset + limit);
+        setLoadingMore(true);
       } else {
-        setBooks(transformedBooks);
-        setOffset(limit);
+        setLoading(true);
+        setOffset(0);
       }
-    } catch (err) {
-      console.error('Error fetching books:', err);
-      setError(err as Error);
-      if (!isLoadMore) {
+      setError(null);
+
+      if (!isSupabaseConfigured()) {
+        console.warn('Supabase not configured - no books available');
         setBooks([]);
+        setLoading(false);
+        setLoadingMore(false);
+        return;
       }
-    } finally {
-      setLoading(false);
-      setLoadingMore(false);
-    }
-  }, [limit, categorySlug, offset]);
+
+      try {
+        const currentOffset = isLoadMore ? offset : 0;
+
+        // Use optimized view (v_books_pt already filters PT + published)
+        // For category filter, use v_books_by_category view
+        const viewName = categorySlug ? 'v_books_by_category' : 'v_books_pt';
+
+        let query = supabase
+          .from(viewName)
+          .select('*')
+          .order('created_at', { ascending: false })
+          .range(currentOffset, currentOffset + limit - 1);
+
+        // Add category filter if provided (single query now!)
+        if (categorySlug) {
+          query = query.eq('tag_slug', categorySlug);
+        }
+
+        const { data: booksData, error: booksError } = await query;
+
+        if (booksError) {
+          throw booksError;
+        }
+
+        // V1: No deduplication needed - only PT books, data already joined in view
+        const transformedBooks = (booksData || []).map(transformViewToBookData);
+
+        // Check if there are more books
+        setHasMore(transformedBooks.length === limit);
+
+        if (isLoadMore) {
+          setBooks((prev) => [...prev, ...transformedBooks]);
+          setOffset(currentOffset + limit);
+        } else {
+          setBooks(transformedBooks);
+          setOffset(limit);
+        }
+      } catch (err) {
+        console.error('Error fetching books:', err);
+        setError(err as Error);
+        if (!isLoadMore) {
+          setBooks([]);
+        }
+      } finally {
+        setLoading(false);
+        setLoadingMore(false);
+      }
+    },
+    [limit, categorySlug, offset]
+  );
 
   const loadMore = useCallback(async () => {
     if (!loadingMore && hasMore) {
@@ -200,7 +259,7 @@ export function useBooks(options: UseBooksOptions = {}): UseBooksResult {
 
   useEffect(() => {
     fetchBooks(false);
-  }, [categorySlug]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [categorySlug]); // eslint-disable-line
 
   return {
     books,
@@ -304,13 +363,20 @@ export function useBookCategories(): UseBookCategoriesResult {
 
       try {
         // Use optimized view (already has PT book counts)
-        const { data, error: catError } = await supabase
+        // Cast as any since view types are not auto-generated
+        const { data, error: catError } = await (supabase as any)
           .from('v_categories_with_count')
           .select('slug, name, book_count');
 
         if (catError) throw catError;
 
-        const categoriesWithCount = (data || []).map((cat) => ({
+        interface CategoryRow {
+          slug: string;
+          name: string;
+          book_count: number;
+        }
+
+        const categoriesWithCount = ((data || []) as CategoryRow[]).map((cat) => ({
           slug: cat.slug,
           name: cat.name,
           count: cat.book_count,
@@ -382,14 +448,16 @@ export function useBookSearch(): UseBookSearchResult {
         // Search by title only (more reliable) - client-side will filter by author too
         const { data, error } = await supabase
           .from('contents')
-          .select(`
+          .select(
+            `
             id,
             slug,
             title,
             image_url,
             metadata,
             content_minds(role, minds(id, slug, name))
-          `)
+          `
+          )
           .eq('content_type', 'book_summary')
           .eq('status', 'published')
           .ilike('title', `%${query}%`)
@@ -412,9 +480,10 @@ export function useBookSearch(): UseBookSearchResult {
               coverUrl: item.image_url,
             } as BookData;
           })
-          .filter((book) =>
-            book.title.toLowerCase().includes(searchLower) ||
-            book.author.toLowerCase().includes(searchLower)
+          .filter(
+            (book) =>
+              book.title.toLowerCase().includes(searchLower) ||
+              book.author.toLowerCase().includes(searchLower)
           )
           .slice(0, 6);
 
@@ -478,11 +547,7 @@ export function useFeaturedBooks(): UseFeaturedBooksResult {
             .limit(5),
 
           // Audiobooks
-          supabase
-            .from('v_books_pt')
-            .select('*')
-            .eq('has_audio', true)
-            .limit(5),
+          supabase.from('v_books_pt').select('*').eq('has_audio', true).limit(5),
         ]);
 
         // Transform using view structure

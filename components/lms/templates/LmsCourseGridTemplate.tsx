@@ -60,10 +60,7 @@ export default function LmsCourseGridTemplate() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background pb-20 font-sans">
-      <LmsTopbar
-        currentSection={Section.APP_LMS_HOME}
-        setSection={() => {}}
-      />
+      <LmsTopbar currentSection={Section.APP_LMS_HOME} setSection={() => {}} />
 
       <main className="flex-1">
         {/* --- Section: Continuar Aprendendo (only if has progress) --- */}
@@ -119,7 +116,7 @@ export default function LmsCourseGridTemplate() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                       <div className="absolute bottom-4 left-4 right-4">
-                        <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-white/80">
+                        <p className="mb-1 text-xs font-bold uppercase tracking-wide text-white/80">
                           {course.progress.percentage}% concluído
                         </p>
                         <h3 className="line-clamp-2 text-lg font-bold leading-tight text-white">
@@ -144,11 +141,7 @@ export default function LmsCourseGridTemplate() {
                       {course.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1.5">
                           {course.tags.slice(0, 2).map((tag) => (
-                            <Badge
-                              key={tag.id}
-                              variant="secondary"
-                              className="px-2 py-0.5 text-[10px]"
-                            >
+                            <Badge key={tag.id} variant="secondary" className="px-2 py-0.5 text-xs">
                               {tag.name}
                             </Badge>
                           ))}

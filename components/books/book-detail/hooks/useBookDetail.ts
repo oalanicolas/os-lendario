@@ -92,13 +92,14 @@ export function useBookDetail() {
         // For description, we need to update the metadata.description field
         if (field === 'description') {
           // Fetch current metadata first
-          const { data: currentData } = await supabase
+          const { data: currentData } = await (supabase as any)
             .from('contents')
             .select('metadata')
             .eq('id', book.id)
             .single();
 
-          const currentMetadata = (currentData?.metadata as Record<string, unknown>) || {};
+          const currentMetadata =
+            (currentData as { metadata?: Record<string, unknown> })?.metadata || {};
 
           const { error } = await (supabase as any)
             .from('contents')

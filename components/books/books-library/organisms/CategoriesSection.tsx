@@ -21,23 +21,30 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
     <section className="space-y-8">
       <div className="flex items-center gap-6">
         <div>
-          <p className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground">Explorar</p>
-          <h2 className="mt-1 text-2xl font-bold tracking-tight text-foreground md:text-3xl">Categorias</h2>
+          <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            Explorar
+          </p>
+          <h2 className="mt-1 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+            Categorias
+          </h2>
         </div>
-        <div className="hidden md:block h-px flex-1 bg-gradient-to-r from-border to-transparent"></div>
+        <div className="hidden h-px flex-1 bg-gradient-to-r from-border to-transparent md:block"></div>
         <button
           onClick={onViewAll}
-          className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground transition-colors duration-300 hover:text-foreground shrink-0"
+          className="shrink-0 text-xs font-bold uppercase tracking-wide text-muted-foreground transition-colors duration-300 hover:text-foreground active:scale-95"
         >
           Ver todas &rarr;
         </button>
       </div>
 
       {/* Mobile: horizontal scroll, Desktop: grid */}
-      <div className="scrollbar-hide -mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 md:mx-0 md:grid md:grid-cols-3 lg:grid-cols-4 md:gap-6 md:overflow-visible md:px-0">
+      <div className="scrollbar-hide -mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 md:mx-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0 lg:grid-cols-4">
         {isLoading
           ? Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-24 min-w-[260px] shrink-0 animate-pulse snap-start rounded-2xl bg-muted/50 md:h-24 md:min-w-0"></div>
+              <div
+                key={i}
+                className="h-24 min-w-[260px] shrink-0 animate-pulse snap-start rounded-2xl bg-muted/50 md:h-24 md:min-w-0"
+              ></div>
             ))
           : categories.slice(0, 8).map((cat) => {
               const style = getCategoryStyle(cat.slug);

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Button } from '../../ui/button';
 import { Icon } from '../../ui/icon';
 import { Input } from '../../ui/input';
@@ -8,27 +8,27 @@ import { ScrollArea } from '../../ui/scroll-area';
 import { CloneCardSelect } from '../templates/CloneCardSelect';
 import { useToast } from '../../../hooks/use-toast';
 import { cn } from '../../../lib/utils';
-import { useArenaSelection, useArenaConfig } from './hooks';
+import { useArenaSelection } from './hooks';
 import { PlayerStage } from './organisms';
 import type { ArenaCreateProps } from './types';
 
 /**
  * ArenaCreate - Orchestrator Component
  *
- * STATE MANAGEMENT (extracted to hooks):
- * - useArenaSelection: selectedClone1, selectedClone2, imgError1, imgError2, isRandomizing, searchQuery (6 useState -> 1 hook)
- * - useArenaConfig: topic, framework (2 useState -> 1 hook)
- * - imgError state moved to PlayerStage organism (2 useState -> moved to organism)
- *
- * TOTAL: 9 useState -> 2 custom hooks + local state in organism
+ * STATE MANAGEMENT:
+ * - useArenaSelection: player selections, randomize, search (external hook - has logic)
+ * - Config state: topic, framework (inline - simple useState)
  */
 export const ArenaCreate: React.FC<ArenaCreateProps> = ({ minds, frameworks, onBack, onStart }) => {
   const { toast } = useToast();
   const selection = useArenaSelection();
-  const config = useArenaConfig();
+
+  // Config state (inline - simple useState, no logic)
+  const [topic, setTopic] = useState('');
+  const [framework, setFramework] = useState('oxford');
 
   const handleStart = () => {
-    if (!selection.selectedClone1 || !selection.selectedClone2 || !config.topic) {
+    if (!selection.selectedClone1 || !selection.selectedClone2 || !topic) {
       toast({
         title: 'Configuracao incompleta',
         description: 'Selecione dois clones e um topico.',
@@ -48,27 +48,31 @@ export const ArenaCreate: React.FC<ArenaCreateProps> = ({ minds, frameworks, onB
     onStart({
       clone1Id: selection.selectedClone1,
       clone2Id: selection.selectedClone2,
-      topic: config.topic,
-      frameworkId: config.framework,
+      topic,
+      frameworkId: framework,
     });
   };
 
   // Filter Clones based on search
-  const baseFiltered = useMemo(() => minds.filter(
-    (clone) =>
-      clone.name.toLowerCase().includes(selection.searchQuery.toLowerCase()) ||
-      clone.role.toLowerCase().includes(selection.searchQuery.toLowerCase())
-  ), [minds, selection.searchQuery]);
+  const baseFiltered = useMemo(
+    () =>
+      minds.filter(
+        (clone) =>
+          clone.name.toLowerCase().includes(selection.searchQuery.toLowerCase()) ||
+          clone.role.toLowerCase().includes(selection.searchQuery.toLowerCase())
+      ),
+    [minds, selection.searchQuery]
+  );
 
   // Filter for Player 1 (exclude Player 2 selection)
-  const filteredClones1 = useMemo(() =>
-    baseFiltered.filter((clone) => clone.id !== selection.selectedClone2),
+  const filteredClones1 = useMemo(
+    () => baseFiltered.filter((clone) => clone.id !== selection.selectedClone2),
     [baseFiltered, selection.selectedClone2]
   );
 
   // Filter for Player 2 (exclude Player 1 selection)
-  const filteredClones2 = useMemo(() =>
-    baseFiltered.filter((clone) => clone.id !== selection.selectedClone1),
+  const filteredClones2 = useMemo(
+    () => baseFiltered.filter((clone) => clone.id !== selection.selectedClone1),
     [baseFiltered, selection.selectedClone1]
   );
 
@@ -90,7 +94,8 @@ export const ArenaCreate: React.FC<ArenaCreateProps> = ({ minds, frameworks, onB
           disabled={selection.isRandomizing || minds.length < 2}
           className="border-studio-primary/30 text-studio-primary hover:bg-studio-primary/10"
         >
-          <Icon name="refresh" className={cn('mr-2', selection.isRandomizing && 'animate-spin')} /> Match Aleatorio
+          <Icon name="refresh" className={cn('mr-2', selection.isRandomizing && 'animate-spin')} />{' '}
+          Match Aleatorio
         </Button>
       </div>
 
@@ -98,11 +103,7 @@ export const ArenaCreate: React.FC<ArenaCreateProps> = ({ minds, frameworks, onB
       <div className="relative grid min-h-[400px] grid-cols-1 items-stretch gap-4 lg:grid-cols-5">
         {/* Player 1 Selection Area */}
         <div className="flex flex-col gap-4 lg:col-span-2">
-          <PlayerStage
-            player="player1"
-            mind={c1}
-            isSelected={!!selection.selectedClone1}
-          />
+          <PlayerStage player="player1" mind={c1} isSelected={!!selection.selectedClone1} />
         </div>
 
         {/* VS Badge & Settings (Center) */}
@@ -120,11 +121,7 @@ export const ArenaCreate: React.FC<ArenaCreateProps> = ({ minds, frameworks, onB
 
         {/* Player 2 Selection Area */}
         <div className="flex flex-col gap-4 lg:col-span-2">
-          <PlayerStage
-            player="player2"
-            mind={c2}
-            isSelected={!!selection.selectedClone2}
-          />
+          <PlayerStage player="player2" mind={c2} isSelected={!!selection.selectedClone2} />
         </div>
       </div>
 
@@ -184,8 +181,8 @@ export const ArenaCreate: React.FC<ArenaCreateProps> = ({ minds, frameworks, onB
             <Input
               placeholder="Ex: A IA vai substituir criativos?"
               className="bg-studio-card h-12 border-white/10 text-center font-serif text-lg text-white focus:border-studio-primary"
-              value={config.topic}
-              onChange={(e) => config.setTopic(e.target.value)}
+              value={topic}
+              onChange={(e) => setTopic(e.target.value)}
             />
           </div>
           <div className="space-y-2">
@@ -193,8 +190,8 @@ export const ArenaCreate: React.FC<ArenaCreateProps> = ({ minds, frameworks, onB
               Regras (Framework)
             </label>
             <Select
-              value={config.framework}
-              onValueChange={config.setFramework}
+              value={framework}
+              onValueChange={setFramework}
               options={frameworks.map((f) => ({ label: f.name, value: f.id }))}
               className="bg-studio-card h-10 border-white/10 text-center text-white"
             />
@@ -203,7 +200,7 @@ export const ArenaCreate: React.FC<ArenaCreateProps> = ({ minds, frameworks, onB
             size="lg"
             className={cn(
               'h-14 w-full text-lg font-black uppercase tracking-wider shadow-lg transition-all duration-300',
-              selection.selectedClone1 && selection.selectedClone2 && config.topic
+              selection.selectedClone1 && selection.selectedClone2 && topic
                 ? 'bg-studio-primary text-white hover:scale-105 hover:shadow-studio-primary/20'
                 : 'cursor-not-allowed bg-zinc-800 text-zinc-500'
             )}

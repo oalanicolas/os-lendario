@@ -37,27 +37,30 @@ export const CategoriesBar: React.FC<CategoriesBarProps> = ({
   }
 
   const shouldShowExpander = isMobile && categories.length > MOBILE_INITIAL_COUNT;
-  const visibleCategories = isMobile && !isExpanded
-    ? categories.slice(0, MOBILE_INITIAL_COUNT)
-    : categories;
+  const visibleCategories =
+    isMobile && !isExpanded ? categories.slice(0, MOBILE_INITIAL_COUNT) : categories;
   const hiddenCount = categories.length - MOBILE_INITIAL_COUNT;
 
   return (
     <div className="relative">
       {/* Categories Container */}
-      <div className={cn(
-        "flex justify-center relative",
-        // On mobile when collapsed, add fade-out mask
-        isMobile && !isExpanded && shouldShowExpander && "mask-fade-bottom"
-      )}>
-        <div className={cn(
-          "flex flex-wrap justify-center gap-2",
-          // On mobile when collapsed, limit height to ~2 rows
-          isMobile && !isExpanded && "max-h-[88px] overflow-hidden"
-        )}>
+      <div
+        className={cn(
+          'relative flex justify-center',
+          // On mobile when collapsed, add fade-out mask
+          isMobile && !isExpanded && shouldShowExpander && 'mask-fade-bottom'
+        )}
+      >
+        <div
+          className={cn(
+            'flex flex-wrap justify-center gap-2',
+            // On mobile when collapsed, limit height to ~2 rows
+            isMobile && !isExpanded && 'max-h-[88px] overflow-hidden'
+          )}
+        >
           {/* "Todos" button */}
           <button
-            className="px-5 py-2 rounded-full text-[9px] font-black uppercase tracking-[0.2em] bg-foreground text-background shadow-lg transition-all duration-300 hover:opacity-90"
+            className="rounded-full bg-foreground px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-background shadow-lg transition-all duration-300 hover:opacity-90 active:scale-95"
             onClick={onAllClick}
           >
             Todos
@@ -67,7 +70,7 @@ export const CategoriesBar: React.FC<CategoriesBarProps> = ({
           {visibleCategories.map((cat) => (
             <button
               key={cat.slug}
-              className="px-5 py-2 rounded-full text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground bg-card/60 backdrop-blur-sm border border-border hover:text-foreground hover:border-foreground/30 transition-all duration-300"
+              className="rounded-full border border-border bg-card/60 px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-muted-foreground backdrop-blur-sm transition-all duration-300 hover:border-foreground/30 hover:text-foreground active:scale-95"
               onClick={() => onCategoryClick(cat.slug)}
             >
               {getCategoryName(cat.slug)}
@@ -78,11 +81,11 @@ export const CategoriesBar: React.FC<CategoriesBarProps> = ({
 
       {/* Mobile: "Ver mais" / "Ver menos" button */}
       {shouldShowExpander && (
-        <div className="flex justify-center mt-3 md:hidden">
+        <div className="mt-3 flex justify-center md:hidden">
           <Button
             variant="ghost"
             size="sm"
-            className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground gap-1.5"
+            className="gap-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground hover:text-foreground"
             onClick={() => setIsExpanded(!isExpanded)}
           >
             {isExpanded ? (

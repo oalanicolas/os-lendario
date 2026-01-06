@@ -1,6 +1,7 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
 import { useHighlights } from '@/hooks/useHighlights';
+import { useMetaTags, generateBookMetaTags } from '@/hooks/useMetaTags';
 import { ReaderHeader, MobileReaderToolbar } from '../reader';
 import { ReaderSidebar } from '../reader-sidebar';
 import { EditModeToggle } from '../ui';
@@ -35,8 +36,23 @@ const BookReaderTemplate: React.FC<BookReaderTemplateProps> = ({
     loading: reader.loading,
   });
 
+  // Set meta tags for SEO and social sharing
+  useMetaTags(
+    reader.book
+      ? generateBookMetaTags({
+          title: reader.book.title,
+          summary: reader.book.summary,
+          coverUrl: reader.book.coverUrl,
+          author: reader.book.author,
+          slug: reader.bookSlug || '',
+        })
+      : null
+  );
+
   if (reader.error) {
-    return <ReaderErrorView message={reader.error.message} onNavigateBack={reader.navigateToLibrary} />;
+    return (
+      <ReaderErrorView message={reader.error.message} onNavigateBack={reader.navigateToLibrary} />
+    );
   }
 
   if (reader.loading) {
@@ -111,32 +127,33 @@ const BookReaderTemplate: React.FC<BookReaderTemplateProps> = ({
       )}
 
       {/* Sidebar - only for authenticated users */}
-      {reader.showFullContent && createPortal(
-        <div className="pointer-events-none fixed inset-0 z-[9999] overflow-hidden">
-          <ReaderSidebar
-            isOpen={ui.sidebarOpen}
-            isDesktop={ui.isDesktop}
-            book={reader.book}
-            chapters={reader.chapters}
-            keyQuotes={reader.keyQuotes}
-            activeTab={ui.activeTab}
-            interactions={reader.interactions}
-            interactionsLoading={reader.interactionsLoading}
-            isTogglingFavorite={reader.isTogglingFavorite}
-            isMarkingRead={reader.isMarkingRead}
-            fallbackGradient={reader.fallbackGradient}
-            onClose={() => ui.setSidebarOpen(false)}
-            onTabChange={ui.setActiveTab}
-            onScrollToChapter={ui.scrollToChapter}
-            onToggleFavorite={reader.handleToggleFavorite}
-            onMarkAsRead={reader.handleMarkAsRead}
-            onSetReadingStatus={reader.setReadingStatus}
-            onNavigateBack={reader.navigateToDetails}
-            onNavigateToCategory={reader.navigateToCategory}
-          />
-        </div>,
-        document.body
-      )}
+      {reader.showFullContent &&
+        createPortal(
+          <div className="pointer-events-none fixed inset-0 z-[9999] overflow-hidden">
+            <ReaderSidebar
+              isOpen={ui.sidebarOpen}
+              isDesktop={ui.isDesktop}
+              book={reader.book}
+              chapters={reader.chapters}
+              keyQuotes={reader.keyQuotes}
+              activeTab={ui.activeTab}
+              interactions={reader.interactions}
+              interactionsLoading={reader.interactionsLoading}
+              isTogglingFavorite={reader.isTogglingFavorite}
+              isMarkingRead={reader.isMarkingRead}
+              fallbackGradient={reader.fallbackGradient}
+              onClose={() => ui.setSidebarOpen(false)}
+              onTabChange={ui.setActiveTab}
+              onScrollToChapter={ui.scrollToChapter}
+              onToggleFavorite={reader.handleToggleFavorite}
+              onMarkAsRead={reader.handleMarkAsRead}
+              onSetReadingStatus={reader.setReadingStatus}
+              onNavigateBack={reader.navigateToDetails}
+              onNavigateToCategory={reader.navigateToCategory}
+            />
+          </div>,
+          document.body
+        )}
 
       {/* Mobile Toolbar - always visible (with limited features for logged out users) */}
       {createPortal(

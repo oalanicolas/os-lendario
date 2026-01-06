@@ -73,6 +73,8 @@ const SECTION_TITLES: Record<Section, string> = {
 
   // Marketing Templates
   [Section.MARKETING_GUIDE]: 'Guia de Marketing',
+  [Section.CURATOR]: 'Curador[IA]',
+  [Section.APP_GUIA_EBOOK]: 'Guia Ebook',
   [Section.TEMPLATE_LANDING]: 'Landing Page',
   [Section.TEMPLATE_ADVERTORIAL]: 'Advertorial',
   [Section.TEMPLATE_SALES]: 'Página de Vendas',

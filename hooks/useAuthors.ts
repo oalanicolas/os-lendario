@@ -35,14 +35,23 @@ export function useAuthors(): UseAuthorsResult {
 
     try {
       // Use optimized view (already has book counts for PT books)
-      const { data, error: fetchError } = await supabase
+      // Cast as any since view types are not auto-generated
+      const { data, error: fetchError } = await (supabase as any)
         .from('v_authors_with_books')
         .select('*');
 
       if (fetchError) throw fetchError;
 
       // Transform to Author interface (view already has all fields)
-      const authorsList: Author[] = (data || []).map((row) => ({
+      interface AuthorRow {
+        id: string;
+        slug: string;
+        name: string;
+        avatar_url: string | null;
+        short_bio: string | null;
+        book_count: number;
+      }
+      const authorsList: Author[] = ((data || []) as AuthorRow[]).map((row) => ({
         id: row.id,
         slug: row.slug,
         name: row.name,

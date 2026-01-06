@@ -22,16 +22,20 @@ export function ResourcesTab({ resources }: ResourcesTabProps) {
               <div className="mt-1 flex items-center gap-2">
                 <Badge
                   variant="secondary"
-                  className="h-4 border-0 bg-muted text-[9px] text-muted-foreground"
+                  className="h-4 border-0 bg-muted text-xs text-muted-foreground"
                 >
                   {res.type}
                 </Badge>
-                <span className="font-mono text-[10px] text-muted-foreground">{res.size}</span>
+                <span className="font-mono text-xs text-muted-foreground">{res.size}</span>
               </div>
             </div>
           </div>
-          <div className="opacity-0 transition-opacity group-hover:opacity-100">
-            <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-primary">
+          <div className="opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100">
+            <Button
+              size="icon"
+              variant="ghost"
+              className="text-muted-foreground hover:text-primary"
+            >
               <Icon name={res.type === 'Link' ? 'external-link' : 'download'} size="size-4" />
             </Button>
           </div>

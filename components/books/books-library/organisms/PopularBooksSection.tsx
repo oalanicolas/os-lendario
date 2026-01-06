@@ -32,10 +32,14 @@ export const PopularBooksSection: React.FC<PopularBooksSectionProps> = ({
     <section className="space-y-8">
       <div className="flex items-center gap-6">
         <div>
-          <p className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground">Tendencias</p>
-          <h2 className="mt-1 text-2xl font-bold tracking-tight text-foreground md:text-3xl">Mais Populares</h2>
+          <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            Tendências
+          </p>
+          <h2 className="mt-1 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+            Mais Populares
+          </h2>
         </div>
-        <div className="hidden md:block h-px flex-1 bg-gradient-to-r from-border to-transparent"></div>
+        <div className="hidden h-px flex-1 bg-gradient-to-r from-border to-transparent md:block"></div>
       </div>
 
       <div className="scrollbar-hide -mx-6 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-4 md:-mx-0 md:gap-8 md:px-0 md:pb-8">

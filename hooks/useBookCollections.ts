@@ -77,20 +77,32 @@ export function useBookCollections(): UseBookCollectionsResult {
 
     try {
       // Use optimized view (already has PT book counts)
-      const { data, error: fetchError } = await supabase
+      // Cast as any since view types are not auto-generated
+      const { data, error: fetchError } = await (supabase as any)
         .from('v_collections_with_count')
         .select('*');
 
       if (fetchError) throw fetchError;
 
+      // Type for the view result
+      interface CollectionRow {
+        id: string | number;
+        slug: string;
+        name: string;
+        description: string | null;
+        book_count: number;
+      }
+
       // Transform to BookCollection format
-      const transformedCollections: BookCollection[] = (data || []).map((row) => ({
-        id: String(row.id),
-        slug: row.slug,
-        name: row.name,
-        description: row.description,
-        bookCount: row.book_count,
-      }));
+      const transformedCollections: BookCollection[] = ((data || []) as CollectionRow[]).map(
+        (row) => ({
+          id: String(row.id),
+          slug: row.slug,
+          name: row.name,
+          description: row.description,
+          bookCount: row.book_count,
+        })
+      );
 
       setCollections(transformedCollections);
     } catch (err) {
@@ -150,15 +162,42 @@ export function useBookCollection(slug: string): UseBookCollectionResult {
 
     try {
       // Use optimized view - SINGLE query for collection + books!
-      const { data: booksData, error: booksError } = await supabase
+      // Cast as any since view types are not auto-generated
+      const { data: booksData, error: booksError } = await (supabase as any)
         .from('v_books_by_collection')
         .select('*')
         .eq('tag_slug', slug);
 
       if (booksError) throw booksError;
 
+      // Type for the view result
+      interface BookCollectionRow {
+        id: string;
+        slug: string;
+        title: string;
+        author_name: string | null;
+        author_slug: string | null;
+        image_url: string | null;
+        content: string | null;
+        description: string | null;
+        category_name: string | null;
+        category_slug: string | null;
+        has_audio: boolean | null;
+        duration: string | null;
+        page_count: number | null;
+        rating: number | null;
+        status: string;
+        created_at: string;
+        tag_id: string | number;
+        tag_slug: string;
+        tag_name: string;
+        tag_description: string | null;
+      }
+
+      const typedBooksData = (booksData || []) as BookCollectionRow[];
+
       // Transform books using view structure
-      const transformedBooks: BookData[] = (booksData || []).map((row) => ({
+      const transformedBooks: BookData[] = typedBooksData.map((row) => ({
         id: row.id,
         slug: row.slug,
         title: row.title,
@@ -183,28 +222,35 @@ export function useBookCollection(slug: string): UseBookCollectionResult {
       }));
 
       // Get collection info from first book row (or fetch separately if no books)
-      if (booksData && booksData.length > 0) {
+      if (typedBooksData.length > 0) {
         setCollection({
-          id: String(booksData[0].tag_id),
-          slug: booksData[0].tag_slug,
-          name: booksData[0].tag_name,
-          description: booksData[0].tag_description || null,
+          id: String(typedBooksData[0].tag_id),
+          slug: typedBooksData[0].tag_slug,
+          name: typedBooksData[0].tag_name,
+          description: typedBooksData[0].tag_description || null,
           bookCount: transformedBooks.length,
         });
       } else {
         // Fetch collection info even if no books
-        const { data: collData } = await supabase
+        interface CollectionRow {
+          id: string | number;
+          slug: string;
+          name: string;
+          description: string | null;
+        }
+        const { data: collData } = await (supabase as any)
           .from('v_collections_with_count')
           .select('*')
           .eq('slug', slug)
           .single();
 
         if (collData) {
+          const typedCollData = collData as CollectionRow;
           setCollection({
-            id: String(collData.id),
-            slug: collData.slug,
-            name: collData.name,
-            description: collData.description,
+            id: String(typedCollData.id),
+            slug: typedCollData.slug,
+            name: typedCollData.name,
+            description: typedCollData.description,
             bookCount: 0,
           });
         }

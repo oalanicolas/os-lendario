@@ -6,10 +6,10 @@ import React from 'react';
 import type { LuxuryLabelProps } from '../types';
 
 export const LuxuryLabel: React.FC<LuxuryLabelProps> = ({ children, htmlFor, extra }) => (
-  <div className="flex items-center justify-between mb-3">
+  <div className="mb-3 flex items-center justify-between">
     <label
       htmlFor={htmlFor}
-      className="text-[11px] font-bold uppercase tracking-[0.25em] text-muted-foreground"
+      className="text-xs font-bold uppercase tracking-[0.25em] text-muted-foreground sm:text-[11px]"
     >
       {children}
     </label>

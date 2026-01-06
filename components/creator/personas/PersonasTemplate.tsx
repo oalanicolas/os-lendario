@@ -1,15 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import { Section } from '../../../types';
 import CreatorTopbar from '../CreatorTopbar';
 import { useAudienceProfiles } from '../../../hooks/useAudienceProfiles';
 
-// Views
-import { PersonasDashboard, type PersonasView } from './personas-dashboard';
-import { PersonasList } from './views/PersonasList';
-import { PersonaDetail, type PersonaDetailTab } from './views/PersonaDetail';
-import { PersonasAnalyticsTemplate } from '../personas-analytics';
-import { PainPointEditor } from './pain-point-editor';
-import { CreatePersona } from './create-persona';
+// Types only (no runtime cost)
+import type { PersonasView } from './personas-dashboard';
+import type { PersonaDetailTab } from './views/PersonaDetail';
+
+// Lazy load views for code splitting (~289KB -> smaller chunks)
+const PersonasDashboard = lazy(() =>
+  import('./personas-dashboard').then((m) => ({ default: m.PersonasDashboard }))
+);
+const PersonasList = lazy(() =>
+  import('./views/PersonasList').then((m) => ({ default: m.PersonasList }))
+);
+const PersonaDetail = lazy(() =>
+  import('./views/PersonaDetail').then((m) => ({ default: m.PersonaDetail }))
+);
+const PersonasAnalyticsTemplate = lazy(() =>
+  import('../personas-analytics').then((m) => ({ default: m.PersonasAnalyticsTemplate }))
+);
+const PainPointEditor = lazy(() =>
+  import('./pain-point-editor').then((m) => ({ default: m.PainPointEditor }))
+);
+const CreatePersona = lazy(() =>
+  import('./create-persona').then((m) => ({ default: m.CreatePersona }))
+);
+
+// Loading fallback
+const ViewLoader = () => (
+  <div className="flex h-64 items-center justify-center">
+    <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+  </div>
+);
 
 interface PersonasTemplateProps {
   setSection: (s: Section) => void;
@@ -156,7 +179,7 @@ const PersonasTemplate: React.FC<PersonasTemplateProps> = ({ setSection }) => {
           />
         </div>
 
-        {renderContent()}
+        <Suspense fallback={<ViewLoader />}>{renderContent()}</Suspense>
       </main>
     </div>
   );

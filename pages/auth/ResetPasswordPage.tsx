@@ -1,15 +1,19 @@
 /**
- * AuthBackground - Background layout organism
+ * ResetPasswordPage - Page to set new password after clicking reset link
+ * Route: /auth/reset-password
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Icon } from '@/components/ui/icon';
-import type { AuthBackgroundProps } from '../types';
+import { ResetPasswordForm } from '../../components/auth/standalone-login/organisms/ResetPasswordForm';
 
 const logoUrl = '/logo-academialendaria.svg';
 
-export const AuthBackground: React.FC<AuthBackgroundProps> = ({ children }) => {
+export const ResetPasswordPage: React.FC = () => {
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const navigate = useNavigate();
 
   return (
@@ -33,7 +37,35 @@ export const AuthBackground: React.FC<AuthBackgroundProps> = ({ children }) => {
           </div>
         </div>
 
-        {children}
+        {/* Card */}
+        <Card className="w-full overflow-hidden rounded-[2rem] border border-border bg-card/95 shadow-2xl backdrop-blur-3xl dark:shadow-[0_50px_100px_rgba(0,0,0,0.8)]">
+          {/* Inner glow border */}
+          <div className="pointer-events-none absolute inset-[1px] rounded-[2rem] border border-border/30" />
+
+          <CardHeader className="px-6 pb-4 pt-10 sm:px-8">
+            <p className="mb-2 text-center text-xs font-black uppercase tracking-[0.4em] text-muted-foreground sm:text-[10px]">
+              Recuperação de Senha
+            </p>
+          </CardHeader>
+
+          <CardContent className="px-6 pb-10 sm:px-8">
+            {/* Error Message */}
+            {error && (
+              <div className="mb-8 animate-fade-in rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-sm font-light tracking-wide text-red-400/90">
+                {error}
+              </div>
+            )}
+
+            {/* Success Message */}
+            {success && (
+              <div className="mb-8 animate-fade-in rounded-xl border border-green-500/20 bg-green-500/5 p-4 text-sm font-light tracking-wide text-green-400/90">
+                {success}
+              </div>
+            )}
+
+            <ResetPasswordForm setError={setError} setSuccess={setSuccess} />
+          </CardContent>
+        </Card>
 
         {/* Bottom Info */}
         <div className="mt-12 flex animate-pulse-slow items-center gap-4 text-[11px] font-black uppercase tracking-[0.35em] text-zinc-700 sm:text-[9px]">
@@ -43,9 +75,9 @@ export const AuthBackground: React.FC<AuthBackgroundProps> = ({ children }) => {
           <span className="opacity-60">v4.1.0</span>
         </div>
 
-        {/* Back to System */}
+        {/* Back to Login */}
         <button
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/auth/login')}
           className="group -mx-4 mt-8 flex min-h-[44px] items-center gap-3 px-4 text-xs font-bold uppercase tracking-[0.3em] text-zinc-600 transition-colors duration-200 hover:text-zinc-400 active:text-zinc-300 sm:text-[10px]"
         >
           <Icon
@@ -53,9 +85,11 @@ export const AuthBackground: React.FC<AuthBackgroundProps> = ({ children }) => {
             size="size-4"
             className="transition-transform duration-200 group-hover:-translate-x-1"
           />
-          <span>Voltar</span>
+          <span>Voltar para Login</span>
         </button>
       </div>
     </div>
   );
 };
+
+export default ResetPasswordPage;

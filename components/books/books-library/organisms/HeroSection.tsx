@@ -36,26 +36,28 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="flex items-center gap-3">
             <Badge
               variant="outline"
-              className="border-primary/20 bg-primary/5 px-4 py-1.5 text-[8px] font-black uppercase tracking-[0.3em] text-primary rounded-full"
+              className="rounded-full border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-primary"
             >
               Curadoria Exclusiva
             </Badge>
-            <span className="text-[10px] font-medium text-muted-foreground">{totalBookCount} obras</span>
+            <span className="text-xs font-medium text-muted-foreground">
+              {totalBookCount} obras
+            </span>
           </div>
           <h1 className="text-3xl font-bold leading-[0.9] tracking-tight text-foreground md:text-4xl lg:text-5xl">
             Expanda sua{' '}
-            <span className="font-serif italic font-light text-muted-foreground">Consciencia.</span>
+            <span className="font-serif font-light italic text-muted-foreground">Consciencia.</span>
           </h1>
-          <p className="font-serif text-sm leading-relaxed text-muted-foreground/70 md:text-base max-w-md">
+          <p className="max-w-md font-serif text-sm leading-relaxed text-muted-foreground/70 md:text-base">
             Sabedoria secular potencializada por IA.
           </p>
         </div>
 
         {/* Botoes */}
-        <div className="flex gap-3 shrink-0">
+        <div className="flex shrink-0 gap-3">
           {isAuthenticated && currentlyReadingBook && (
             <Button
-              className="h-12 px-6 rounded-xl bg-foreground font-black uppercase tracking-[0.2em] text-[9px] text-background hover:opacity-90 shadow-lg active:scale-95 transition-all"
+              className="h-12 rounded-xl bg-foreground px-6 text-xs font-bold uppercase tracking-wide text-background shadow-lg transition-all hover:opacity-90 active:scale-95"
               onClick={onContinueReading}
             >
               Continuar Leitura
@@ -64,7 +66,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           {isAuthenticated && (
             <Button
               variant="outline"
-              className="h-12 px-6 rounded-xl border-border font-black uppercase tracking-[0.2em] text-[9px] text-foreground hover:bg-muted active:scale-95 transition-all"
+              className="h-12 rounded-xl border-border px-6 text-xs font-bold uppercase tracking-wide text-foreground transition-all hover:bg-muted active:scale-95"
               onClick={onMyLibrary}
             >
               Minha Lista
@@ -72,7 +74,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           )}
           {!isAuthenticated && (
             <Button
-              className="h-12 px-6 rounded-xl bg-foreground font-black uppercase tracking-[0.2em] text-[9px] text-background hover:opacity-90 shadow-lg active:scale-95 transition-all"
+              className="h-12 rounded-xl bg-foreground px-6 text-xs font-bold uppercase tracking-wide text-background shadow-lg transition-all hover:opacity-90 active:scale-95"
               onClick={onExploreLibrary}
             >
               Explorar Biblioteca

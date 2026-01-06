@@ -20,13 +20,18 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onClick, classNam
   return (
     <div
       className={cn(
-        'group relative flex cursor-pointer items-center gap-5 rounded-2xl border border-border/50 bg-card p-5 transition-all duration-500 hover:border-border hover:shadow-xl overflow-hidden',
+        'group relative flex cursor-pointer items-center gap-5 overflow-hidden rounded-2xl border border-border/50 bg-card p-5 transition-all duration-500 hover:border-border hover:shadow-xl',
         className
       )}
       onClick={onClick}
     >
       {/* Background glow on hover */}
-      <div className={cn('absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700', category.color.replace('bg-', 'bg-') + '/5')}></div>
+      <div
+        className={cn(
+          'absolute inset-0 opacity-0 transition-opacity duration-700 group-hover:opacity-100',
+          category.color.replace('bg-', 'bg-') + '/5'
+        )}
+      ></div>
 
       {/* Icon Container */}
       <div className="relative shrink-0 transition-transform duration-500 group-hover:-translate-y-1">
@@ -42,16 +47,16 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onClick, classNam
 
       {/* Category Info */}
       <div className="relative min-w-0 flex-1">
-        <h4 className="text-base font-bold leading-tight transition-colors duration-300 group-hover:text-primary truncate">
+        <h4 className="truncate text-base font-bold leading-tight transition-colors duration-300 group-hover:text-primary">
           {category.name}
         </h4>
-        <p className="mt-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+        <p className="mt-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
           {category.bookCount} {category.bookCount === 1 ? 'livro' : 'livros'}
         </p>
       </div>
 
       {/* Arrow on hover */}
-      <div className="relative opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+      <div className="relative -translate-x-2 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
         <Icon name="chevron-right" className="text-muted-foreground" size="size-5" />
       </div>
     </div>

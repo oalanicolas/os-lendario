@@ -54,7 +54,10 @@ export function CourseSidebar({ course, onPlay }: CourseSidebarProps) {
         <p className="text-sm text-muted-foreground">
           Tire duvidas e faca networking com outros alunos no nosso Discord exclusivo.
         </p>
-        <Button variant="outline" className="w-full border-primary/30 text-primary hover:bg-primary/10">
+        <Button
+          variant="outline"
+          className="w-full border-primary/30 text-primary hover:bg-primary/10"
+        >
           Acessar Comunidade
         </Button>
       </div>
@@ -76,11 +79,11 @@ export function CourseSidebar({ course, onPlay }: CourseSidebarProps) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Avatar className="h-6 w-6 border border-border">
-                  <AvatarFallback className="bg-muted text-[9px]">SL</AvatarFallback>
+                  <AvatarFallback className="bg-muted text-xs">SL</AvatarFallback>
                 </Avatar>
                 <span className="text-xs font-bold text-foreground">Sarah Lima</span>
               </div>
-              <span className="text-[10px] text-muted-foreground">2d atras</span>
+              <span className="text-xs text-muted-foreground">2d atrás</span>
             </div>
             <p className="font-serif text-xs leading-relaxed text-muted-foreground">
               "O modulo de banco de dados finalmente fez a ficha cair. Ja estou aplicando no meu
@@ -96,11 +99,11 @@ export function CourseSidebar({ course, onPlay }: CourseSidebarProps) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Avatar className="h-6 w-6 border border-border">
-                  <AvatarFallback className="bg-muted text-[9px]">MP</AvatarFallback>
+                  <AvatarFallback className="bg-muted text-xs">MP</AvatarFallback>
                 </Avatar>
                 <span className="text-xs font-bold text-foreground">Marcos Paulo</span>
               </div>
-              <span className="text-[10px] text-muted-foreground">1sem atras</span>
+              <span className="text-xs text-muted-foreground">1sem atrás</span>
             </div>
             <p className="font-serif text-xs leading-relaxed text-muted-foreground">
               "A didatica e direto ao ponto. Sem enrolacao. O melhor investimento que fiz este ano."

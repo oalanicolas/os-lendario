@@ -79,16 +79,14 @@ export function useEditUserDialog(onSuccess: () => void): UseEditUserDialogRetur
 
       // 1. Update mind_id in user_profiles if changed
       if (selectedMindId !== user.mind_id) {
-        const { error: upsertError } = await supabase
-          .from('user_profiles')
-          .upsert(
-            {
-              id: user.user_id,
-              mind_id: selectedMindId,
-              updated_at: new Date().toISOString(),
-            },
-            { onConflict: 'id' }
-          );
+        const { error: upsertError } = await (supabase as any).from('user_profiles').upsert(
+          {
+            id: user.user_id,
+            mind_id: selectedMindId,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: 'id' }
+        );
 
         if (upsertError) {
           throw new Error(`Erro ao atualizar mind: ${upsertError.message}`);

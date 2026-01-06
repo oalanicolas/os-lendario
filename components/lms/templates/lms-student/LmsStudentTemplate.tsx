@@ -54,7 +54,7 @@ export default function LmsStudentTemplate() {
                 <Icon name="arrow-left" size="size-4" />
               </Button>
               <div className="flex flex-col">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
                   {lesson.courseData.title}
                 </span>
                 <h1 className="flex items-center gap-2 text-sm font-bold text-foreground">

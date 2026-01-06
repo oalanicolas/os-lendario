@@ -9,6 +9,7 @@ import { SubscriptionGuard } from './auth/SubscriptionGuard';
 const LoginPage = React.lazy(() => import('../pages/auth/LoginPage'));
 const SignupPage = React.lazy(() => import('../pages/auth/SignupPage'));
 const CallbackPage = React.lazy(() => import('../pages/auth/CallbackPage'));
+const ResetPasswordPage = React.lazy(() => import('../pages/auth/ResetPasswordPage'));
 const AccessDeniedPage = React.lazy(() => import('../pages/auth/AccessDeniedPage'));
 
 // Lazy load all templates for better performance
@@ -37,7 +38,9 @@ const SalesCallDetailsTemplate = React.lazy(
 );
 const SalesMarketingTemplate = React.lazy(() => import('./sales/templates/SalesMarketingTemplate'));
 const SalesProductTemplate = React.lazy(() => import('./sales/templates/SalesProductTemplate'));
-const SalesSettingsTemplate = React.lazy(() => import('./sales/sales-settings/SalesSettingsTemplate'));
+const SalesSettingsTemplate = React.lazy(
+  () => import('./sales/sales-settings/SalesSettingsTemplate')
+);
 const SalesObjectionsTemplate = React.lazy(
   () => import('./sales/sales-objections/SalesObjectionsTemplate')
 );
@@ -45,7 +48,9 @@ const SalesObjectionsTemplate = React.lazy(
 // Minds Templates
 const MindsGalleryTemplate = React.lazy(() => import('./minds/templates/minds-gallery'));
 const MindProfileTemplate = React.lazy(() => import('./minds/templates/mind-profile'));
-const MindComparisonTemplate = React.lazy(() => import('./minds/mind-comparison/MindComparisonTemplate'));
+const MindComparisonTemplate = React.lazy(
+  () => import('./minds/mind-comparison/MindComparisonTemplate')
+);
 const ArtifactEditorTemplate = React.lazy(() => import('./minds/artifact-editor'));
 const ArenaTemplate = React.lazy(() => import('./minds/templates/ArenaTemplate'));
 
@@ -156,6 +161,7 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
         <Route path="/auth/login" element={<LoginPage />} />
         <Route path="/auth/signup" element={<SignupPage />} />
         <Route path="/auth/callback" element={<CallbackPage />} />
+        <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
         <Route path="/access-denied" element={<AccessDeniedPage />} />
 
         {/* Books Library - PUBLIC (no auth required for reading) */}
@@ -196,10 +202,7 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
             />
           }
         />
-        <Route
-          path="/books/my-library"
-          element={<MyBooksTemplate setSection={setSection} />}
-        />
+        <Route path="/books/my-library" element={<MyBooksTemplate setSection={setSection} />} />
         <Route
           path="/books/:bookSlug/highlights"
           element={<BookHighlightsTemplate setSection={setSection} />}
@@ -345,11 +348,11 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
 
           {/* Marketing Templates */}
           <Route path="/marketing/guide" element={<MarketingTemplatesPage />} />
+          <Route path="/marketing/curator" element={<CuratorTemplate setSection={setSection} />} />
           <Route
-            path="/marketing/curator"
-            element={<CuratorTemplate setSection={setSection} />}
+            path="/marketing/guia-ebook"
+            element={<GuiaEbookTemplate setSection={setSection} />}
           />
-          <Route path="/marketing/guia-ebook" element={<GuiaEbookTemplate />} />
           <Route path="/marketing/landing" element={<LandingPageTemplate />} />
           <Route path="/marketing/advertorial" element={<AdvertorialTemplate />} />
           <Route path="/marketing/sales-page" element={<SalesPageTemplate />} />
@@ -424,7 +427,10 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
           />
 
           {/* Books Library - Protected routes (rate, admin) */}
-          <Route path="/books/:slug/rate" element={<BookRatingTemplate setSection={setSection} />} />
+          <Route
+            path="/books/:slug/rate"
+            element={<BookRatingTemplate setSection={setSection} />}
+          />
           <Route
             path="/books/admin"
             element={

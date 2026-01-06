@@ -14,6 +14,7 @@ import { cn } from '../../../lib/utils';
 import { Section } from '../../../types';
 import { useBookCollection, useBookCollections } from '../../../hooks/useBookCollections';
 import { usePageTitle } from '../../../hooks/usePageTitle';
+import { useMetaTags } from '../../../hooks/useMetaTags';
 import BookCard from '../ui/BookCard';
 import BooksTopbar from '../topbar';
 import { getCollectionStyle, type SortOption, SORT_OPTIONS } from '../constants';
@@ -41,6 +42,18 @@ const BookCollectionTemplate: React.FC<BookCollectionProps> = ({ setSection }) =
   const { collections: allCollections } = useBookCollections();
 
   usePageTitle(collection?.name || 'Coleção');
+  useMetaTags(
+    collection
+      ? {
+          title: collection.name,
+          description:
+            collection.description ||
+            `Explore a coleção "${collection.name}" com ${books.length} livros selecionados na Academia Lendária.`,
+          image: books[0]?.coverUrl, // Use first book cover as preview
+          type: 'website',
+        }
+      : null
+  );
 
   // Sort books
   const sortedBooks = useMemo(() => {
@@ -70,12 +83,14 @@ const BookCollectionTemplate: React.FC<BookCollectionProps> = ({ setSection }) =
             <Icon name="exclamation" className="text-destructive" size="size-8" />
           </div>
           <div className="space-y-3">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">Coleção não encontrada</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">
+              Coleção não encontrada
+            </h2>
             <p className="font-serif text-base italic text-muted-foreground">{error.message}</p>
           </div>
-          <Button 
+          <Button
             onClick={() => navigate('/books')}
-            className="h-14 px-10 bg-foreground font-black uppercase tracking-[0.2em] text-sm text-background hover:bg-foreground/90 active:scale-[0.98] transition-all duration-300"
+            className="h-14 bg-foreground px-10 text-sm font-black uppercase tracking-[0.2em] text-background transition-all duration-300 hover:bg-foreground/90 active:scale-[0.98]"
           >
             Voltar à Biblioteca
           </Button>
@@ -89,7 +104,7 @@ const BookCollectionTemplate: React.FC<BookCollectionProps> = ({ setSection }) =
       {/* BooksTopbar FORA do container animado para não quebrar position:fixed */}
       <BooksTopbar currentSection={currentSection} setSection={handleSetSection} />
 
-      <main className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-20 animate-fade-in">
+      <main className="mx-auto max-w-7xl animate-fade-in px-6 py-16 md:px-8 md:py-20">
         {/* Hero Section */}
         <div className="mb-16 flex flex-col items-start gap-12 md:flex-row md:items-center">
           {/* Collection Icon */}
@@ -98,11 +113,11 @@ const BookCollectionTemplate: React.FC<BookCollectionProps> = ({ setSection }) =
           ) : (
             <div className="group relative">
               {/* Aura */}
-              <div className="absolute -inset-4 bg-primary/0 group-hover:bg-primary/20 rounded-3xl blur-3xl transition-all duration-700 opacity-0 group-hover:opacity-100" />
-              
+              <div className="absolute -inset-4 rounded-3xl bg-primary/0 opacity-0 blur-3xl transition-all duration-700 group-hover:bg-primary/20 group-hover:opacity-100" />
+
               {/* Stack effect */}
-              <div className="absolute right-0 top-0 h-36 w-32 translate-x-4 rotate-6 rounded-2xl border border-border bg-card shadow-lg transition-transform duration-500 group-hover:translate-x-5 group-hover:rotate-8"></div>
-              <div className="absolute right-0 top-0 h-36 w-32 translate-x-2 -rotate-3 rounded-2xl border border-border bg-card shadow-lg transition-transform duration-500 group-hover:translate-x-3 group-hover:-rotate-4"></div>
+              <div className="group-hover:rotate-8 absolute right-0 top-0 h-36 w-32 translate-x-4 rotate-6 rounded-2xl border border-border bg-card shadow-lg transition-transform duration-500 group-hover:translate-x-5"></div>
+              <div className="group-hover:-rotate-4 absolute right-0 top-0 h-36 w-32 translate-x-2 -rotate-3 rounded-2xl border border-border bg-card shadow-lg transition-transform duration-500 group-hover:translate-x-3"></div>
               {/* Main icon */}
               <div
                 className={cn(
@@ -141,11 +156,15 @@ const BookCollectionTemplate: React.FC<BookCollectionProps> = ({ setSection }) =
                 )}
                 <div className="flex items-center gap-8 pt-4">
                   <div className="flex flex-col">
-                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">Livros</span>
+                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+                      Livros
+                    </span>
                     <span className="text-2xl font-bold text-foreground">{books.length}</span>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">Leitura</span>
+                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+                      Leitura
+                    </span>
                     <span className="text-2xl font-bold text-foreground">
                       ~{books.reduce((acc, b) => acc + (b.readingTime || 0), 0)} min
                     </span>
@@ -161,24 +180,30 @@ const BookCollectionTemplate: React.FC<BookCollectionProps> = ({ setSection }) =
           <div className="mb-12 flex flex-wrap items-center justify-between gap-6 border-b border-border pb-8">
             <div className="flex items-center gap-4">
               <Button
-                className="h-14 px-10 bg-foreground font-black uppercase tracking-[0.15em] text-sm text-background shadow-lg hover:bg-foreground/90 hover:shadow-xl active:scale-[0.98] transition-all duration-300"
+                className="h-14 bg-foreground px-10 text-sm font-black uppercase tracking-[0.15em] text-background shadow-lg transition-all duration-300 hover:bg-foreground/90 hover:shadow-xl active:scale-[0.98]"
                 onClick={() => books[0] && navigate(`/books/${books[0].slug}`)}
                 disabled={books.length === 0}
               >
                 <Icon name="play" className="mr-3" size="size-4" /> Começar a Ler
               </Button>
-              <Button 
-                variant="outline" 
-                className="h-14 px-8 rounded-full border-border font-black uppercase tracking-[0.15em] text-sm transition-all duration-300 hover:border-primary/40 hover:bg-primary/5"
+              <Button
+                variant="outline"
+                className="h-14 rounded-full border-border px-8 text-sm font-black uppercase tracking-[0.15em] transition-all duration-300 hover:border-primary/40 hover:bg-primary/5"
               >
                 <Icon name="plus" className="mr-3" size="size-4" /> Adicionar
               </Button>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">Ordenar</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+                Ordenar
+              </span>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-10 rounded-full px-4 text-[10px] font-bold uppercase tracking-[0.15em] transition-all duration-300 hover:bg-muted">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-10 rounded-full px-4 text-[10px] font-bold uppercase tracking-[0.15em] transition-all duration-300 hover:bg-muted"
+                  >
                     {SORT_OPTIONS[sortBy]}{' '}
                     <Icon name="chevron-down" className="ml-2" size="size-3" />
                   </Button>
@@ -191,7 +216,9 @@ const BookCollectionTemplate: React.FC<BookCollectionProps> = ({ setSection }) =
                       className={cn('transition-colors', sortBy === option ? 'bg-muted' : '')}
                     >
                       {SORT_OPTIONS[option]}
-                      {sortBy === option && <Icon name="check" className="ml-auto text-primary" size="size-4" />}
+                      {sortBy === option && (
+                        <Icon name="check" className="ml-auto text-primary" size="size-4" />
+                      )}
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>
@@ -203,8 +230,12 @@ const BookCollectionTemplate: React.FC<BookCollectionProps> = ({ setSection }) =
         {/* Books Grid */}
         <div className="space-y-10">
           <div>
-            <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary">Explorar</p>
-            <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground md:text-3xl">Livros nesta Coleção</h2>
+            <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary">
+              Explorar
+            </p>
+            <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+              Livros nesta Coleção
+            </h2>
           </div>
 
           {loading ? (
@@ -232,8 +263,12 @@ const BookCollectionTemplate: React.FC<BookCollectionProps> = ({ setSection }) =
               <div className="flex h-20 w-20 items-center justify-center rounded-full border border-dashed border-border bg-muted/30">
                 <Icon name="book" className="text-muted-foreground/50" size="size-8" />
               </div>
-              <h3 className="mt-6 text-xl font-bold tracking-tight text-foreground">Nenhum livro nesta coleção</h3>
-              <p className="mt-2 font-serif text-base italic text-muted-foreground">Em breve adicionaremos livros a esta coleção.</p>
+              <h3 className="mt-6 text-xl font-bold tracking-tight text-foreground">
+                Nenhum livro nesta coleção
+              </h3>
+              <p className="mt-2 font-serif text-base italic text-muted-foreground">
+                Em breve adicionaremos livros a esta coleção.
+              </p>
             </div>
           )}
         </div>
@@ -241,14 +276,18 @@ const BookCollectionTemplate: React.FC<BookCollectionProps> = ({ setSection }) =
         {/* Related Collections */}
         {otherCollections.length > 0 && (
           <div className="mt-20 pt-16">
-            <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent mb-16" />
-            
+            <div className="mb-16 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+
             <div className="mb-10 flex items-end justify-between">
               <div>
-                <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary">Descubra mais</p>
-                <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground md:text-3xl">Outras Coleções</h2>
+                <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary">
+                  Descubra mais
+                </p>
+                <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+                  Outras Coleções
+                </h2>
               </div>
-              <button 
+              <button
                 onClick={() => navigate('/books/collections')}
                 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground transition-colors duration-300 hover:text-foreground"
               >
@@ -267,8 +306,8 @@ const BookCollectionTemplate: React.FC<BookCollectionProps> = ({ setSection }) =
                   >
                     {/* Stack Effect */}
                     <div className="relative">
-                      <div className="absolute right-0 top-0 h-28 w-24 translate-x-3 rotate-6 rounded-xl border border-border bg-card shadow-md transition-transform duration-500 group-hover:translate-x-4 group-hover:rotate-8"></div>
-                      <div className="absolute right-0 top-0 h-28 w-24 translate-x-1.5 -rotate-3 rounded-xl border border-border bg-card shadow-md transition-transform duration-500 group-hover:translate-x-2 group-hover:-rotate-4"></div>
+                      <div className="group-hover:rotate-8 absolute right-0 top-0 h-28 w-24 translate-x-3 rotate-6 rounded-xl border border-border bg-card shadow-md transition-transform duration-500 group-hover:translate-x-4"></div>
+                      <div className="group-hover:-rotate-4 absolute right-0 top-0 h-28 w-24 translate-x-1.5 -rotate-3 rounded-xl border border-border bg-card shadow-md transition-transform duration-500 group-hover:translate-x-2"></div>
                       <div
                         className={cn(
                           'relative flex h-28 w-24 items-center justify-center rounded-xl text-black shadow-xl transition-all duration-500 group-hover:-translate-y-1',

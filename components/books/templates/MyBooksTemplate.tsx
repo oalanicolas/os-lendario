@@ -14,6 +14,7 @@ import { toast } from '../../../hooks/use-toast';
 import BooksTopbar from '../topbar';
 import BookCard from '../ui/BookCard';
 import { BookCardSkeleton } from '../ui/BookSkeletons';
+import type { BookData } from '../../../hooks/useBooks';
 
 // ============================================================================
 // Types
@@ -279,13 +280,13 @@ const MyBooksTemplate: React.FC<MyBooksTemplateProps> = ({ setSection }) => {
       {/* Content Section */}
       <main className="mx-auto mt-16 max-w-7xl space-y-12 px-8">
         {/* Luxury Tab Navigation */}
-        <nav className="flex items-center gap-12 overflow-x-auto pb-2">
+        <nav className="flex items-center gap-6 overflow-x-auto pb-2 sm:gap-8">
           {FILTERS.map((tab) => (
             <button
               key={tab.value}
               onClick={() => setSelectedFilter(tab.value)}
               className={cn(
-                'relative whitespace-nowrap pb-4 text-[11px] font-black uppercase tracking-[0.3em] transition-colors duration-300',
+                'relative whitespace-nowrap pb-4 text-xs font-bold uppercase tracking-wide transition-colors duration-300 active:scale-95',
                 selectedFilter === tab.value
                   ? 'text-[#FAFAFA]'
                   : 'text-[#555555] hover:text-[#888888]'
@@ -359,24 +360,25 @@ const MyBooksTemplate: React.FC<MyBooksTemplateProps> = ({ setSection }) => {
                 }
               };
 
-              const handleToggleFavorite = async (_bookData: typeof bookData) => {
-                try {
-                  const isFavorite = await toggleFavorite(book.contentId);
-                  toast({
-                    title: isFavorite ? 'Adicionado aos favoritos' : 'Removido dos favoritos',
-                    description: isFavorite
-                      ? 'Livro salvo nos seus favoritos.'
-                      : 'Livro removido dos favoritos.',
-                    variant: 'success',
+              const handleToggleFavorite = (_bookData: BookData) => {
+                toggleFavorite(book.contentId)
+                  .then((isFavorite) => {
+                    toast({
+                      title: isFavorite ? 'Adicionado aos favoritos' : 'Removido dos favoritos',
+                      description: isFavorite
+                        ? 'Livro salvo nos seus favoritos.'
+                        : 'Livro removido dos favoritos.',
+                      variant: 'success',
+                    });
+                  })
+                  .catch((err) => {
+                    console.error('Failed to toggle favorite:', err);
+                    toast({
+                      title: 'Erro ao favoritar',
+                      description: 'Não foi possível salvar. Tente novamente.',
+                      variant: 'destructive',
+                    });
                   });
-                } catch (err) {
-                  console.error('Failed to toggle favorite:', err);
-                  toast({
-                    title: 'Erro ao favoritar',
-                    description: 'Não foi possível salvar. Tente novamente.',
-                    variant: 'destructive',
-                  });
-                }
               };
 
               return (

@@ -1,5 +1,6 @@
-// Re-export Mind from CloneCardSelect
-export type { Mind } from '../templates/CloneCardSelect';
+// Import and re-export Mind from CloneCardSelect
+import type { Mind } from '../templates/CloneCardSelect';
+export type { Mind };
 
 // ============================================================================
 // Config Types
@@ -50,13 +51,3 @@ export interface UseArenaSelectionReturn {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
 }
-
-export interface UseArenaConfigReturn {
-  topic: string;
-  setTopic: (topic: string) => void;
-  framework: string;
-  setFramework: (framework: string) => void;
-}
-
-// Import Mind type for the full interface
-import type { Mind } from '../templates/CloneCardSelect';

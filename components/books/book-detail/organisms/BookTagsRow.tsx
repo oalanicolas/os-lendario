@@ -23,25 +23,26 @@ export const BookTagsRow: React.FC<BookTagsRowProps> = ({
   return (
     <div className="flex flex-wrap items-center gap-3">
       {/* Tags/Genres */}
-      {tags.length > 0 && tags.map((tag) => (
-        <Badge
-          key={tag.slug}
-          variant="outline"
-          className="cursor-pointer rounded-full border-border px-3 py-1 text-[9px] font-bold uppercase tracking-[0.1em] transition-all duration-300 hover:border-primary/40 hover:bg-primary/5"
-          onClick={() => onTagClick(tag.slug)}
-        >
-          {tag.name}
-        </Badge>
-      ))}
+      {tags.length > 0 &&
+        tags.map((tag) => (
+          <Badge
+            key={tag.slug}
+            variant="outline"
+            className="cursor-pointer rounded-full border-border px-3 py-1.5 text-xs font-bold uppercase tracking-wide transition-all duration-300 hover:border-primary/40 hover:bg-primary/5 active:scale-95"
+            onClick={() => onTagClick(tag.slug)}
+          >
+            {tag.name}
+          </Badge>
+        ))}
       {/* Favorite Button - Compact */}
       <button
         onClick={onToggleFavorite}
         disabled={isLoading || isTogglingFavorite}
         className={cn(
-          "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[9px] font-bold uppercase tracking-[0.1em] transition-all duration-300 disabled:opacity-50",
+          'inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[9px] font-bold uppercase tracking-[0.1em] transition-all duration-300 disabled:opacity-50',
           isFavorite
-            ? "border-primary/40 bg-primary/10 text-primary"
-            : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
+            ? 'border-primary/40 bg-primary/10 text-primary'
+            : 'border-border text-muted-foreground hover:border-primary/40 hover:text-foreground'
         )}
       >
         <Icon

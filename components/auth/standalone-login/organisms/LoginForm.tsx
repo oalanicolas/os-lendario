@@ -46,7 +46,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             <button
               type="button"
               onClick={onForgotPassword}
-              className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-600 hover:text-primary transition-colors duration-200"
+              className="-mx-2 -my-2 flex min-h-[44px] items-center px-2 text-xs font-bold uppercase tracking-[0.2em] text-zinc-600 transition-colors duration-200 hover:text-primary active:text-primary/80 sm:text-[10px]"
             >
               Esqueci a Senha
             </button>

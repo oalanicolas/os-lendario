@@ -104,12 +104,12 @@ const LessonContextTabs: React.FC<LessonContextTabsProps> = ({ activeTab, onTabC
               <div className="flex-1 space-y-1">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-bold text-foreground">João Pedro</span>
-                  <span className="text-[10px] text-muted-foreground">5h atrás</span>
+                  <span className="text-xs text-muted-foreground">5h atrás</span>
                 </div>
                 <p className="font-serif text-sm leading-relaxed text-muted-foreground">
                   Excelente explicação sobre normalização. Ficou muito mais claro.
                 </p>
-                <div className="flex items-center gap-4 pt-1 opacity-0 transition-opacity group-hover:opacity-100">
+                <div className="flex items-center gap-4 pt-1 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100">
                   <button className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
                     <Icon name="thumbs-up" size="size-3" /> Curtir
                   </button>

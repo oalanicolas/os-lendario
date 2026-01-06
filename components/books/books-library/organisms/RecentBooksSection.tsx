@@ -25,10 +25,12 @@ export const RecentBooksSection: React.FC<RecentBooksSectionProps> = ({
     <section className="space-y-8">
       <div className="flex items-center gap-6">
         <div>
-          <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary">Novidades</p>
-          <h2 className="mt-1 text-2xl font-bold tracking-tight text-foreground md:text-3xl">Lancamentos</h2>
+          <p className="text-xs font-bold uppercase tracking-wider text-primary">Novidades</p>
+          <h2 className="mt-1 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+            Lancamentos
+          </h2>
         </div>
-        <div className="hidden md:block h-px flex-1 bg-gradient-to-r from-border to-transparent"></div>
+        <div className="hidden h-px flex-1 bg-gradient-to-r from-border to-transparent md:block"></div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">

@@ -37,25 +37,30 @@ const BookDetailSheet: React.FC<BookDetailSheetProps> = ({
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="w-full overflow-y-auto p-0 sm:max-w-lg border-l border-border bg-background">
-        <div className="flex flex-col h-full">
+      <SheetContent className="w-full overflow-y-auto border-l border-border bg-background p-0 sm:max-w-lg">
+        <div className="flex h-full flex-col">
           {/* Hero with Centered Cover */}
-          <div className="relative h-[45vh] w-full flex items-center justify-center pt-12 overflow-hidden">
+          <div className="relative flex h-[45vh] w-full items-center justify-center overflow-hidden pt-12">
             {/* Background blur from cover */}
             {book.coverUrl && (
               <div
-                className="absolute inset-0 bg-cover bg-center blur-3xl opacity-20 scale-150"
+                className="absolute inset-0 scale-150 bg-cover bg-center opacity-20 blur-3xl"
                 style={{ backgroundImage: `url(${book.coverUrl})` }}
               />
             )}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background"></div>
 
             {/* Centered Cover */}
-            <div className="relative z-10 w-40 aspect-[2/3] rounded-2xl shadow-2xl overflow-hidden border border-border/20 bg-card">
+            <div className="relative z-10 aspect-[2/3] w-40 overflow-hidden rounded-2xl border border-border/20 bg-card shadow-2xl">
               {book.coverUrl ? (
-                <img src={book.coverUrl} loading="lazy" className="w-full h-full object-cover" alt={book.title} />
+                <img
+                  src={book.coverUrl}
+                  loading="lazy"
+                  className="h-full w-full object-cover"
+                  alt={book.title}
+                />
               ) : (
-                <div className="w-full h-full flex items-center justify-center bg-muted">
+                <div className="flex h-full w-full items-center justify-center bg-muted">
                   <Icon name="book" className="text-muted-foreground/30" size="size-12" />
                 </div>
               )}
@@ -63,10 +68,10 @@ const BookDetailSheet: React.FC<BookDetailSheetProps> = ({
           </div>
 
           {/* Content */}
-          <div className="flex-1 p-8 space-y-8">
+          <div className="flex-1 space-y-8 p-8">
             {/* Title and Author */}
-            <div className="text-center space-y-3">
-              <Badge className="border-none bg-primary/10 text-[9px] font-black uppercase tracking-[0.3em] text-primary rounded-full px-4 py-1.5">
+            <div className="space-y-3 text-center">
+              <Badge className="rounded-full border-none bg-primary/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-primary">
                 {book.category || 'Livro'}
               </Badge>
               <SheetTitle className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
@@ -78,7 +83,7 @@ const BookDetailSheet: React.FC<BookDetailSheetProps> = ({
             {/* Action Buttons */}
             <div className="flex gap-3">
               <Button
-                className="flex-1 h-14 rounded-xl bg-foreground font-black uppercase tracking-[0.2em] text-[10px] text-background hover:opacity-90 shadow-lg active:scale-[0.98] transition-all"
+                className="h-14 flex-1 rounded-xl bg-foreground text-xs font-bold uppercase tracking-wide text-background shadow-lg transition-all hover:opacity-90 active:scale-95"
                 onClick={() => onReadSummary(book)}
               >
                 <Icon name="book-open-cover" className="mr-2" size="size-4" /> Ler Resumo
@@ -87,8 +92,8 @@ const BookDetailSheet: React.FC<BookDetailSheetProps> = ({
                 <Button
                   variant="outline"
                   size="icon"
-                  className={`h-14 w-14 rounded-xl border-border hover:bg-muted active:scale-[0.98] transition-all ${
-                    isBookmarked ? 'text-primary border-primary/30 bg-primary/5' : 'text-foreground'
+                  className={`h-14 w-14 rounded-xl border-border transition-all hover:bg-muted active:scale-[0.98] ${
+                    isBookmarked ? 'border-primary/30 bg-primary/5 text-primary' : 'text-foreground'
                   }`}
                   onClick={() => onBookmark(book)}
                 >
@@ -98,7 +103,7 @@ const BookDetailSheet: React.FC<BookDetailSheetProps> = ({
             </div>
 
             {/* Description */}
-            <SheetDescription className="font-serif text-base leading-relaxed text-muted-foreground text-center">
+            <SheetDescription className="text-center font-serif text-base leading-relaxed text-muted-foreground">
               {book.summary || 'Sem descrição disponível.'}
             </SheetDescription>
 
@@ -109,7 +114,7 @@ const BookDetailSheet: React.FC<BookDetailSheetProps> = ({
                   <Badge
                     key={tag.slug}
                     variant="secondary"
-                    className="bg-muted/50 text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground rounded-full px-3 py-1"
+                    className="rounded-full bg-muted/50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-muted-foreground"
                   >
                     {tag.name}
                   </Badge>
@@ -120,32 +125,32 @@ const BookDetailSheet: React.FC<BookDetailSheetProps> = ({
             {/* Statistics */}
             <div className="grid grid-cols-2 gap-4">
               {book.pageCount && (
-                <div className="p-4 rounded-xl bg-muted/30 border border-border/50 text-center">
-                  <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground mb-1">
+                <div className="rounded-xl border border-border/50 bg-muted/30 p-4 text-center">
+                  <p className="mb-1 text-xs font-bold uppercase tracking-wide text-muted-foreground">
                     Páginas
                   </p>
                   <p className="text-lg font-bold text-foreground">{book.pageCount}</p>
                 </div>
               )}
               {book.publishedYear && (
-                <div className="p-4 rounded-xl bg-muted/30 border border-border/50 text-center">
-                  <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground mb-1">
+                <div className="rounded-xl border border-border/50 bg-muted/30 p-4 text-center">
+                  <p className="mb-1 text-xs font-bold uppercase tracking-wide text-muted-foreground">
                     Ano
                   </p>
                   <p className="text-lg font-bold text-foreground">{book.publishedYear}</p>
                 </div>
               )}
               {book.hasAudio && (
-                <div className="p-4 rounded-xl bg-primary/5 border border-primary/20 text-center">
-                  <Icon name="headset" size="size-5" className="text-primary mx-auto mb-1" />
-                  <p className="text-[8px] font-black uppercase tracking-widest text-primary">
+                <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-center">
+                  <Icon name="headset" size="size-5" className="mx-auto mb-1 text-primary" />
+                  <p className="text-xs font-bold uppercase tracking-wide text-primary">
                     Audiobook
                   </p>
                 </div>
               )}
               {book.rating && (
-                <div className="p-4 rounded-xl bg-muted/30 border border-border/50 text-center">
-                  <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground mb-1">
+                <div className="rounded-xl border border-border/50 bg-muted/30 p-4 text-center">
+                  <p className="mb-1 text-xs font-bold uppercase tracking-wide text-muted-foreground">
                     Avaliação
                   </p>
                   <div className="flex items-center justify-center gap-1">

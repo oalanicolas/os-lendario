@@ -9,39 +9,57 @@ import { getSectionFromPath, SECTION_ROUTES } from '../routes';
 const isSalesApp = (section: Section) =>
   section.startsWith('template_sales') || section.startsWith('studio_sales');
 
-const isMindsApp = (section: Section) =>
-  section.startsWith('app_minds');
+const isMindsApp = (section: Section) => section.startsWith('app_minds');
 
-const isCreatorApp = (section: Section) =>
-  section.startsWith('app_creator');
+const isCreatorApp = (section: Section) => section.startsWith('app_creator');
 
-const isLearnApp = (section: Section) =>
-  section.startsWith('app_learn');
+const isLearnApp = (section: Section) => section.startsWith('app_learn');
 
-const isLmsApp = (section: Section) =>
-  section.startsWith('app_lms');
+const isLmsApp = (section: Section) => section.startsWith('app_lms');
 
-const isBooksApp = (section: Section) =>
-  section.startsWith('app_books');
+const isBooksApp = (section: Section) => section.startsWith('app_books');
 
 const isExternal = (section: Section) =>
   section === Section.EXTERNAL_CHALLENGES ||
   section === Section.EXTERNAL_PROMPT_OPS ||
   section === Section.EXTERNAL_VAULT;
 
-const isOpsApp = (section: Section) =>
-  section.startsWith('studio_ops');
+const isOpsApp = (section: Section) => section.startsWith('studio_ops');
+
+const isMarketingApp = (section: Section) =>
+  section.startsWith('app_guia') ||
+  section === Section.CURATOR ||
+  section === Section.MARKETING_GUIDE;
 
 const isDesignSystemApp = (section: Section) => {
   const dsRoutes = [
-    Section.CONCEPT, Section.IDENTITY, Section.LEGENDARY_VS_MEDIOCRE,
-    Section.COLORS, Section.TYPOGRAPHY, Section.SPACING, Section.ICONS, Section.ICONS_COMPARE,
-    Section.LISTS, Section.MOTION, Section.GRAPHS, Section.CHARTS,
-    Section.COMPONENTS, Section.BUTTONS, Section.ADVANCED, Section.FEEDBACK,
-    Section.STATES, Section.CARDS, Section.FORMS, Section.TABLES,
-    Section.TEMPLATE_APP_CMS, Section.TEMPLATE_APP_KANBAN,
-    Section.TEMPLATE_APP_SETTINGS, Section.TEMPLATE_SIDEBAR_LEGACY,
-    Section.TOKENS, Section.DOCS, Section.AI_MANUAL
+    Section.CONCEPT,
+    Section.IDENTITY,
+    Section.LEGENDARY_VS_MEDIOCRE,
+    Section.COLORS,
+    Section.TYPOGRAPHY,
+    Section.SPACING,
+    Section.ICONS,
+    Section.ICONS_COMPARE,
+    Section.LISTS,
+    Section.MOTION,
+    Section.GRAPHS,
+    Section.CHARTS,
+    Section.COMPONENTS,
+    Section.BUTTONS,
+    Section.ADVANCED,
+    Section.FEEDBACK,
+    Section.STATES,
+    Section.CARDS,
+    Section.FORMS,
+    Section.TABLES,
+    Section.TEMPLATE_APP_CMS,
+    Section.TEMPLATE_APP_KANBAN,
+    Section.TEMPLATE_APP_SETTINGS,
+    Section.TEMPLATE_SIDEBAR_LEGACY,
+    Section.TOKENS,
+    Section.DOCS,
+    Section.AI_MANUAL,
   ];
   return dsRoutes.includes(section);
 };
@@ -52,17 +70,14 @@ interface UseAppSectionOptions {
 }
 
 export function useAppSection(options: UseAppSectionOptions = {}) {
-  const {
-    defaultSection = Section.TEMPLATE_SALES_DASHBOARD,
-    defaultTheme = 'Gold'
-  } = options;
+  const { defaultSection = Section.TEMPLATE_SALES_DASHBOARD, defaultTheme = 'Gold' } = options;
 
   const location = useLocation();
   const navigate = useNavigate();
 
   // Initialize from URL to prevent route mismatch on first render
-  const [currentSection, setCurrentSection] = useState<Section>(() =>
-    getSectionFromPath(location.pathname) || defaultSection
+  const [currentSection, setCurrentSection] = useState<Section>(
+    () => getSectionFromPath(location.pathname) || defaultSection
   );
 
   const [isDark, setIsDark] = useState(true);
@@ -77,30 +92,36 @@ export function useAppSection(options: UseAppSectionOptions = {}) {
   }, [location.pathname, currentSection]);
 
   // Navigate to route when section changes via Sidebar
-  const handleSetSection = useCallback((section: Section) => {
-    if (SECTION_ROUTES[section]) {
-      navigate(SECTION_ROUTES[section]);
-    } else {
-      setCurrentSection(section);
-    }
-  }, [navigate]);
+  const handleSetSection = useCallback(
+    (section: Section) => {
+      if (SECTION_ROUTES[section]) {
+        navigate(SECTION_ROUTES[section]);
+      } else {
+        setCurrentSection(section);
+      }
+    },
+    [navigate]
+  );
 
   // Get effective theme based on current section
-  const getEffectiveTheme = useCallback((section: Section): ThemeName => {
-    // PRIORITY: Check URL path FIRST for special routes
-    // This must come before section checks because unmatched routes default to sales template
-    if (location.pathname.startsWith('/auth/')) return 'Gold';
-    if (location.pathname.startsWith('/design/')) return 'Gold';
-    if (location.pathname.startsWith('/books/')) return 'Gold';
+  const getEffectiveTheme = useCallback(
+    (section: Section): ThemeName => {
+      // PRIORITY: Check URL path FIRST for special routes
+      // This must come before section checks because unmatched routes default to sales template
+      if (location.pathname.startsWith('/auth/')) return 'Gold';
+      if (location.pathname.startsWith('/design/')) return 'Gold';
+      if (location.pathname.startsWith('/books/')) return 'Gold';
 
-    // Section-based theme selection
-    if (isSalesApp(section)) return 'SalesRed';
-    if (isMindsApp(section)) return 'Teal';
-    if (isCreatorApp(section)) return 'Creator';
-    if (isPRDApp(section)) return 'PRDStudio';
-    if (isDesignSystemApp(section)) return 'Gold';
-    return currentTheme;
-  }, [currentTheme, location.pathname]);
+      // Section-based theme selection
+      if (isSalesApp(section)) return 'SalesRed';
+      if (isMindsApp(section)) return 'Teal';
+      if (isCreatorApp(section)) return 'Creator';
+      if (isPRDApp(section)) return 'PRDStudio';
+      if (isDesignSystemApp(section)) return 'Gold';
+      return currentTheme;
+    },
+    [currentTheme, location.pathname]
+  );
 
   // Apply Theme & Dark Mode
   useEffect(() => {
@@ -130,18 +151,21 @@ export function useAppSection(options: UseAppSectionOptions = {}) {
   }, [isDark, currentTheme, currentSection, getEffectiveTheme]);
 
   // Check if current section requires full-width layout
-  const isFullWidthPage = useCallback((section: Section) =>
-    isSalesApp(section) ||
-    isMindsApp(section) ||
-    isCreatorApp(section) ||
-    isLearnApp(section) ||
-    isLmsApp(section) ||
-    isBooksApp(section) ||
-    isPRDApp(section) ||
-    isExternal(section) ||
-    isDesignSystemApp(section) ||
-    isOpsApp(section),
-  []);
+  const isFullWidthPage = useCallback(
+    (section: Section) =>
+      isSalesApp(section) ||
+      isMindsApp(section) ||
+      isCreatorApp(section) ||
+      isLearnApp(section) ||
+      isLmsApp(section) ||
+      isBooksApp(section) ||
+      isPRDApp(section) ||
+      isExternal(section) ||
+      isDesignSystemApp(section) ||
+      isOpsApp(section) ||
+      isMarketingApp(section),
+    []
+  );
 
   return {
     // State

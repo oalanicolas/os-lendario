@@ -14,9 +14,9 @@ interface EbookPagesProps {
   isPrint?: boolean;
 }
 
-// Design System Constants
-const GOLD = '#C9B298';
-const OBSIDIAN = '#050505';
+// Design System Constants - Aligned with Lendário Luxe
+const GOLD = '#C9B298'; // brand-gold (matches theme.ts)
+const OBSIDIAN = '#0A0A0F'; // background.base from design-tokens-spec.yaml
 const PAPER = '#FFFFFF';
 const MARGIN = '12mm';
 
@@ -62,7 +62,10 @@ export const EbookPages: React.FC<EbookPagesProps> = ({
             borderRadius: '4px',
           }}
         >
-          <Symbol name="infinity" style={{ fontSize: '130px', color: GOLD, marginBottom: '25px' }} />
+          <Symbol
+            name="infinity"
+            style={{ fontSize: '130px', color: GOLD, marginBottom: '25px' }}
+          />
           <h1
             style={{
               fontSize: '46px',
@@ -76,7 +79,9 @@ export const EbookPages: React.FC<EbookPagesProps> = ({
           >
             {ebookData.title}
           </h1>
-          <div style={{ height: '2px', width: '70px', backgroundColor: GOLD, marginBottom: '25px' }} />
+          <div
+            style={{ height: '2px', width: '70px', backgroundColor: GOLD, marginBottom: '25px' }}
+          />
           <p
             style={{
               fontSize: '18px',
@@ -149,7 +154,9 @@ export const EbookPages: React.FC<EbookPagesProps> = ({
               <span>Ref: AL-MANUAL-25</span>
               <span>Matriz de Conhecimento</span>
             </div>
-            <span style={{ fontSize: '12px', fontWeight: 'bold', fontFamily: 'monospace' }}>PAGE_02</span>
+            <span style={{ fontSize: '12px', fontWeight: 'bold', fontFamily: 'monospace' }}>
+              PAGE_02
+            </span>
           </div>
 
           <div style={{ marginBottom: '55px' }}>
@@ -329,7 +336,14 @@ export const EbookPages: React.FC<EbookPagesProps> = ({
               overflow: 'hidden',
             }}
           >
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div
+              style={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+              }}
+            >
               <span
                 style={{
                   fontSize: '260px',
@@ -355,7 +369,9 @@ export const EbookPages: React.FC<EbookPagesProps> = ({
               >
                 {chapter.title}
               </h2>
-              <div style={{ height: '4px', width: '140px', backgroundColor: GOLD, marginTop: '30px' }} />
+              <div
+                style={{ height: '4px', width: '140px', backgroundColor: GOLD, marginTop: '30px' }}
+              />
             </div>
           </div>
 
@@ -413,7 +429,14 @@ export const EbookPages: React.FC<EbookPagesProps> = ({
                     {chapter.title}
                   </span>
                 </div>
-                <span style={{ fontSize: '14px', fontWeight: '900', fontFamily: 'monospace', color: '#EEE' }}>
+                <span
+                  style={{
+                    fontSize: '14px',
+                    fontWeight: '900',
+                    fontFamily: 'monospace',
+                    color: '#EEE',
+                  }}
+                >
                   PAGE_0{section.pageNumber}
                 </span>
               </div>
@@ -428,7 +451,14 @@ export const EbookPages: React.FC<EbookPagesProps> = ({
                 }}
               >
                 {/* LEFT COLUMN: Theory and Footer Blocks */}
-                <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '100%',
+                    overflow: 'hidden',
+                  }}
+                >
                   {/* Theory Zone */}
                   <div style={{ flexShrink: 1, overflow: 'hidden', marginBottom: '30px' }}>
                     <h3
@@ -453,31 +483,41 @@ export const EbookPages: React.FC<EbookPagesProps> = ({
                         color: '#111',
                       }}
                     >
-                      {section.content.split('\n\n').slice(0, 3).map((p, pi) => (
-                        <p key={pi} style={{ marginBottom: '14px', position: 'relative' }}>
-                          {pi === 0 && (
-                            <span
-                              style={{
-                                float: 'left',
-                                fontSize: '40px',
-                                lineHeight: '0.8',
-                                fontWeight: '900',
-                                marginRight: '8px',
-                                marginTop: '4px',
-                                color: GOLD,
-                              }}
-                            >
-                              {p.charAt(0)}
-                            </span>
-                          )}
-                          {pi === 0 ? p.substring(1) : p}
-                        </p>
-                      ))}
+                      {section.content
+                        .split('\n\n')
+                        .slice(0, 3)
+                        .map((p, pi) => (
+                          <p key={pi} style={{ marginBottom: '14px', position: 'relative' }}>
+                            {pi === 0 && (
+                              <span
+                                style={{
+                                  float: 'left',
+                                  fontSize: '40px',
+                                  lineHeight: '0.8',
+                                  fontWeight: '900',
+                                  marginRight: '8px',
+                                  marginTop: '4px',
+                                  color: GOLD,
+                                }}
+                              >
+                                {p.charAt(0)}
+                              </span>
+                            )}
+                            {pi === 0 ? p.substring(1) : p}
+                          </p>
+                        ))}
                     </div>
                   </div>
 
                   {/* Practical Zone: Anchored at bottom */}
-                  <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  <div
+                    style={{
+                      marginTop: 'auto',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '20px',
+                    }}
+                  >
                     {/* Deep Reflection */}
                     <div
                       style={{
@@ -659,7 +699,14 @@ export const EbookPages: React.FC<EbookPagesProps> = ({
                               flexShrink: 0,
                             }}
                           />
-                          <span style={{ fontSize: '10.5px', fontWeight: '600', color: '#333', lineHeight: '1.3' }}>
+                          <span
+                            style={{
+                              fontSize: '10.5px',
+                              fontWeight: '600',
+                              color: '#333',
+                              lineHeight: '1.3',
+                            }}
+                          >
                             {item}
                           </span>
                         </div>
@@ -667,7 +714,14 @@ export const EbookPages: React.FC<EbookPagesProps> = ({
                     </div>
                   </div>
 
-                  <div style={{ padding: '16px', backgroundColor: '#F8F8F8', borderRadius: '2px', flexShrink: 0 }}>
+                  <div
+                    style={{
+                      padding: '16px',
+                      backgroundColor: '#F8F8F8',
+                      borderRadius: '2px',
+                      flexShrink: 0,
+                    }}
+                  >
                     {section.technicalSpec.slice(0, 4).map((spec, si) => (
                       <div
                         key={si}
@@ -705,7 +759,14 @@ export const EbookPages: React.FC<EbookPagesProps> = ({
                     ))}
                   </div>
 
-                  <div style={{ marginTop: 'auto', textAlign: 'center', opacity: 0.04, paddingBottom: '5px' }}>
+                  <div
+                    style={{
+                      marginTop: 'auto',
+                      textAlign: 'center',
+                      opacity: 0.04,
+                      paddingBottom: '5px',
+                    }}
+                  >
                     <Symbol name="infinity" style={{ fontSize: '55px' }} />
                   </div>
                 </div>
@@ -726,7 +787,9 @@ export const EbookPages: React.FC<EbookPagesProps> = ({
                 }}
               >
                 <span>{ebookData.footerText}</span>
-                <span className="font-bold">ACADEMIA LENDÁRIA | DEP. ENGENHARIA OBSIDIAN © 2025</span>
+                <span className="font-bold">
+                  ACADEMIA LENDÁRIA | DEP. ENGENHARIA OBSIDIAN © 2025
+                </span>
               </div>
             </div>
           ))}
