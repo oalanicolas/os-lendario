@@ -52,6 +52,8 @@ const ArenaTemplate = React.lazy(() => import('./minds/templates/ArenaTemplate')
 const MarketingTemplatesPage = React.lazy(
   () => import('./marketing/templates-page/MarketingTemplatesPage')
 );
+const CuratorTemplate = React.lazy(() => import('./marketing/curator/CuratorTemplate'));
+const GuiaEbookTemplate = React.lazy(() => import('./marketing/guia-ebook/GuiaEbookTemplate'));
 const LandingPageTemplate = React.lazy(() => import('./marketing/templates/LandingPageTemplate'));
 const AdvertorialTemplate = React.lazy(() => import('./marketing/templates/AdvertorialTemplate'));
 const EbookTemplate = React.lazy(() => import('./marketing/templates/EbookTemplate'));
@@ -340,6 +342,11 @@ const AppRoutes: React.FC<AppRoutesProps> = ({
 
           {/* Marketing Templates */}
           <Route path="/marketing/guide" element={<MarketingTemplatesPage />} />
+          <Route
+            path="/marketing/curator"
+            element={<CuratorTemplate setSection={setSection} />}
+          />
+          <Route path="/marketing/guia-ebook" element={<GuiaEbookTemplate />} />
           <Route path="/marketing/landing" element={<LandingPageTemplate />} />
           <Route path="/marketing/advertorial" element={<AdvertorialTemplate />} />
           <Route path="/marketing/sales-page" element={<SalesPageTemplate />} />

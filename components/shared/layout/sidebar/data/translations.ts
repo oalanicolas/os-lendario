@@ -43,6 +43,8 @@ export const translations: TranslationDictionary = {
     content_newsletter: 'Newsletter',
 
     // Marketing Studio Products
+    marketing_curator: 'Curador[IA]',
+    marketing_guia_ebook: 'Gu[IA] Ebook',
     marketing_ads: 'Fábrica de Anúncios',
     marketing_dashboard: 'Dashboard de Ads',
     marketing_intelligence: 'Inteligência',
@@ -158,6 +160,8 @@ export const translations: TranslationDictionary = {
     content_video: 'Video Ops',
     content_social: 'Social Ops',
     content_newsletter: 'Newsletter Ops',
+    marketing_curator: 'Curator[AI]',
+    marketing_guia_ebook: 'Gu[IA] Ebook',
     marketing_ads: 'Ads Factory',
     marketing_dashboard: 'Ads Dashboard',
     marketing_intelligence: 'Intelligence Hub',
@@ -265,6 +269,8 @@ export const translations: TranslationDictionary = {
     content_video: 'Video Ops',
     content_social: 'Social Ops',
     content_newsletter: 'Newsletter Ops',
+    marketing_curator: 'Curador[IA]',
+    marketing_guia_ebook: 'Gu[IA] Ebook',
     marketing_ads: 'Ads Factory',
     marketing_dashboard: 'Ads Dashboard',
     marketing_intelligence: 'Intelligence Hub',

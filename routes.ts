@@ -66,6 +66,8 @@ export const SECTION_ROUTES: Record<Section, string> = {
 
   // Marketing Templates
   [Section.MARKETING_GUIDE]: '/marketing/guide',
+  [Section.CURATOR]: '/marketing/curator',
+  [Section.APP_GUIA_EBOOK]: '/marketing/guia-ebook',
   [Section.TEMPLATE_LANDING]: '/marketing/landing',
   [Section.TEMPLATE_ADVERTORIAL]: '/marketing/advertorial',
   [Section.TEMPLATE_SALES]: '/marketing/sales-page',

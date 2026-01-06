@@ -120,6 +120,18 @@ export const navStructure: NavItem[] = [
     group: 'team',
     children: [
       {
+        key: 'marketing_curator',
+        icon: 'search-alt',
+        section: Section.CURATOR,
+        status: 'active',
+      },
+      {
+        key: 'marketing_guia_ebook',
+        icon: 'book-open-reader',
+        section: Section.APP_GUIA_EBOOK,
+        status: 'active',
+      },
+      {
         key: 'marketing_ads',
         icon: 'megaphone',
         section: Section.STUDIO_MARKETING,

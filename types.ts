@@ -77,6 +77,7 @@ export enum Section {
   APP_MINDS_WIZARD = 'app_minds_wizard',
   APP_MINDS_ARENA = 'app_minds_arena',
   MARKETING_GUIDE = 'marketing_guide',
+  CURATOR = 'curator',
   TEMPLATE_LANDING = 'template_landing',
   TEMPLATE_ADVERTORIAL = 'template_advertorial',
   TEMPLATE_SALES = 'template_sales',
@@ -110,6 +111,9 @@ export enum Section {
   STUDIO_OPS_TOOL_STACKS = 'studio_ops_tool_stacks',
   STUDIO_OPS_USERS = 'studio_ops_users',
   STUDIO_OPS_EMAILS = 'studio_ops_emails',
+
+  // Marketing Tools
+  APP_GUIA_EBOOK = 'app_guia_ebook',
 
   // Books Library
   APP_BOOKS_LIBRARY = 'app_books_library',
