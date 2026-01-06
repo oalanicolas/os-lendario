@@ -245,11 +245,13 @@ export function useBook(slug: string): UseBookResult {
     }
 
     try {
-      // Use optimized view for single book lookup
+      // Use v_books_complete (no language filter) for single book lookup
+      // This allows viewing any book, even if not in PT
       const { data: bookData, error: bookError } = await supabase
-        .from('v_books_pt')
+        .from('v_books_complete')
         .select('*')
         .eq('slug', slug)
+        .eq('status', 'published')
         .single();
 
       if (bookError) {
